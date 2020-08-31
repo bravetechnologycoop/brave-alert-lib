@@ -1,0 +1,13 @@
+# OS
+dist: xenial
+
+# Language
+language: node_js           # node version specified in .nvmrc
+
+# install dependencies
+install:
+  - npm install
+
+# run unit tests
+script:
+- sudo env "PATH=$PATH" npm run test

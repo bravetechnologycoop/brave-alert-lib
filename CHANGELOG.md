@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore`.
 - Node package definition.
 - Proof of concept test.
+- Travis configuration to run the tests in GitHub.
 
 ## [0.0.0]
 ### Added
