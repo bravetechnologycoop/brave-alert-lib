@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog.
 - `.gitignore`.
 - Node package definition.
-- Proof of concept test.
 - Travis configuration to run the tests in GitHub.
+- Proof of concept test.
+- Proof of concept function to output to the console "BraveAlertLib here".
 
 ## [0.0.0]
 ### Added
