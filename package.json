@@ -8,6 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "lint": "npx eslint .",
     "test": "NODE_ENV=test mocha --timeout 10000 \"test/**/*.js\""
   },
   "devDependencies": {

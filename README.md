@@ -10,4 +10,6 @@ Library to communicate with responders and staff when action is required.
 
 1. run `npm install` to install the dependencies
 
+1. run `npm run lint` to run the linter
+
 1. run `npm test` to run the tests
