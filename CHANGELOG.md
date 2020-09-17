@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- "How to use this library" documentation to the README.
+- `BraveAlerter` implementation (CU-baqza9).
+- `helpers` helper functions that are already used in multiple Brave NodeJS projects.
 
 ## [0.1.0]
 ### Added
