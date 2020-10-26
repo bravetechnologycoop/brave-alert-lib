@@ -4,6 +4,7 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require("sinon-chai");
 
+const ALERT_STATE = require('../../../lib/alertStateEnum.js')
 const BraveAlerter = require('../../../lib/braveAlerter.js')
 const helpers = require('../../../lib/helpers.js')
 const Twilio = require ('../../../lib/twilio.js')
@@ -39,7 +40,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', function() 
             )
             
             await braveAlerter.startAlertSession({
-                alertSession: new AlertSession('guid-123'),
+                sessionId: 'guid-123',
                 toPhoneNumber: '+11231231234',
                 fromPhoneNumber: '+11231231234',
                 reminderMessage: 'My message',
@@ -52,6 +53,14 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', function() 
 
         it('should send alert', function() {
             expect(Twilio.sendTwilioMessage).to.be.calledOnce
+        })
+
+        it('should call the callback with session ID and alert state STARTED', function() {
+            const expectedAlertSession = new AlertSession(
+                'guid-123',
+                ALERT_STATE.STARTED,
+            )
+            expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
         })
     })
     

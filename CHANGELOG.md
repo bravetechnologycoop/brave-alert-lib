@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Twilio message ID logs for the alert session.
+- A call to the `sessionChangedCallback` after sending the initial alert session message (CU-bar1zy).
 
 ## [1.0.0] - 2020-10-15
 ### Added

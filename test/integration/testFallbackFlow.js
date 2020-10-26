@@ -78,12 +78,18 @@ describe('fallback flow: responder never responds so fallback message is sent to
     it('', async function() {
         // Initial alert sent to responder phone
         await this.braveAlerter.startAlertSession(initialAlertInfo)
+
+        // Expect the state to change to STARTED
+        expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(
+            sessionId,
+            ALERT_STATE.STARTED,
+        ))
         
         // Wait for the reminder to send
         await helpers.sleep(2000)
         
         // Expect the state to change to WAITING_FOR_REPLY
-        expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(
+        expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(
             sessionId,
             ALERT_STATE.WAITING_FOR_REPLY,
         ))
@@ -94,7 +100,7 @@ describe('fallback flow: responder never responds so fallback message is sent to
         await helpers.sleep(3000)
 
         // Expect the fallback return message from a successful Twilio request to be 'queued'
-        expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(
+        expect(this.braveAlerter.alertSessionChangedCallback.getCall(2).args[0]).to.eql(new AlertSession(
             sessionId,
             undefined,
             undefined,
