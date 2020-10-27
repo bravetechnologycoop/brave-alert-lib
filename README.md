@@ -145,7 +145,7 @@ An object representing an alert session. Contains the following fields:
 
 **alertState (ALERT_STATE):** Thc current alert state of the alert session
 
-**incidentCategory (int):** The integer representing the incident category associated with the alert session
+**incidentCategoryKey (string):** The integer representing the incident category associated with the alert session
 
 **details (string):** The incident details associated with the alert session
 
@@ -153,15 +153,10 @@ An object representing an alert session. Contains the following fields:
 
 **responderPhoneNumber(string):** The phone number of th responder phone associated with the alert session
 
-**validIncidentCategories (object):** The valid incident cateogries for this session. The object keys are the values we expect the responder to return (for example '1' or '2'). The object values are the interpretation of these keys that will be stored in the DB. For example:
+**validIncidentCategoryKeys (array of strings):** The valid incident cateogry keys for this session. These are the values that the responder will use to select an incident category through text message. For example:
 
 ```
-{
-    '1': 'No One Inside',
-    '2': 'Person responded',
-    '3': 'Overdose',
-    '4': 'None of the above'
-}
+['1', '2', '3', '4']
 ````
 
 

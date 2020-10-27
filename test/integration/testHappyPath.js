@@ -24,11 +24,9 @@ const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
 const devicePhoneNumber = '+15005550006'
 const initialMessage = 'Ok'
-const incidentCategory = '1'
+const incidentCategoryKey = '1'
 const details = 'my details'
-const validIncidentCategories = {
-    '1': 'one',
-}
+const validIncidentCategoryKeys = ['1', '2']
 const initialAlertInfo = {
     sessionId: sessionId,
     toPhoneNumber: responderPhoneNumber,
@@ -53,7 +51,7 @@ describe('happy path integration test: responder responds right away and provide
             undefined,
             undefined,
             responderPhoneNumber,
-            validIncidentCategories,
+            validIncidentCategoryKeys,
         )
 
         this.braveAlerter = new BraveAlerter(
@@ -112,7 +110,7 @@ describe('happy path integration test: responder responds right away and provide
         response = await chai.request(this.app).post('/alert/sms').send({
             From: responderPhoneNumber,
             To: devicePhoneNumber,
-            Body: incidentCategory,
+            Body: incidentCategoryKey,
         })
         expect(response).to.have.status(200)
 
@@ -120,11 +118,11 @@ describe('happy path integration test: responder responds right away and provide
         expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(
             sessionId,
             ALERT_STATE.WAITING_FOR_DETAILS,
-            incidentCategory,
+            incidentCategoryKey,
         ))
 
         this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_DETAILS
-        this.currentAlertSession.incidentCategory = incidentCategory
+        this.currentAlertSession.incidentCategoryKey = incidentCategoryKey
 
         // Responder replies with incident details
         response = await chai.request(this.app).post('/alert/sms').send({

@@ -8,12 +8,7 @@ function dummyGetRetunMessages(fromAlertState, toAlertState) {
     return `${fromAlertState} --> ${toAlertState}`
 }
 
-const dummyIncidentCategories = {
-    '1': 'One',
-    '2': 'Two',
-    '3': 'Three',
-    '4': 'Four'
-}
+const dummyIncidentCategoryKeys = ['1', '2', '3', '4']
 
 describe('alertStateMachine.js unit tests:', function() {
     describe('constructor', function() {
@@ -44,25 +39,25 @@ describe('alertStateMachine.js unit tests:', function() {
 
             describe('given alert state is STARTED', function() {
                 it('should transition to WAITING_FOR_CATEGORY', function () {
-                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategories)
+                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategoryKeys)
 
                     expect(nextAlertState).to.equal(ALERT_STATE.WAITING_FOR_CATEGORY)
                 })
 
                 it('should not change the incident category', function() {
-                    const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategories)
+                    const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategoryKeys)
 
-                    expect(incidentCategory).to.be.undefined
+                    expect(incidentCategoryKey).to.be.undefined
                 })
 
                 it('should not change the details', function() {
-                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategories)
+                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategoryKeys)
 
                     expect(details).to.be.undefined
                 })
 
                 it('should give the return message for STARTED --> WAITING_FOR_CATEGORY', function() {
-                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategories)
+                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.STARTED, '3', dummyIncidentCategoryKeys)
 
                     expect(returnMessage).to.equal(`${ALERT_STATE.STARTED} --> ${ALERT_STATE.WAITING_FOR_CATEGORY}`)
                 })
@@ -70,25 +65,25 @@ describe('alertStateMachine.js unit tests:', function() {
 
             describe('given alert state is WAITING_FOR_REPLY', function() {
                 it('should transition to WAITING_FOR_CATEGORY', function () {
-                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategories)
+                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategoryKeys)
 
                     expect(nextAlertState).to.equal(ALERT_STATE.WAITING_FOR_CATEGORY)
                 })
 
                 it('should not change the incident category', function() {
-                    const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategories)
+                    const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategoryKeys)
 
-                    expect(incidentCategory).to.be.undefined
+                    expect(incidentCategoryKey).to.be.undefined
                 })
 
                 it('should not change the details', function() {
-                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategories)
+                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategoryKeys)
 
                     expect(details).to.be.undefined
                 })
 
                 it('should give the return message for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', function() {
-                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategories)
+                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_REPLY, '3', dummyIncidentCategoryKeys)
 
                     expect(returnMessage).to.equal(`${ALERT_STATE.WAITING_FOR_REPLY} --> ${ALERT_STATE.WAITING_FOR_CATEGORY}`)
                 })
@@ -97,31 +92,31 @@ describe('alertStateMachine.js unit tests:', function() {
             describe('given alert state is WAITING_FOR_CATEGORY', function() {
                 describe('and messageText contains a valid incident category', function () {
                     it('should transition to WAITING_FOR_DETAILS', function () {
-                        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategories)
+                        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategoryKeys)
     
                         expect(nextAlertState).to.equal(ALERT_STATE.WAITING_FOR_DETAILS)
                     })
     
                     it('should change the incident category to the message text', function() {
-                        const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategories)
+                        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategoryKeys)
     
-                        expect(incidentCategory).to.equal('3')
+                        expect(incidentCategoryKey).to.equal('3')
                     })
 
                     it('should change the incident category to the trimmed message text', function() {
-                        const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '   2    ', dummyIncidentCategories)
+                        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '   2    ', dummyIncidentCategoryKeys)
     
-                        expect(incidentCategory).to.equal('2')
+                        expect(incidentCategoryKey).to.equal('2')
                     })
     
                     it('should not change the details', function() {
-                        const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategories)
+                        const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategoryKeys)
     
                         expect(details).to.be.undefined
                     })
     
                     it('should give the return message for WAITING_FOR_CATEGORY --> WAITING_FOR_DETAILS', function() {
-                        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategories)
+                        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '3', dummyIncidentCategoryKeys)
     
                         expect(returnMessage).to.equal(`${ALERT_STATE.WAITING_FOR_CATEGORY} --> ${ALERT_STATE.WAITING_FOR_DETAILS}`)
                     })
@@ -129,25 +124,25 @@ describe('alertStateMachine.js unit tests:', function() {
 
                 describe('and messageText does not contain a valid incident category', function() {
                     it('should stay in WAITING_FOR_CATEGORY', function () {
-                        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategories)
+                        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategoryKeys)
     
                         expect(nextAlertState).to.equal(ALERT_STATE.WAITING_FOR_CATEGORY)
                     })
     
                     it('should not change the incident category', function() {
-                        const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '  2A3  ', dummyIncidentCategories)
+                        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '  2A3  ', dummyIncidentCategoryKeys)
     
-                        expect(incidentCategory).to.be.undefined
+                        expect(incidentCategoryKey).to.be.undefined
                     })
     
                     it('should not change the details', function() {
-                        const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategories)
+                        const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategoryKeys)
     
                         expect(details).to.be.undefined
                     })
     
                     it('should give the return message for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', function() {
-                        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategories)
+                        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_CATEGORY, '5', dummyIncidentCategoryKeys)
     
                         expect(returnMessage).to.equal(`${ALERT_STATE.WAITING_FOR_CATEGORY} --> ${ALERT_STATE.WAITING_FOR_CATEGORY}`)
                     })
@@ -156,31 +151,31 @@ describe('alertStateMachine.js unit tests:', function() {
 
             describe('given alert state is WAITING_FOR_DETAILS', function() {
                 it('should transition to COMPLETED', function () {
-                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategories)
+                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategoryKeys)
 
                     expect(nextAlertState).to.equal(ALERT_STATE.COMPLETED)
                 })
 
                 it('should not change the incident category', function() {
-                    const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategories)
+                    const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategoryKeys)
 
-                    expect(incidentCategory).to.be.undefined
+                    expect(incidentCategoryKey).to.be.undefined
                 })
 
                 it('should change the details to the message text', function() {
-                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategories)
+                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategoryKeys)
 
                     expect(details).to.equal('3')
                 })
 
                 it('should change the details to the trimmed message text', function() {
-                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '    many    details    ', dummyIncidentCategories)
+                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '    many    details    ', dummyIncidentCategoryKeys)
 
                     expect(details).to.equal('many    details')
                 })
 
                 it('should give the return message for WAITING_FOR_DETAILS --> COMPLETED', function() {
-                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategories)
+                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.WAITING_FOR_DETAILS, '3', dummyIncidentCategoryKeys)
 
                     expect(returnMessage).to.equal(`${ALERT_STATE.WAITING_FOR_DETAILS} --> ${ALERT_STATE.COMPLETED}`)
                 })
@@ -188,25 +183,25 @@ describe('alertStateMachine.js unit tests:', function() {
 
             describe('given alert state is COMPLETED', function() {
                 it('should stay in COMPLETED', function () {
-                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategories)
+                    const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategoryKeys)
 
                     expect(nextAlertState).to.equal(ALERT_STATE.COMPLETED)
                 })
 
                 it('should not change the incident category', function() {
-                    const { incidentCategory } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategories)
+                    const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategoryKeys)
 
-                    expect(incidentCategory).to.be.undefined
+                    expect(incidentCategoryKey).to.be.undefined
                 })
 
                 it('should not change the details', function() {
-                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategories)
+                    const { details } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategoryKeys)
 
                     expect(details).to.be.undefined
                 })
 
                 it('should give the return message for COMPLETED --> COMPLETED', function() {
-                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategories)
+                    const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(ALERT_STATE.COMPLETED, '3', dummyIncidentCategoryKeys)
 
                     expect(returnMessage).to.equal(`${ALERT_STATE.COMPLETED} --> ${ALERT_STATE.COMPLETED}`)
                 })

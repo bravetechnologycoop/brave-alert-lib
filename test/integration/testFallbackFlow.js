@@ -25,9 +25,7 @@ const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
 const devicePhoneNumber = '+15005550006'
 const initialMessage = 'Ok'
-const validIncidentCategories = {
-    '1': 'one',
-}
+const validIncidentCategoryKeys = ['1']
 const initialAlertInfo = {
     sessionId: sessionId,
     toPhoneNumber: responderPhoneNumber,
@@ -50,7 +48,7 @@ describe('fallback flow: responder never responds so fallback message is sent to
             undefined,
             undefined,
             responderPhoneNumber,
-            validIncidentCategories,
+            validIncidentCategoryKeys,
         )
 
         this.braveAlerter = new BraveAlerter(

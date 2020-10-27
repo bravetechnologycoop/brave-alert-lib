@@ -69,7 +69,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     )
                     sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                         nextAlertState: ALERT_STATE.COMPLETED,
-                        incidentCategory: '2',
+                        incidentCategoryKey: '2',
                         details: 'new details',
                         returnMessage: 'return message',
                     })
@@ -133,7 +133,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     )
                     sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                         nextAlertState: ALERT_STATE.COMPLETED,
-                        incidentCategory: '2',
+                        incidentCategoryKey: '2',
                         details: 'new details',
                         returnMessage: 'return message',
                     })
@@ -183,7 +183,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                 sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(null)
                 sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                     nextAlertState: ALERT_STATE.COMPLETED,
-                    incidentCategory: '2',
+                    incidentCategoryKey: '2',
                     details: 'new details',
                     returnMessage: 'return message',
                 })
@@ -242,7 +242,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                 nextAlertState: ALERT_STATE.COMPLETED,
-                incidentCategory: '2',
+                incidentCategoryKey: '2',
                 details: 'new details',
                 returnMessage: 'return message',
             })
@@ -300,7 +300,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                 nextAlertState: ALERT_STATE.COMPLETED,
-                incidentCategory: '2',
+                incidentCategoryKey: '2',
                 details: 'new details',
                 returnMessage: 'return message',
             })
@@ -358,7 +358,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
                 nextAlertState: ALERT_STATE.COMPLETED,
-                incidentCategory: '2',
+                incidentCategoryKey: '2',
                 details: 'new details',
                 returnMessage: 'return message',
             })
