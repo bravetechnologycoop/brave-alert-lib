@@ -84,6 +84,14 @@ describe('happy path integration test: responder responds right away and provide
         // Initial alert sent to responder phone
         await this.braveAlerter.startAlertSession(initialAlertInfo)
 
+        // Expect the state to change to STARTED
+        expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(
+            sessionId,
+            ALERT_STATE.STARTED,
+        ))
+
+        this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_CATEGORY
+
         // Responder replies 'Ok'
         let response = await chai.request(this.app).post('/alert/sms').send({
             From: responderPhoneNumber,
