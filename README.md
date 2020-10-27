@@ -184,6 +184,12 @@ In the test environment, returns the test version of the environment variable wi
 **Returns:** the correct environment variable for the situation.
 
 
+### isTestEnvironment()
+
+Determines whether we are executing in a test environment (i.e. with the value of NODE_ENV === 'test').
+
+**Returns:** `true` if the current execution is in a test environment. `false` otherwise.
+
 ### isValidRequest(req, properties)
 
 Determines whether the given Express request is valid if the given set of properties are required.
