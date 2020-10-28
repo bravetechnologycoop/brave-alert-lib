@@ -10,7 +10,7 @@ const AlertSession = require('../../lib/alertSession.js')
 const ALERT_STATE = require('./../../lib/alertStateEnum.js')
 const BraveAlerter = require ('./../../lib/braveAlerter.js')
 
-chai.use(chaiHttp);
+chai.use(chaiHttp)
 chai.use(sinonChai)
 
 const dummyGetAlertSession = function() { return 'getAlertSession' }
