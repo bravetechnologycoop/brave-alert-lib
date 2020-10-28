@@ -78,7 +78,7 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **asksIncidentDetails (boolean):** `true` if alert sessions should ask for incident details, `false` otherwise
 
-**getReturnMessage (function(fromAlertState, toAlertState)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state)
+**getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
 
 ### getRouter()
@@ -153,11 +153,24 @@ An object representing an alert session. Contains the following fields:
 
 **responderPhoneNumber(string):** The phone number of th responder phone associated with the alert session
 
+**validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will
+be stored in the DB. For example:
+
+```
+['Accidental', 'Safer Use', 'Overdose', 'Other']
+```
+
+Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
+human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
+
 **validIncidentCategoryKeys (array of strings):** The valid incident cateogry keys for this session. These are the values that the responder will use to select an incident category through text message. For example:
 
 ```
 ['1', '2', '3', '4']
 ````
+
+Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
+human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
 
 
 ## `ALERT_STATE` enum
