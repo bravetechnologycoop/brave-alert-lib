@@ -64,7 +64,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                             'my details', 
                             'my fallback message', 
                             '+11231231234', 
-                            {'3': 'three'}
+                            ['3'],
+                            ['three'],
                         )
                     )
                     sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
@@ -128,7 +129,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                             'my details', 
                             'my fallback message', 
                             '+11231231234', 
-                            {'3': 'three'}
+                            ['3'],
+                            ['three'],
                         )
                     )
                     sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
@@ -237,7 +239,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     'my details', 
                     'my fallback message', 
                     '+11231231234', 
-                    {'3': 'three'}
+                    ['3'],
+                    ['three'],
                 )
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
@@ -295,7 +298,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     'my details', 
                     'my fallback message', 
                     '+11231231234', 
-                    {'3': 'three'}
+                    ['3'],
+                    ['three'],
                 )
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
@@ -353,7 +357,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     'my details', 
                     'my fallback message', 
                     '+11231231234', 
-                    {'3': 'three'}
+                    ['3'],
+                    ['three'],
                 )
             )
             sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
