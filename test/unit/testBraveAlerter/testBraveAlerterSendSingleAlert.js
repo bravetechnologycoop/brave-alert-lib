@@ -23,9 +23,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', function() {
     describe('if successfully sends the alert', function() {
         beforeEach(async function() {
             // Don't actually call Twilio
-            sinon.stub(Twilio, 'sendTwilioMessage').returns({
-                sid: 'my sid'
-            })
+            sinon.stub(Twilio, 'sendTwilioMessage')
 
             const braveAlerter = new BraveAlerter()
 
@@ -38,10 +36,6 @@ describe('braveAlerter.js unit tests: sendSingleAlert', function() {
 
         it('should send alert', function() {
             expect(Twilio.sendTwilioMessage).to.be.calledOnce
-        })
-
-        it('should log the response sid', function() {
-            expect(helpers.log).to.be.calledWith('my sid')
         })
     })
 
@@ -59,7 +53,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', function() {
             Twilio.sendTwilioMessage.restore()
         })
 
-        it('should log the response sid', function() {
+        it('should log the response error', function() {
             expect(helpers.log).to.be.calledWith('Failed to send single alert: My message')
         })
     })
