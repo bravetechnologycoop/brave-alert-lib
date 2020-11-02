@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Twilio message ID logs for the alert session.
 - A call to the `sessionChangedCallback` after sending the initial alert session message (CU-bar1zy).
+- helpers.isTestEnvironment helper method (CU-bar0fm).
+- try/catch blocks to better handle `UnhandledPromiseRejectionWarning`s (CU-bar0fm).
+
+### Changed
+- IncidentCategory handling (CU-bar0fm).
 
 ## [1.0.0] - 2020-10-15
 ### Added
