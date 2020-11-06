@@ -145,7 +145,7 @@ An object representing an alert session. Contains the following fields:
 
 **alertState (ALERT_STATE):** Thc current alert state of the alert session
 
-**incidentCategoryKey (string):** The integer representing the incident category associated with the alert session
+**incidentCategoryKey (string):** The string representing the incident category associated with the alert session
 
 **details (string):** The incident details associated with the alert session
 
