@@ -6,10 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add Twilio validation to make sure that post requests are coming from Twilio and relevant tests(CU-dgmfbv).
-
-### Updated
-- Updated existing tests to work with implementation of Twilio validation (CU-dgmfbv).
+- Add Twilio validation to make sure that post requests are coming from Twilio and relevant tests (CU-dgmfbv).
 
 ## [2.0.0] - 2020-11-20
 ### Added
