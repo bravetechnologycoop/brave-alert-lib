@@ -78,6 +78,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
 
                     // Don't actually call Twilio
                     sinon.stub(Twilio, 'sendTwilioResponse')
+                    sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
                     await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
                 })
@@ -86,7 +87,9 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     this.braveAlerter.getAlertSessionByPhoneNumber.restore()
                     this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
                     this.braveAlerter.alertSessionChangedCallback.restore()
+
                     Twilio.sendTwilioResponse.restore()
+                    Twilio.isValidTwilioRequest.restore()
                 })
 
                 it('should call the callback', function() {
@@ -143,6 +146,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
 
                     // Don't actually call Twilio
                     sinon.stub(Twilio, 'sendTwilioResponse')
+                    sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
                     await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
                 })
@@ -151,7 +155,9 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                     this.braveAlerter.getAlertSessionByPhoneNumber.restore()
                     this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
                     this.braveAlerter.alertSessionChangedCallback.restore()
+
                     Twilio.sendTwilioResponse.restore()
+                    Twilio.isValidTwilioRequest.restore()
                 })
 
                 it('should log the error', function() {
@@ -193,6 +199,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
 
                 // Don't actually call Twilio
                 sinon.stub(Twilio, 'sendTwilioResponse')
+                sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
                 await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
             })
@@ -201,7 +208,9 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
                 this.braveAlerter.getAlertSessionByPhoneNumber.restore()
                 this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
                 this.braveAlerter.alertSessionChangedCallback.restore()
+
                 Twilio.sendTwilioResponse.restore()
+                Twilio.isValidTwilioRequest.restore()
             })
 
             it('should log the error', function() {
@@ -388,6 +397,69 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', function() {
 
         it('should return 400', function () {
             expect(this.fakeExpressResponse.status).to.be.calledWith(400)
+        })
+    })
+
+    describe('if request does not come from Twilio', function() {
+        beforeEach(async function() {
+            const validRequest = {
+                body: {
+                    From: '+11231231234',
+                    To: '+11231231234',
+                    Body: 'fake body',
+                }
+            }
+
+            this.fakeExpressResponse = mockResponse()
+
+            // Don't actually call braveAlerter methods
+            this.braveAlerter = new BraveAlerter(
+                dummyGetAlertSession,
+                dummyGetAlertSessionByPhoneNumber,
+                dummyAlertSessionChangedCallback,
+            )
+            sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(
+                new AlertSession(
+                    'guid-123', 
+                    ALERT_STATE.WAITING_FOR_DETAILS, 
+                    '3', 
+                    'my details', 
+                    'my fallback message', 
+                    '+11231231234', 
+                    ['3'],
+                    ['three'],
+                )
+            )
+            sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+                nextAlertState: ALERT_STATE.COMPLETED,
+                incidentCategoryKey: '2',
+                details: 'new details',
+                returnMessage: 'return message',
+            })
+            sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
+
+            // Don't actually call Twilio
+            sinon.stub(Twilio, 'sendTwilioResponse')
+            sinon.stub(Twilio, 'isValidTwilioRequest').returns(false)
+
+            await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
+        })
+
+        afterEach(function() {
+            this.braveAlerter.getAlertSessionByPhoneNumber.restore()
+            this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
+            this.braveAlerter.alertSessionChangedCallback.restore()
+
+            Twilio.sendTwilioResponse.restore()
+            Twilio.isValidTwilioRequest.restore()
+        })
+
+        it('should log the error', function() {
+            expect(helpers.log).to.be.calledWith('Bad request: Sender is not Twilio')
+        })
+
+        it('should return 401', function () {
+            expect(this.fakeExpressResponse.status).to.be.calledWith(401)
         })
     })
 })

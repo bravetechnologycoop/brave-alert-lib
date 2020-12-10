@@ -9,6 +9,7 @@ const sinonChai = require("sinon-chai");
 const AlertSession = require('../../lib/alertSession.js')
 const ALERT_STATE = require('./../../lib/alertStateEnum.js')
 const BraveAlerter = require ('./../../lib/braveAlerter.js')
+const Twilio = require('./../../lib/twilio.js')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
@@ -66,6 +67,8 @@ describe('happy path integration test: responder responds right away and provide
         sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(this.currentAlertSession)
         sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
+        sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
+
         this.app = express()
         this.app.use(this.braveAlerter.getRouter())
     })
@@ -76,6 +79,8 @@ describe('happy path integration test: responder responds right away and provide
         this.braveAlerter.alertSessionChangedCallback.restore()
 
         this.clock.restore()
+
+        Twilio.isValidTwilioRequest.restore()
     })
 
     it('', async function() {
