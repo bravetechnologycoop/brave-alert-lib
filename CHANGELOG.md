@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2021-01-07
+### Security
+- Update Twilio to include latest version of axios (CU-j6yuzk).
+
 ## [2.1.0] - 2020-12-11
 ### Security
 - Add Twilio validation to make sure that post requests are coming from Twilio and relevant tests (CU-dgmfbv).
@@ -43,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README.
 
 
-[Unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v0.1.0...v1.0.0
