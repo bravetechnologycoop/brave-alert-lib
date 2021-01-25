@@ -2,50 +2,58 @@ const expect = require('chai').expect
 const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 
-const BraveAlerter = require('../../../lib/braveAlerter.js')
-const helpers = require('../../../lib/helpers.js')
+const BraveAlerter = require('../../../lib/braveAlerter')
+const helpers = require('../../../lib/helpers')
 
-const dummyGetAlertSession = function() { return 'getAlertSession' }
-const dummyGetAlertSessionByPhoneNumber = function() { return 'getAlertSessionByPhoneNumber' }
-const dummyAlertSessionChangedCallback = function() { return 'alertSessionChangedCallback' }
-const dummyGetReturnMessage = function() { return 'getReturnMessage' }
+function dummyGetAlertSession() {
+  return 'getAlertSession'
+}
 
-describe('braveAlerter.js unit tests: constructor', function () {
-    beforeEach(function() {
-        // Don't actually log
-        sinon.stub(helpers, 'log')
+function dummyGetAlertSessionByPhoneNumber() {
+  return 'getAlertSessionByPhoneNumber'
+}
 
-        this.braveAlerter = new BraveAlerter(
-            dummyGetAlertSession,
-            dummyGetAlertSessionByPhoneNumber,
-            dummyAlertSessionChangedCallback,
-            true,
-            dummyGetReturnMessage,
-        )
-    })
+function dummyAlertSessionChangedCallback() {
+  return 'alertSessionChangedCallback'
+}
 
-    afterEach(function() {
-        helpers.log.restore()
-    })
+function dummyGetReturnMessage() {
+  return 'getReturnMessage'
+}
 
-    it('should be able to call the functions set by in the constructor', function () {
-        const result = 
-            this.braveAlerter.getAlertSession() + ' ' +
-            this.braveAlerter.getAlertSessionByPhoneNumber() + ' ' +
-            this.braveAlerter.alertSessionChangedCallback()
+describe('braveAlerter.js unit tests: constructor', () => {
+  beforeEach(() => {
+    // Don't actually log
+    sinon.stub(helpers, 'log')
 
-        expect(result).to.equal('getAlertSession getAlertSessionByPhoneNumber alertSessionChangedCallback')
-    })
+    this.braveAlerter = new BraveAlerter(
+      dummyGetAlertSession,
+      dummyGetAlertSessionByPhoneNumber,
+      dummyAlertSessionChangedCallback,
+      true,
+      dummyGetReturnMessage,
+    )
+  })
 
-    it('should initialize the router', function() {
-        expect(this.braveAlerter.router).to.not.be.undefined
-    })
+  afterEach(() => {
+    helpers.log.restore()
+  })
 
-    it('should initialize the state machine with whether to ask for incident details', function() {
-        expect(this.braveAlerter.alertStateMachine.asksIncidentDetails).to.be.true
-    })
+  it('should be able to call the functions set by in the constructor', () => {
+    const result = `${this.braveAlerter.getAlertSession()} ${this.braveAlerter.getAlertSessionByPhoneNumber()} ${this.braveAlerter.alertSessionChangedCallback()}`
 
-    it('should initialize the state machine with the function to get the return messages', function() {
-        expect(this.braveAlerter.alertStateMachine.getReturnMessage()).to.equal('getReturnMessage')
-    })
+    expect(result).to.equal('getAlertSession getAlertSessionByPhoneNumber alertSessionChangedCallback')
+  })
+
+  it('should initialize the router', () => {
+    expect(this.braveAlerter.router).to.not.be.undefined
+  })
+
+  it('should initialize the state machine with whether to ask for incident details', () => {
+    expect(this.braveAlerter.alertStateMachine.asksIncidentDetails).to.be.true
+  })
+
+  it('should initialize the state machine with the function to get the return messages', () => {
+    expect(this.braveAlerter.alertStateMachine.getReturnMessage()).to.equal('getReturnMessage')
+  })
 })

@@ -2,59 +2,59 @@ const chai = require('chai')
 const expect = require('chai').expect
 const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
-const sinonChai = require("sinon-chai");
+const sinonChai = require('sinon-chai')
 
-const BraveAlerter = require('../../../lib/braveAlerter.js')
-const helpers = require('../../../lib/helpers.js')
-const Twilio = require ('../../../lib/twilio.js')
+const BraveAlerter = require('../../../lib/braveAlerter')
+const helpers = require('../../../lib/helpers')
+const Twilio = require('../../../lib/twilio')
 
 chai.use(sinonChai)
 
-describe('braveAlerter.js unit tests: sendSingleAlert', function() {
-    beforeEach(function() {
-        // Don't actually log
-        sinon.stub(helpers, 'log')
+describe('braveAlerter.js unit tests: sendSingleAlert', () => {
+  beforeEach(() => {
+    // Don't actually log
+    sinon.stub(helpers, 'log')
+  })
+
+  afterEach(() => {
+    helpers.log.restore()
+  })
+
+  describe('if successfully sends the alert', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sinon.stub(Twilio, 'sendTwilioMessage')
+
+      const braveAlerter = new BraveAlerter()
+
+      await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
     })
 
-    afterEach(function() {
-        helpers.log.restore()
+    afterEach(() => {
+      Twilio.sendTwilioMessage.restore()
     })
 
-    describe('if successfully sends the alert', function() {
-        beforeEach(async function() {
-            // Don't actually call Twilio
-            sinon.stub(Twilio, 'sendTwilioMessage')
+    it('should send alert', () => {
+      expect(Twilio.sendTwilioMessage).to.be.calledOnce
+    })
+  })
 
-            const braveAlerter = new BraveAlerter()
+  describe('if fails to send the alert', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sinon.stub(Twilio, 'sendTwilioMessage').returns()
 
-            await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
-        })
+      const braveAlerter = new BraveAlerter()
 
-        afterEach(function() {
-            Twilio.sendTwilioMessage.restore()
-        })
-
-        it('should send alert', function() {
-            expect(Twilio.sendTwilioMessage).to.be.calledOnce
-        })
+      await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
     })
 
-    describe('if fails to send the alert', function() {
-        beforeEach(async function() {
-            // Don't actually call Twilio
-            sinon.stub(Twilio, 'sendTwilioMessage').returns()
-
-            const braveAlerter = new BraveAlerter()
-
-            await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
-        })
-
-        afterEach(function() {
-            Twilio.sendTwilioMessage.restore()
-        })
-
-        it('should log the response error', function() {
-            expect(helpers.log).to.be.calledWith('Failed to send single alert: My message')
-        })
+    afterEach(() => {
+      Twilio.sendTwilioMessage.restore()
     })
+
+    it('should log the response error', () => {
+      expect(helpers.log).to.be.calledWith('Failed to send single alert: My message')
+    })
+  })
 })

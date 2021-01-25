@@ -4,7 +4,6 @@
 
 Library to communicate with responders and staff when action is required.
 
-
 # Prerequisites
 
 1. Must have a `.env` file containing following environment variables:
@@ -12,7 +11,6 @@ Library to communicate with responders and staff when action is required.
    - `TWILIO_SID_TEST`: The Twilio SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
-
 
 # How to setup a local dev environment
 
@@ -25,7 +23,6 @@ Library to communicate with responders and staff when action is required.
 1. run `npm run lint` to run the linter
 
 1. run `npm test` to run the tests
-
 
 # How to add or change an encrypted Travis environment variable
 
@@ -42,25 +39,23 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 1. Copy the encrypted variable into `.travis.yml`
 
-
 # How to use this library in another code base
 
-1. if you are upgrading from a previous version of `brave-alert-lib`, run `npm uninstall brave-alert-lib` to remove it
-from `package.json` and `package-lock.json`
+1.  if you are upgrading from a previous version of `brave-alert-lib`, run `npm uninstall brave-alert-lib` to remove it
+    from `package.json` and `package-lock.json`
 
-1. in the `package.json` file of the other code base, add the following where `VERSION` is the tag that you've chosen
-(for example `v0.1.0`):
+1.  in the `package.json` file of the other code base, add the following where `VERSION` is the tag that you've chosen
+    (for example `v0.1.0`):
 
-    ```
-    "dependencies": {
-        ...
-        "brave-alert-lib": "https://github.com/bravetechnologycoop/brave-alert-lib#<VERSION>",
-        ...
-    }
-    ```
+        ```
+        "dependencies": {
+            ...
+            "brave-alert-lib": "https://github.com/bravetechnologycoop/brave-alert-lib#<VERSION>",
+            ...
+        }
+        ```
 
-1. Run `npm install` to download the library and include it in `package-lock.json`
-
+1.  Run `npm install` to download the library and include it in `package-lock.json`
 
 # API
 
@@ -80,7 +75,6 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
-
 ### getRouter()
 
 The BraveAlerter's Express Router contains the route `POST /alert/sms` that can be added to an existing Express app by:
@@ -96,7 +90,6 @@ Generally, a call to the `POST /alert/sms` endpoint results in a call to the Bra
 
 **Returns:** The BraveAlerter's Express Router
 
-
 ### sendSingleAlert(toPhoneNumber, fromPhoneNumber, message)
 
 Sends the given `message` to the `toPhoneNumber` from the `fromPhoneNumber`.
@@ -108,7 +101,6 @@ Sends the given `message` to the `toPhoneNumber` from the `fromPhoneNumber`.
 **message (string):** The message to send
 
 **Returns:** A promise that is resolved when the message is sent.
-
 
 ### startAlertSession(alertInfo)
 
@@ -135,7 +127,6 @@ Starts a full alert session configured with the given `alertInfo` object.
 **alertInfo.fallbackFromPhoneNumber (string):** The phone number to send fallback text messages from
 
 **Returns:** A promise that is resolved when the first message is sent, the reminder is scheduled, and the fallback is scheduled.
-
 
 ## `AlertSession` class
 
@@ -167,21 +158,18 @@ human-readable DB value for the `validIncidentCategoryKeys[i]` value given by th
 
 ```
 ['1', '2', '3', '4']
-````
+```
 
 Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
 human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
-
 
 ## `ALERT_STATE` enum
 
 An enum of the possible states the Alert Session could be in at any given time.
 
-
 ## `helpers` functions
 
 A collection of functions that are useful across the Brave NodeJS applications.
-
 
 ### getEnvVars(name)
 
@@ -190,7 +178,6 @@ In the test environment, returns the test version of the environment variable wi
 **name (string):** the name of the environment variable
 
 **Returns:** the correct environment variable for the situation.
-
 
 ### isTestEnvironment()
 
@@ -206,8 +193,7 @@ Determines whether the given Express request is valid if the given set of proper
 
 **properties (Array of strings):** the body parameters that must be given in the request in order for it to be valid.
 
-**Returns:** `true` if the given request's body contains all of the given properties. `false` otherwise. 
-
+**Returns:** `true` if the given request's body contains all of the given properties. `false` otherwise.
 
 ### log(logString)
 
@@ -216,7 +202,6 @@ Logs the given string as appropriate for the situation.
 **logString (string):** The string to log
 
 **Returns:** nothing
-
 
 ### sleep(millis)
 
