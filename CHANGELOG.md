@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `helpers.logError` function that will output to `console.error` with the same format at `helpers.log` (CU-jcuw85).
+
 ### Changed
 
 - Use Brave-wide ESLint and Prettier configuration (CU-eprhhn).
