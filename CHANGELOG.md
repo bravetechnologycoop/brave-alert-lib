@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2021-02-11
+
 ### Added
 
 - `helpers.logError` function that will output to `console.error` with the same format at `helpers.log` (CU-jcuw85).
@@ -65,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[Unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v1.0.0...v2.0.0
