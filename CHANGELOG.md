@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Timestamps from production out and error logs (CU-jcuw85).
+
 ## [2.3.0] - 2021-02-11
 
 ### Added

@@ -195,9 +195,17 @@ Determines whether the given Express request is valid if the given set of proper
 
 **Returns:** `true` if the given request's body contains all of the given properties. `false` otherwise.
 
+### logError(logString)
+
+Logs the given string to stderr as appropriate for the situation.
+
+**logString (string):** The string to log
+
+**Returns:** nothing
+
 ### log(logString)
 
-Logs the given string as appropriate for the situation.
+Logs the given string to stdout as appropriate for the situation.
 
 **logString (string):** The string to log
 
