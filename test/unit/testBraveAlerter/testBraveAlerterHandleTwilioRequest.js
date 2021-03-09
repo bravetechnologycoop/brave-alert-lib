@@ -222,7 +222,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
   describe('if missing the Body request parameter', () => {
     beforeEach(async () => {
-      const validRequest = {
+      const inValidRequest = {
         body: {
           From: '+11231231234',
           To: '+11231231234',
@@ -249,7 +249,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call Twilio
       sinon.stub(Twilio, 'sendTwilioResponse')
 
-      await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
+      await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
 
     afterEach(() => {
@@ -270,7 +270,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
   describe('if missing the From request parameter', () => {
     beforeEach(async () => {
-      const validRequest = {
+      const inValidRequest = {
         body: {
           To: '+11231231234',
           Body: 'fake body',
@@ -297,7 +297,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call Twilio
       sinon.stub(Twilio, 'sendTwilioResponse')
 
-      await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
+      await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
 
     afterEach(() => {
@@ -318,7 +318,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
   describe('if missing the To request parameter', () => {
     beforeEach(async () => {
-      const validRequest = {
+      const inValidRequest = {
         body: {
           From: '+11231231234',
           Body: 'fake body',
@@ -345,7 +345,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call Twilio
       sinon.stub(Twilio, 'sendTwilioResponse')
 
-      await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
+      await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
 
     afterEach(() => {
