@@ -1,11 +1,15 @@
-const alertSession = require('./lib/alertSession')
 const ALERT_STATE = require('./lib/alertStateEnum')
-const braveAlerter = require('./lib/braveAlerter')
+const AlertSession = require('./lib/alertSession')
+const BraveAlerter = require('./lib/braveAlerter')
 const helpers = require('./lib/helpers')
+const Location = require('./lib/location')
+const SYSTEM = require('./lib/systemEnum')
 
 module.exports = {
-  BraveAlerter: braveAlerter,
-  AlertSession: alertSession,
   ALERT_STATE,
+  AlertSession,
+  BraveAlerter,
   helpers,
+  Location,
+  SYSTEM,
 }

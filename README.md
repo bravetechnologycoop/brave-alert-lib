@@ -63,7 +63,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, asksIncidentDetails, getReturnMessage)
+### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, asksIncidentDetails, getReturnMessage)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given sessionId
 
@@ -71,13 +71,37 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB
 
+**getLocationByAlertApiKey (async function(alertApiKey)):** function that returns the `Location` object whose Alert API Key matches the given `alertApiKey`, or `null` if there is no match
+
 **asksIncidentDetails (boolean):** `true` if alert sessions should ask for incident details, `false` otherwise
 
 **getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
 ### getRouter()
 
-The BraveAlerter's Express Router contains the route `POST /alert/sms` that can be added to an existing Express app by:
+The BraveAlerter's Express Router contains the routes
+
+- `POST /alert/sms`
+
+    Generally, a call to the `POST /alert/sms` endpoint results in a call to the BraveAlerter's `alertSessionChangedCallback` with an `AlertSession` object as a parameter. The `AlertSession.sessionId` field will always be present. Other fields will only be present if they have updated. This parameter should be used to update the session's DB.
+
+- `POST /alert/designatedevice`
+
+    Expects the header to contain `X-API-KEY`.
+
+    Expects the body to contain `verificationCode`.
+
+    Prints the Alert API key and verificiation code to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key to the DB.
+
+    On success, returns `200` and the body `'OK'`.
+
+- `GET /alert/location`
+
+    Expects the header to contain `X-API-KEY`.
+
+    On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
+
+which can be added to an existing Express app by:
 
 ```
 const BraveAlerter = require('brave-alert-lib')
@@ -85,8 +109,6 @@ let express = require('express')
 const braveAlerter = new BraveAlerter(...)
 express.use(braveAlerter.getRouter())
 ```
-
-Generally, a call to the `POST /alert/sms` endpoint results in a call to the BraveAlerter's `alertSessionChangedCallback` with an `AlertSession` object as a parameter. The `AlertSession.sessionId` field will always be present. Other fields will only be present if they have updated. This parameter should be used to update the session's DB.
 
 **Returns:** The BraveAlerter's Express Router
 

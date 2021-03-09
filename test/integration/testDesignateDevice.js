@@ -1,0 +1,122 @@
+const { expect, assert } = require('chai')
+const { afterEach, beforeEach, describe, it } = require('mocha')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+const express = require('express')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+
+const helpers = require('../../lib/helpers')
+const BraveAlerter = require('../../lib/braveAlerter')
+
+chai.use(chaiHttp)
+chai.use(sinonChai)
+
+describe('designateDevice.js integration tests: handleDesignateDevice', () => {
+  beforeEach(() => {
+    this.braveAlerter = new BraveAlerter()
+
+    this.app = express()
+    this.app.use(this.braveAlerter.getRouter())
+
+    sinon.stub(helpers, 'log')
+  })
+
+  afterEach(() => {
+    helpers.log.restore()
+  })
+
+  describe('given valid request parameters', () => {
+    beforeEach(async () => {
+      this.response = await chai
+        .request(this.app)
+        .post('/alert/designatedevice')
+        .set('X-API-KEY', '00000000-000000000000000')
+        .send({ verificationCode: 'ABC123' })
+    })
+
+    it('should log the verification code and Alert API Key', () => {
+      expect(helpers.log).to.be.calledWith('************* Verification Code: ABC123 Alert API Key: 00000000-000000000000000')
+    })
+
+    it('should return a JSON response body', async () => {
+      try {
+        JSON.parse(this.response.body)
+      } catch (e) {
+        assert.fail('Getting the JSON string should not throw an error. Make sure that your response is sent with ".json(JSON.stringify(...))"')
+      }
+    })
+
+    it('should return 200', () => {
+      expect(this.response.status).to.equal(200)
+    })
+  })
+
+  describe('given that verificationCode is missing', () => {
+    beforeEach(async () => {
+      this.response = await chai.request(this.app).post('/alert/designatedevice').set('X-API-KEY', '00000000-000000000000000').send({})
+    })
+
+    it('should log the error', () => {
+      expect(helpers.log).to.be.calledWith(
+        'Bad request to /alert/designatedevice: {"errors":[{"msg":"Invalid value","param":"verificationCode","location":"body"}]}',
+      )
+    })
+
+    it('should return 400', () => {
+      expect(this.response.status).to.equal(400)
+    })
+  })
+
+  describe('given that verificationCode is blank', () => {
+    beforeEach(async () => {
+      this.response = await chai
+        .request(this.app)
+        .post('/alert/designatedevice')
+        .set('X-API-KEY', '00000000-000000000000000')
+        .send({ verificationCode: '' })
+    })
+
+    it('should log the error', () => {
+      expect(helpers.log).to.be.calledWith(
+        'Bad request to /alert/designatedevice: {"errors":[{"value":"","msg":"Invalid value","param":"verificationCode","location":"body"}]}',
+      )
+    })
+
+    it('should return 400', () => {
+      expect(this.response.status).to.equal(400)
+    })
+  })
+
+  describe('given that the API key is missing', () => {
+    beforeEach(async () => {
+      this.response = await chai.request(this.app).post('/alert/designatedevice').send({ verificationCode: 'ABC123' })
+    })
+
+    it('should log the error', () => {
+      expect(helpers.log).to.be.calledWith(
+        'Bad request to /alert/designatedevice: {"errors":[{"msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
+      )
+    })
+
+    it('should return 400', () => {
+      expect(this.response.status).to.equal(400)
+    })
+  })
+
+  describe('given that the API key is blank', () => {
+    beforeEach(async () => {
+      this.response = await chai.request(this.app).post('/alert/designatedevice').set('X-API-KEY', '').send({ verificationCode: 'ABC123' })
+    })
+
+    it('should log the error', () => {
+      expect(helpers.log).to.be.calledWith(
+        'Bad request to /alert/designatedevice: {"errors":[{"value":"","msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
+      )
+    })
+
+    it('should return 400', () => {
+      expect(this.response.status).to.equal(400)
+    })
+  })
+})
