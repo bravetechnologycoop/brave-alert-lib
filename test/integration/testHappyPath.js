@@ -26,6 +26,10 @@ function dummyAlertSessionChangedCallback() {
   return 'alertSessionChangedCallback'
 }
 
+function dummyGetLocationData() {
+  return 'getLocationData'
+}
+
 function dummyGetRetunMessages(fromAlertState, toAlertState) {
   return `${fromAlertState} --> ${toAlertState}`
 }
@@ -68,6 +72,7 @@ describe('happy path integration test: responder responds right away and provide
       dummyGetAlertSession,
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
+      dummyGetLocationData,
       true,
       dummyGetRetunMessages,
     )

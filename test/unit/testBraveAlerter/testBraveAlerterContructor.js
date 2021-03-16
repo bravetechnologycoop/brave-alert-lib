@@ -17,6 +17,10 @@ function dummyAlertSessionChangedCallback() {
   return 'alertSessionChangedCallback'
 }
 
+function dummyGetLocationData() {
+  return 'getLocationData'
+}
+
 function dummyGetReturnMessage() {
   return 'getReturnMessage'
 }
@@ -30,6 +34,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       dummyGetAlertSession,
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
+      dummyGetLocationData,
       true,
       dummyGetReturnMessage,
     )

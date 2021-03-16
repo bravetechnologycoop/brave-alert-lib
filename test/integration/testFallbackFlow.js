@@ -26,6 +26,10 @@ function dummyAlertSessionChangedCallback() {
   return 'alertSessionChangedCallback'
 }
 
+function dummyGetLocationData() {
+  return 'getLocationData'
+}
+
 function dummyGetRetunMessages(fromAlertState, toAlertState) {
   return `${fromAlertState} --> ${toAlertState}`
 }
@@ -64,6 +68,7 @@ describe('fallback flow: responder never responds so fallback message is sent to
       dummyGetAlertSession,
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
+      dummyGetLocationData,
       true,
       dummyGetRetunMessages,
     )
