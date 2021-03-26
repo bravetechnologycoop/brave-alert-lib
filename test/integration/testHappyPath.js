@@ -46,7 +46,7 @@ const initialAlertInfo = {
   fallbackTimeoutMillis: 5 * 60 * 1000, // 5 minutes
   reminderMessage: 'Reminder message',
   fallbackMessage: 'Fallback message',
-  fallbackToPhoneNumber: '+17778889999',
+  fallbackToPhoneNumbers: ['+17778889999'],
   fallbackFromPhoneNumber: '+13336669999',
 }
 

@@ -202,11 +202,11 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       this.clock = sinon.useFakeTimers()
 
       this.braveAlerter = new BraveAlerter()
-      sinon.stub(this.braveAlerter, 'sendFallbackMessageForSession')
+      sinon.stub(this.braveAlerter, 'sendFallbackMessagesForSession')
     })
 
     afterEach(() => {
-      this.braveAlerter.sendFallbackMessageForSession.restore()
+      this.braveAlerter.sendFallbackMessagesForSession.restore()
 
       this.clock.restore()
     })
@@ -218,7 +218,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
       this.clock.tick(2)
 
-      expect(this.braveAlerter.sendFallbackMessageForSession).to.be.calledOnce
+      expect(this.braveAlerter.sendFallbackMessagesForSession).to.be.calledOnce
     })
 
     it('negative should not send a fallback alert', async () => {
@@ -228,7 +228,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
       this.clock.tick(2)
 
-      expect(this.braveAlerter.sendFallbackMessageForSession).not.to.be.called
+      expect(this.braveAlerter.sendFallbackMessagesForSession).not.to.be.called
     })
 
     it('not given should not send a fallback alert', async () => {
@@ -237,7 +237,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
       this.clock.tick(2)
 
-      expect(this.braveAlerter.sendFallbackMessageForSession).not.to.be.called
+      expect(this.braveAlerter.sendFallbackMessagesForSession).not.to.be.called
     })
   })
 })

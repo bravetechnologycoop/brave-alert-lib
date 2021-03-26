@@ -44,11 +44,11 @@ const initialAlertInfo = {
   fallbackTimeoutMillis: 3000, // 3 seconds
   reminderMessage: 'Reminder message',
   fallbackMessage: 'Fallback message',
-  fallbackToPhoneNumber: '+15147332272',
+  fallbackToPhoneNumbers: ['+15147332272', '+15146141784'],
   fallbackFromPhoneNumber: '+15005550006',
 }
 
-describe('fallback flow: responder never responds so fallback message is sent to manager', () => {
+describe('fallback flow: responder never responds so fallback message is sent to manager(s)', () => {
   beforeEach(() => {
     this.currentAlertSession = new AlertSession(
       sessionId,
@@ -97,12 +97,12 @@ describe('fallback flow: responder never responds so fallback message is sent to
 
     this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_REPLY
 
-    // Wait for the fallback to send
+    // Wait for the fallbacks to send
     await helpers.sleep(3000)
 
-    // Expect the fallback return message from a successful Twilio request to be 'queued'
+    // Expect the fallback return messages from a successful Twilio request to be 'queued' for each phone number
     expect(this.braveAlerter.alertSessionChangedCallback.getCall(2).args[0]).to.eql(
-      new AlertSession(sessionId, undefined, undefined, undefined, 'queued'),
+      new AlertSession(sessionId, undefined, undefined, undefined, 'queued, queued'),
     )
   })
 })
