@@ -122,7 +122,7 @@ Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.fallbackMessage (string):** Message for the fallback
 
-**alertInfo.fallbackToPhoneNumber (string):** The phone number to send fallback text messages to
+**alertInfo.fallbackToPhoneNumbers (array of strings):** The phone numbers to send fallback text messages to
 
 **alertInfo.fallbackFromPhoneNumber (string):** The phone number to send fallback text messages from
 
