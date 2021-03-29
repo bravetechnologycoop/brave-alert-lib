@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-03-29
+
 ### Changed
 
 - Alert Sessions expect an array of fallback phone numbers, which will all be messaged simultaneously after the fallback timeout (CU-pv8hd5).
@@ -77,7 +79,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v3.0.0...HEAD
+[2.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.4.0...v3.0.0
 [2.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.1.0...v2.2.0
