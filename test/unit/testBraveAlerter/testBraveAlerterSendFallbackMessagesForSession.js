@@ -23,11 +23,11 @@ function dummyGetAlertSessionByPhoneNumber() {
 describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   beforeEach(() => {
     // Don't actually log
-    sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('if AlertSession is waiting for a response', () => {
@@ -223,7 +223,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Failed to send any fallbacks for session guid-123')
+      expect(helpers.logError).to.be.calledWith('Failed to send any fallbacks for session guid-123')
     })
   })
 

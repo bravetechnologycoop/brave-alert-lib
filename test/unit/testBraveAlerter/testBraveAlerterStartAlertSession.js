@@ -23,11 +23,11 @@ function dummyGetAlertSessionByPhoneNumber() {
 describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   beforeEach(() => {
     // Don't actually log
-    sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('if there is toPhoneNumber and fromPhoneNumber', () => {
@@ -149,7 +149,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Failed to send alert for session guid-123')
+      expect(helpers.logError).to.be.calledWith('Failed to send alert for session guid-123')
     })
   })
 
