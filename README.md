@@ -197,7 +197,7 @@ Determines whether the given Express request is valid if the given set of proper
 
 ### logError(logString)
 
-Logs the given string to stderr as appropriate for the situation.
+Logs the given string to stderr as appropriate for the situation. Also forwards the error to Sentry.
 
 **logString (string):** The string to log
 
@@ -211,6 +211,14 @@ Logs the given string to stdout as appropriate for the situation.
 
 **Returns:** nothing
 
+### logSentry(logString)
+
+Logs the given string to stdout as appropriate for the situation. Also forwards the string to Sentry.
+
+**logString (string):** The string to log
+
+**Returns:** nothing
+
 ### sleep(millis)
 
 Sleep for the given number of milliseconds. Must use `await` when calling this function, so much be called from an `async` function. Reference: https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
@@ -218,3 +226,18 @@ Sleep for the given number of milliseconds. Must use `await` when calling this f
 **millis (int):** The number of milliseconds to sleep for
 
 **Returns:** a promise that will resolve after the given number of milliseconds
+
+### setupSentry(app, dsn, environment, release)
+
+Set up Sentry for tracking errors and outages. NOTE: this needs to be called *after* all other app.use() calls
+
+**app (express()):** The express instance that you want to track errors in
+
+**dsnString (string):** The Sentry data source name you'd like to connect to
+
+**env (string):** The environment you are tracking errors in
+
+**releaseName (string):** The name of the release you are tracking errors for
+
+**Returns:** nothing
+
