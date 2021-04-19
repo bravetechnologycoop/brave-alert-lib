@@ -39,11 +39,11 @@ describe('twilio.js integration tests:', () => {
 
       beforeEach(() => {
         // Do not actually log
-        sinon.stub(helpers, 'log')
+        sinon.stub(helpers, 'logError')
       })
 
       afterEach(() => {
-        helpers.log.restore()
+        helpers.logError.restore()
       })
 
       it('should return nothing', async () => {
@@ -55,7 +55,7 @@ describe('twilio.js integration tests:', () => {
       it('should log an error', async () => {
         await twilio.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
 
-        expect(helpers.log.getCall(0).args[0]).matches(/^Error/)
+        expect(helpers.logError.getCall(0).args[0]).matches(/^Error/)
       })
     })
   })

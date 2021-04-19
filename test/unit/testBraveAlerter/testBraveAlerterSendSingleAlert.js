@@ -13,11 +13,11 @@ chai.use(sinonChai)
 describe('braveAlerter.js unit tests: sendSingleAlert', () => {
   beforeEach(() => {
     // Don't actually log
-    sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('if successfully sends the alert', () => {
@@ -54,7 +54,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     })
 
     it('should log the response error', () => {
-      expect(helpers.log).to.be.calledWith('Failed to send single alert: My message')
+      expect(helpers.logError).to.be.calledWith('Failed to send single alert: My message')
     })
   })
 })
