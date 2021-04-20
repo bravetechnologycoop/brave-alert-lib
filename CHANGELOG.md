@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `POST /alert/designatedevice` endpoint (CU-hjwazd).
 - `GET /alert/location` endpoint (CU-hjwazd).
+- A helper function to format Express Validation errors.
 
 ## [3.1.0] - 2021-04-30
 

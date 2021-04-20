@@ -20,10 +20,12 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     this.app.use(this.braveAlerter.getRouter())
 
     sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
     helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('given valid request parameters', () => {
@@ -58,9 +60,7 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/designatedevice: {"errors":[{"msg":"Invalid value","param":"verificationCode","location":"body"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/designatedevice: verificationCode (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -78,9 +78,7 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/designatedevice: {"errors":[{"value":"","msg":"Invalid value","param":"verificationCode","location":"body"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/designatedevice: verificationCode (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -94,9 +92,7 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/designatedevice: {"errors":[{"msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/designatedevice: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -110,9 +106,7 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/designatedevice: {"errors":[{"value":"","msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/designatedevice: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {

@@ -83,23 +83,23 @@ The BraveAlerter's Express Router contains the routes
 
 - `POST /alert/sms`
 
-    Generally, a call to the `POST /alert/sms` endpoint results in a call to the BraveAlerter's `alertSessionChangedCallback` with an `AlertSession` object as a parameter. The `AlertSession.sessionId` field will always be present. Other fields will only be present if they have updated. This parameter should be used to update the session's DB.
+  Generally, a call to the `POST /alert/sms` endpoint results in a call to the BraveAlerter's `alertSessionChangedCallback` with an `AlertSession` object as a parameter. The `AlertSession.sessionId` field will always be present. Other fields will only be present if they have updated. This parameter should be used to update the session's DB.
 
 - `POST /alert/designatedevice`
 
-    Expects the header to contain `X-API-KEY`.
+  Expects the header to contain `X-API-KEY`.
 
-    Expects the body to contain `verificationCode`.
+  Expects the body to contain `verificationCode`.
 
-    Prints the Alert API key and verificiation code to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key to the DB.
+  Prints the Alert API key and verificiation code to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key to the DB.
 
-    On success, returns `200` and the body `'OK'`.
+  On success, returns `200` and the body `'OK'`.
 
 - `GET /alert/location`
 
-    Expects the header to contain `X-API-KEY`.
+  Expects the header to contain `X-API-KEY`.
 
-    On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
+  On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
 
 which can be added to an existing Express app by:
 
@@ -192,6 +192,10 @@ An enum of the possible states the Alert Session could be in at any given time.
 ## `helpers` functions
 
 A collection of functions that are useful across the Brave NodeJS applications.
+
+### formatExpressValidationErrors(expressErrorObject)
+
+A function that can be sent as an argument to the Express Validation `formatWith` function (https://express-validator.github.io/docs/validation-result-api.html#formatwithformatter). It takes an Express error object and returns a consistent, readable string to be used for error logs and sending in error HTTP messages.
 
 ### getEnvVars(name)
 

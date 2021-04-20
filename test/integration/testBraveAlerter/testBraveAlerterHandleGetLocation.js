@@ -16,11 +16,11 @@ chai.use(sinonChai)
 
 describe('braveAlerter.js integration tests: handleGetLocation', () => {
   beforeEach(() => {
-    sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('given valid request parameters and a location that corresponds to the API key', () => {
@@ -82,9 +82,7 @@ describe('braveAlerter.js integration tests: handleGetLocation', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/location: {"errors":[{"value":"","msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/location: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -105,9 +103,7 @@ describe('braveAlerter.js integration tests: handleGetLocation', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith(
-        'Bad request to /alert/location: {"errors":[{"msg":"Invalid value","param":"x-api-key","location":"headers"}]}',
-      )
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/location: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {

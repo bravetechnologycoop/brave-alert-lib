@@ -38,10 +38,12 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   beforeEach(() => {
     // Don't actually log
     sinon.stub(helpers, 'log')
+    sinon.stub(helpers, 'logError')
   })
 
   afterEach(() => {
     helpers.log.restore()
+    helpers.logError.restore()
   })
 
   describe('given the required request parameters', () => {
@@ -162,7 +164,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should log the error', () => {
-          expect(helpers.log).to.be.calledWith('Invalid Phone Number')
+          expect(helpers.logError).to.be.calledWith('Bad request to /: Invalid Phone Number')
         })
 
         it('should return 400', () => {
@@ -260,7 +262,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -308,7 +310,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -356,7 +358,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -408,7 +410,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.log).to.be.calledWith('Bad request to /: Sender is not Twilio')
+      expect(helpers.logError).to.be.calledWith('Bad request to /: Sender is not Twilio')
     })
 
     it('should return 401', () => {
