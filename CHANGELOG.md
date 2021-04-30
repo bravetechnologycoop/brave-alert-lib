@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
+
+## [3.1.0] - 2021-04-30
 
 ### Added
 
-- Sentry setup and error tracking
+- Sentry setup and error tracking (CU-32a5wb) (CU-px7k6e)
 
 ## [3.0.0] - 2021-03-29
 
@@ -83,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v3.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v3.1.0...HEAD
+[3.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v3.0.0...v3.1.0
 [2.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.4.0...v3.0.0
 [2.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v2.2.0...v2.3.0
