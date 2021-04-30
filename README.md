@@ -4,6 +4,24 @@
 
 Library to communicate with responders and staff when action is required.
 
+# How to deploy a new version
+
+On your local machine, in the `brave-alert-lib` repository:
+
+1. Pull the latest code for release: `git checkout main && git pull origin main`
+
+1. Decide on an appropriate version number for the new version
+
+1. Update `CHANGELOG.md` by moving everything in `Unreleased` to a section for the new version
+
+1. Update the version in `package.json` and `package-lock.json`
+
+1. Make a new commit directly on `main` with those updates
+
+1. Tag the new commit - for example, if the version number is v1.0.0 use `git tag v1.0.0`
+
+1. Push the new version to GitHub: `git push origin main --tags`
+
 # Prerequisites
 
 1. Must have a `.env` file containing following environment variables:
@@ -28,9 +46,22 @@ Library to communicate with responders and staff when action is required.
 
 Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables
 
-1. Download the Travis CLI `brew install travis` or `gem install travis`
+1. Download the Travis CLI `gem install travis`
 
 1. cd to anywhere in this repo
+
+1. temporarily create a personal access token on GitHub https://github.com/settings/tokens with the following permissions:
+
+   - `repo`
+   - `read:packages`
+   - `read:org`
+   - `read:public_key`
+   - `read:repo_hook`
+   - `user`
+   - `read:discussion`
+   - `read:enterprise`
+
+1. login using `travis login --pro --github-token <token from github>`
 
 1. For a given `VAR_NAME` that you want to have value `secret_value`, run
    `travis encrypt --pro VAR_NAME=secret_value`
@@ -38,6 +69,8 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
    output your encrypted variable
 
 1. Copy the encrypted variable into `.travis.yml`
+
+1. Delete your personal access token from GitHub
 
 # How to use this library in another code base
 
