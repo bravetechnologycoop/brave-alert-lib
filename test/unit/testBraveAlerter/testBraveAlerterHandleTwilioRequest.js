@@ -51,6 +51,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       describe('and the request is from the responder phone', () => {
         beforeEach(async () => {
           const validRequest = {
+            path: '/alert/sms',
             body: {
               From: '+11231231234',
               To: '+11231231234',
@@ -114,6 +115,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       describe('and the request is not from the responder phone', () => {
         beforeEach(async () => {
           const validRequest = {
+            path: '/alert/sms',
             body: {
               From: 'not +11231231234',
               To: '+11231231234',
@@ -164,7 +166,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should log the error', () => {
-          expect(helpers.logError).to.be.calledWith('Bad request to /: Invalid Phone Number')
+          expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Invalid Phone Number')
         })
 
         it('should return 400', () => {
@@ -176,6 +178,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     describe('and there are no open sessions for the phone', () => {
       beforeEach(async () => {
         const validRequest = {
+          path: '/alert/sms',
           body: {
             From: '+11231231234',
             To: '+11231231234',
@@ -225,6 +228,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   describe('if missing the Body request parameter', () => {
     beforeEach(async () => {
       const inValidRequest = {
+        path: '/alert/sms',
         body: {
           From: '+11231231234',
           To: '+11231231234',
@@ -262,7 +266,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -273,6 +277,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   describe('if missing the From request parameter', () => {
     beforeEach(async () => {
       const inValidRequest = {
+        path: '/alert/sms',
         body: {
           To: '+11231231234',
           Body: 'fake body',
@@ -310,7 +315,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -321,6 +326,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   describe('if missing the To request parameter', () => {
     beforeEach(async () => {
       const inValidRequest = {
+        path: '/alert/sms',
         body: {
           From: '+11231231234',
           Body: 'fake body',
@@ -358,7 +364,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /: Body, From, or To fields are missing')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Body, From, or To fields are missing')
     })
 
     it('should return 400', () => {
@@ -369,6 +375,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   describe('if request does not come from Twilio', () => {
     beforeEach(async () => {
       const validRequest = {
+        path: '/alert/sms',
         body: {
           From: '+11231231234',
           To: '+11231231234',
@@ -410,7 +417,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /: Sender is not Twilio')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Sender is not Twilio')
     })
 
     it('should return 401', () => {
