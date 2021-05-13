@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Route in API error messages.
+
 ## [3.2.0] - 2021-05-03
 
 ### Added
@@ -20,8 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Sentry setup and error tracking (CU-32a5wb) (CU-px7k6e).
-
-### Added
 
 ## [3.0.0] - 2021-03-29
 
