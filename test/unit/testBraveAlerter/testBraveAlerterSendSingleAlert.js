@@ -46,7 +46,10 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
 
       const braveAlerter = new BraveAlerter()
 
-      await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
+      this.toNumber = '+11231231234'
+      this.fromNumber = '+18885552222'
+      this.message = 'My message'
+      await braveAlerter.sendSingleAlert(this.toNumber, this.fromNumber, this.message)
     })
 
     afterEach(() => {
@@ -54,7 +57,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     })
 
     it('should log the response error', () => {
-      expect(helpers.logError).to.be.calledWith('Failed to send single alert: My message')
+      expect(helpers.logError).to.be.calledWith(`Failed to send single alert to ${this.toNumber} from ${this.fromNumber}: ${this.message}`)
     })
   })
 })

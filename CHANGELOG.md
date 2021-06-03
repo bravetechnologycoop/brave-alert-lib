@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Mocha debugging configuration.
+- `GET /alert/historicAlerts` endpoint (CU-hjwfx2).
+
+### Changed
+
+- Added more detail to API error messages.
 
 ## [3.3.0] - 2021-05-27
 

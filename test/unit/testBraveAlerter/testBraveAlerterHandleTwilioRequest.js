@@ -114,10 +114,13 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
       describe('and the request is not from the responder phone', () => {
         beforeEach(async () => {
-          const validRequest = {
+          this.invalidFromNumber = 'not +11231231234'
+          this.guid = 'guid-123'
+
+          const invalidRequest = {
             path: '/alert/sms',
             body: {
-              From: 'not +11231231234',
+              From: this.invalidFromNumber,
               To: '+11231231234',
               Body: 'fake body',
             },
@@ -131,7 +134,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
             .returns(
               new AlertSession(
-                'guid-123',
+                this.guid,
                 ALERT_STATE.WAITING_FOR_DETAILS,
                 '3',
                 'my details',
@@ -153,7 +156,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           sinon.stub(Twilio, 'sendTwilioResponse')
           sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
-          await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleTwilioRequest(invalidRequest, this.fakeExpressResponse)
         })
 
         afterEach(() => {
@@ -166,7 +169,9 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should log the error', () => {
-          expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Invalid Phone Number')
+          expect(helpers.logError).to.be.calledWith(
+            `Bad request to /alert/sms: ${this.invalidFromNumber} is not the responder phone for ${this.guid}`,
+          )
         })
 
         it('should return 400', () => {
@@ -177,12 +182,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
     describe('and there are no open sessions for the phone', () => {
       beforeEach(async () => {
+        this.fromNumber = '+11231231234'
+        this.toNumber = '+19995554444'
+        this.body = 'fake body'
+
         const validRequest = {
           path: '/alert/sms',
           body: {
-            From: '+11231231234',
-            To: '+11231231234',
-            Body: 'fake body',
+            From: this.fromNumber,
+            To: this.toNumber,
+            Body: this.body,
           },
         }
 
@@ -216,7 +225,9 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       it('should log the error', () => {
-        expect(helpers.log).to.be.calledWith('Received twilio message with no corresponding open session: fake body')
+        expect(helpers.log).to.be.calledWith(
+          `Received twilio message from ${this.fromNumber} to ${this.toNumber} with no corresponding open session: ${this.body}`,
+        )
       })
 
       it('should return 200', () => {
@@ -374,11 +385,13 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
   describe('if request does not come from Twilio', () => {
     beforeEach(async () => {
+      this.fromNumber = '+11231231234'
+
       const validRequest = {
         path: '/alert/sms',
         body: {
-          From: '+11231231234',
-          To: '+11231231234',
+          From: this.fromNumber,
+          To: '+19995551111',
           Body: 'fake body',
         },
       }
@@ -417,7 +430,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/sms: Sender is not Twilio')
+      expect(helpers.logError).to.be.calledWith(`Bad request to /alert/sms: Sender ${this.fromNumber} is not Twilio`)
     })
 
     it('should return 401', () => {

@@ -21,6 +21,10 @@ function dummyGetLocationByAlertApiKey() {
   return 'getLocationByAlertApiKey'
 }
 
+function dummyGetHistoricAlertsByAlertApiKey() {
+  return 'getHistoricAlertsByAlertApiKey'
+}
+
 function dummyGetReturnMessage() {
   return 'getReturnMessage'
 }
@@ -35,6 +39,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
+      dummyGetHistoricAlertsByAlertApiKey,
       true,
       dummyGetReturnMessage,
     )

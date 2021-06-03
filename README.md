@@ -96,7 +96,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, asksIncidentDetails, getReturnMessage)
+### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getHistoricAlertsByAlertApiKey, asksIncidentDetails, getReturnMessage)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given sessionId
 
@@ -105,6 +105,8 @@ The main class of this library. It is used to send single alerts or to start ale
 **alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB
 
 **getLocationByAlertApiKey (async function(alertApiKey)):** function that returns the `Location` object whose Alert API Key matches the given `alertApiKey`, or `null` if there is no match
+
+**getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
 **asksIncidentDetails (boolean):** `true` if alert sessions should ask for incident details, `false` otherwise
 
@@ -133,6 +135,14 @@ The BraveAlerter's Express Router contains the routes
   Expects the header to contain `X-API-KEY`.
 
   On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
+
+- `GET /alert/historicAlerts`
+
+  Expects the header to contain `X-API-KEY`.
+
+  Expects the URL parameter to contain the integer `maxHistoricAlerts`.
+
+  On success, return `200` and the body an array of `HistoricAlert` objects corresponding to the most recent `maxHistoricAlerts` non-ongoing alerts for the location/installation with the given API key. If there is no corresponding location/installation, returns the body `[]`.
 
 which can be added to an existing Express app by:
 

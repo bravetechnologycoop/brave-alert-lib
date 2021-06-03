@@ -48,8 +48,6 @@ describe('braveAlerter.js integration tests: handleGetLocation', () => {
 
   describe('given valid request parameters but no location that corresponds to the API key', () => {
     beforeEach(async () => {
-      this.fakeLocation = new Location('fakeName', SYSTEM.BUTTONS)
-
       const braveAlerter = new BraveAlerter(null, null, null, () => {
         return null
       })
