@@ -30,6 +30,10 @@ function dummyGetLocationByAlertApiKey() {
   return 'getLocationByAlertApiKey'
 }
 
+function dummyGetHistoricAlertsByAlertApiKey() {
+  return 'getHistoricAlertsByAlertApiKey'
+}
+
 function dummyGetRetunMessages(fromAlertState, toAlertState) {
   return `${fromAlertState} --> ${toAlertState}`
 }
@@ -69,6 +73,7 @@ describe('fallback flow: responder never responds so fallback message is sent to
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
+      dummyGetHistoricAlertsByAlertApiKey,
       true,
       dummyGetRetunMessages,
     )

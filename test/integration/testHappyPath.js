@@ -30,6 +30,10 @@ function dummyGetLocationByAlertApiKey() {
   return 'getLocationByAlertApiKey'
 }
 
+function dummyGetHistoricAlertsByAlertApiKey() {
+  return 'getHistoricAlertsByAlertApiKey'
+}
+
 function dummyGetRetunMessages(fromAlertState, toAlertState) {
   return `${fromAlertState} --> ${toAlertState}`
 }
@@ -73,6 +77,7 @@ describe('happy path integration test: responder responds right away and provide
       dummyGetAlertSessionByPhoneNumber,
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
+      dummyGetHistoricAlertsByAlertApiKey,
       true,
       dummyGetRetunMessages,
     )
