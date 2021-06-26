@@ -34,6 +34,10 @@ function dummyGetHistoricAlertsByAlertApiKey() {
   return 'getHistoricAlertsByAlertApiKey'
 }
 
+function dummyGetNewNotificationsCountByAlertApiKey() {
+  return 'getNewNotificationsCountByAlertApiKey'
+}
+
 function dummyGetRetunMessages(fromAlertState, toAlertState) {
   return `${fromAlertState} --> ${toAlertState}`
 }
@@ -78,6 +82,7 @@ describe('happy path integration test: responder responds right away and provide
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
       dummyGetHistoricAlertsByAlertApiKey,
+      dummyGetNewNotificationsCountByAlertApiKey,
       true,
       dummyGetRetunMessages,
     )
