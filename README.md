@@ -124,9 +124,9 @@ The BraveAlerter's Express Router contains the routes
 
   Expects the header to contain `X-API-KEY`.
 
-  Expects the body to contain `verificationCode`.
+  Expects the body to contain `verificationCode` and `responderPushId`.
 
-  Prints the Alert API key and verificiation code to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key to the DB.
+  Prints the Alert API key, verificiation code, and responder push ID to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key and responder push ID to the DB.
 
   On success, returns `200` and the body `'OK'`.
 
@@ -320,7 +320,7 @@ Sleep for the given number of milliseconds. Must use `await` when calling this f
 
 ### setupSentry(app, dsn, environment, release)
 
-Set up Sentry for tracking errors and outages. NOTE: this needs to be called *after* all other app.use() calls
+Set up Sentry for tracking errors and outages. NOTE: this needs to be called _after_ all other app.use() calls
 
 **app (express()):** The express instance that you want to track errors in
 
@@ -331,4 +331,3 @@ Set up Sentry for tracking errors and outages. NOTE: this needs to be called *af
 **releaseName (string):** The name of the release you are tracking errors for
 
 **Returns:** nothing
-
