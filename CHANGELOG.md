@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `POST /alert/designatedevice` also logs the given Responder Push ID (CU-10xfkhr).
+- `startAlertSession` will send message to the designated device using the Push Notification ID, if given one. Only if not given a Push Notification ID will it send the message using SMS (CU-10xfkhr).
 
 ## [3.4.0] - 2021-06-24
 

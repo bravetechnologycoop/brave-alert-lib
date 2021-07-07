@@ -5,12 +5,16 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const ALERT_STATE = require('../../../lib/alertStateEnum')
+const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
+const OneSignal = require('../../../lib/oneSignal')
 const AlertSession = require('../../../lib/alertSession')
 
 chai.use(sinonChai)
+
+const sandbox = sinon.createSandbox()
 
 function dummyGetAlertSession() {
   return 'getAlertSession'
@@ -22,53 +26,166 @@ function dummyGetAlertSessionByPhoneNumber() {
 
 describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   beforeEach(() => {
-    // Don't actually log
-    sinon.stub(helpers, 'logError')
+    sandbox.spy(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.logError.restore()
+    sandbox.restore()
   })
 
-  describe('if there is toPhoneNumber and fromPhoneNumber', () => {
+  describe('if there is responderPushId, toPhoneNumber, and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
+
+      // Don't use real time
+      sandbox.useFakeTimers()
 
       // Spy on the alertSessionChangedCallback call
-      this.fakeAlertSessionChangedCallback = sinon.fake()
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
 
       const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
+      this.sessionId = 'guid-123'
+      this.message = 'my message'
+      this.responderPushId = 'pushId'
+      this.alertType = ALERT_TYPE.SENSOR_DURATION
+      this.deviceName = 'Room 101'
+      this.fallbackTimeoutMillis = 60000
       await braveAlerter.startAlertSession({
-        sessionId: 'guid-123',
+        responderPushId: this.responderPushId,
         toPhoneNumber: '+11231231234',
         fromPhoneNumber: '+11231231234',
-        reminderMessage: 'My message',
+        sessionId: this.sessionId,
+        message: this.message,
+        alertType: this.alertType,
+        deviceName: this.deviceName,
+        fallbackTimeoutMillis: this.fallbackTimeoutMillis,
       })
     })
 
-    afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+    it('should not send Twilio alert', () => {
+      expect(Twilio.sendTwilioMessage).not.to.be.calledOnce
     })
 
-    it('should send alert', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledOnce
+    it('should send OneSignal alert with the right parameters', () => {
+      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(this.responderPushId, `${this.sessionId} START`, this.message, {
+        sessionId: this.sessionId,
+        alertType: this.alertType,
+        deviceName: this.deviceName,
+        fallbackTime: new Date(this.fallbackTimeoutMillis),
+      })
     })
 
     it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession('guid-123', ALERT_STATE.STARTED)
+      const expectedAlertSession = new AlertSession(this.sessionId, ALERT_STATE.STARTED)
       expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
 
-  describe('if there is no toPhoneNumber', () => {
+  describe('if there is responderPushId', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
+
+      // Don't use real time
+      sandbox.useFakeTimers()
 
       // Spy on the alertSessionChangedCallback call
-      this.fakeAlertSessionChangedCallback = sinon.fake()
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
+
+      const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
+
+      this.sessionId = 'guid-123'
+      this.message = 'my message'
+      this.responderPushId = 'pushId'
+      this.alertType = ALERT_TYPE.SENSOR_DURATION
+      this.deviceName = 'Room 101'
+      this.fallbackTimeoutMillis = 60000
+      await braveAlerter.startAlertSession({
+        responderPushId: this.responderPushId,
+        sessionId: this.sessionId,
+        message: this.message,
+        alertType: this.alertType,
+        deviceName: this.deviceName,
+        fallbackTimeoutMillis: this.fallbackTimeoutMillis,
+      })
+    })
+
+    it('should not send Twilio alert', () => {
+      expect(Twilio.sendTwilioMessage).not.to.be.calledOnce
+    })
+
+    it('should send OneSignal alert with the right parameters', () => {
+      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(this.responderPushId, `${this.sessionId} START`, this.message, {
+        sessionId: this.sessionId,
+        alertType: this.alertType,
+        deviceName: this.deviceName,
+        fallbackTime: new Date(this.fallbackTimeoutMillis),
+      })
+    })
+
+    it('should call the callback with session ID and alert state STARTED', () => {
+      const expectedAlertSession = new AlertSession(this.sessionId, ALERT_STATE.STARTED)
+      expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    })
+  })
+
+  describe('if there is no responderPushId but there is toPhoneNumber and fromPhoneNumber', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
+
+      // Spy on the alertSessionChangedCallback call
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
+
+      const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
+
+      this.sessionId = 'guid-123'
+      this.toPhoneNumber = '+11231231234'
+      this.fromPhoneNumber = '+18887776666'
+      this.message = 'my message'
+      await braveAlerter.startAlertSession({
+        sessionId: this.sessionId,
+        toPhoneNumber: this.toPhoneNumber,
+        fromPhoneNumber: this.fromPhoneNumber,
+        message: this.message,
+      })
+    })
+
+    it('should send Twilio alert with the right parameters', () => {
+      expect(Twilio.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumber, this.fromPhoneNumber, this.message)
+    })
+
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
+    })
+
+    it('should call the callback with session ID and alert state STARTED', () => {
+      const expectedAlertSession = new AlertSession(this.sessionId, ALERT_STATE.STARTED)
+      expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    })
+  })
+
+  describe('if there is no responderPushId and no toPhoneNumber', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
+
+      // Spy on the alertSessionChangedCallback call
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
 
       const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
@@ -79,12 +196,12 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
     })
 
-    afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+    it('should not send Twilio alert', () => {
+      expect(Twilio.sendTwilioMessage).not.to.be.called
     })
 
-    it('should not send alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {
@@ -92,13 +209,16 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
   })
 
-  describe('if there is no fromPhoneNumber', () => {
+  describe('if there is no responderPushId and no fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
 
       // Spy on the alertSessionChangedCallback call
-      this.fakeAlertSessionChangedCallback = sinon.fake()
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
 
       const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
@@ -109,12 +229,12 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
     })
 
-    afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+    it('should not send Twilio alert', () => {
+      expect(Twilio.sendTwilioMessage).not.to.be.called
     })
 
-    it('should not send alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {
@@ -125,10 +245,13 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if twilio fails to send the message', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns()
+      sandbox.stub(Twilio, 'sendTwilioMessage').returns()
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({})
 
       // Spy on the alertSessionChangedCallback call
-      this.fakeAlertSessionChangedCallback = sinon.fake()
+      this.fakeAlertSessionChangedCallback = sandbox.fake()
 
       const braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
@@ -138,10 +261,6 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         fromPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
       })
-    })
-
-    afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
     })
 
     it('should not call the callback', () => {
@@ -155,16 +274,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
   describe('if reminderTimeoutMillis is', () => {
     beforeEach(() => {
-      this.clock = sinon.useFakeTimers()
+      sandbox.useFakeTimers()
 
       this.braveAlerter = new BraveAlerter()
-      sinon.stub(this.braveAlerter, 'sendReminderMessageForSession')
-    })
-
-    afterEach(() => {
-      this.braveAlerter.sendReminderMessageForSession.restore()
-
-      this.clock.restore()
+      sandbox.stub(this.braveAlerter, 'sendReminderMessageForSession')
     })
 
     it('non-negative should send a reminder', async () => {
@@ -172,7 +285,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: new AlertSession('guid-123'),
         reminderTimeoutMillis: 1,
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendReminderMessageForSession).to.be.calledOnce
     })
@@ -182,7 +295,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: new AlertSession('guid-123'),
         reminderTimeoutMillis: -1,
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendReminderMessageForSession).not.to.be.called
     })
@@ -191,7 +304,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: new AlertSession('guid-123'),
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendReminderMessageForSession).not.to.be.called
     })
@@ -199,16 +312,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
   describe('if fallbackTimeoutMillis is', () => {
     beforeEach(() => {
-      this.clock = sinon.useFakeTimers()
+      sandbox.useFakeTimers()
 
       this.braveAlerter = new BraveAlerter()
-      sinon.stub(this.braveAlerter, 'sendFallbackMessagesForSession')
-    })
-
-    afterEach(() => {
-      this.braveAlerter.sendFallbackMessagesForSession.restore()
-
-      this.clock.restore()
+      sandbox.stub(this.braveAlerter, 'sendFallbackMessagesForSession')
     })
 
     it('non-negative should send a fallback alert', async () => {
@@ -216,7 +323,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: new AlertSession('guid-123'),
         fallbackTimeoutMillis: 1,
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendFallbackMessagesForSession).to.be.calledOnce
     })
@@ -226,7 +333,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: new AlertSession('guid-123'),
         fallbackTimeoutMillis: -1,
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendFallbackMessagesForSession).not.to.be.called
     })
@@ -235,7 +342,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: new AlertSession('guid-123'),
       })
-      this.clock.tick(2)
+      sandbox.clock.tick(2)
 
       expect(this.braveAlerter.sendFallbackMessagesForSession).not.to.be.called
     })

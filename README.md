@@ -29,6 +29,8 @@ On your local machine, in the `brave-alert-lib` repository:
    - `TWILIO_SID_TEST`: The Twilio SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
+   - `ONESIGNAL_APP_ID`: The OneSignal app ID for our production account
+   - `ONESIGNAL_APP_ID_TEST`: The OneSignal app ID to use in testing
 
 # How to setup a local dev environment
 
@@ -173,15 +175,21 @@ Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.sessionId (GUID):** Unique identifier for the session; this should match the session ID in the DB
 
-**alertInfo.toPhoneNumber (string):** The phone number to send text message alert to
+**alertInfo.responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the alert to, or `undefined` to send a text message alert instead.
 
-**alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from
+**alertInfo.toPhoneNumber (string):** The phone number to send text message alert to if `alertInfo.responderPushId` is `undefined`.
+
+**alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from if `alertInfo.responderPushId` is `undefined`.
 
 **alertInfo.message (string):** First message to send as part of this session
 
+**alertInfo.deviceName (string):** The display name of the device that intiated the alert. This is often the unit number of the room.
+
+**alertInfo.alertType (ALERT_TYPE):** The Alert Type.
+
 **alertInfo.reminderTimeoutMillis (int):** How long to wait after initial alert before sending a reminder message; if falsy or not positive, will not send a reminder message
 
-**alertInfo.fallbackTimeoutMillis (int):** How long to wait after initial alert before sending the fallback message; if falsy or not positive, will not send a reminder message
+**alertInfo.fallbackTimeoutMillis (int):** How long to wait after initial alert before sending the fallback message; if falsy or not positive, will not send a fallback message
 
 **alertInfo.reminderMessage (string):** Message for the reminder
 
@@ -207,7 +215,7 @@ An object representing an alert session. Contains the following fields:
 
 **fallbackReturnMessage (string):** The message to send as a fallback for the alert session
 
-**responderPhoneNumber(string):** The phone number of th responder phone associated with the alert session
+**responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 
 **validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will
 be stored in the DB. For example:
