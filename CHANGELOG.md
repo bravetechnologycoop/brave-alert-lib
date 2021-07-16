@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Security audit to Travis (CU-121j1qz).
+
+### Security
+
+- Updated dependencies (CU-121j1qz).
+
 ## [3.5.0] - 2021-07-09
 
 ### Added

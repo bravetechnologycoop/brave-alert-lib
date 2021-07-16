@@ -16,7 +16,8 @@ env:
     # TWILIO_TOKEN_TEST (from https://www.twilio.com/console/voice/project/test-credentials)
     - secure: 'FPm3qiQofYifPEXpfNEW9ETnU2zASy8l8H63Pt3DurMiuBHJpVJoKXbJeh8OE9UvVnEpZ9yYGkfWxoAQBywcoVEKfdhWgPzlvdBKEH5/Iz8EzGEBst1M1l3OGex/GZYsb8T43ldsdlcE5vLiMLNX8qv6fW/Ye0O66vKE7tebiGvDPXnyXgbCofXPBg5oES37n3E4mQapqas2RGucElQocDmk4BjqUw8KhwU2RzVRhg6qxDqHx116VEm9IsnpwqWl0YwoYzzzkY7jxrE/aCYkwJkufEdS9CxIt9ZXn+WSHBJncPL5HGxjJAwHE5CgPZDZe4ejpYmHW0DBRNGp5Qs6rXU9jVW85DDh582RNryuoqkNH4MGgVYXsesHzFcxlDbJ7VRH4l0GibWAVw4Lq5xoKiiiqW67felfglCENDdngnq8TM5KN8Nw7kDE2hH2yjbMiz3noBKwSIvoNCGJTsM+cKCnt5yCfSe1fgCzJPa8KO18plT6HRUw+dmDXF/yrquIi95UCB/wn4Y+TAosNbJoUE0RARhZNpJe7phDdoMXJI0CGNhzxcLiw3MHSpER1q42j777we2plLlVatbQvf44sVDvRap3J6fsHvfYEcJtgVPrB0LciZqizRIqe/NXunKTO0RRoTz6/QU2yaUmmBebthRuIG2rwb3q1jBFzHthI9w='
 
-# run unit tests
+# Run security audit, linting, unit tests, and integration tests
 script:
+  - if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --config ./audit-ci.json; fi
   - npm run lint
   - sudo env "PATH=$PATH" npm run test
