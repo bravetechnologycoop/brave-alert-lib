@@ -4,7 +4,7 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const ALERT_STATE = require('../../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
@@ -43,7 +43,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.STARTED, // Pretend the AlertSession has started
+          CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
         ),
       )
 
@@ -65,7 +65,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should call the callback with session ID and alert state WAITING_FOR_REPLY', () => {
-      const expectedAlertSession = new AlertSession('guid-123', ALERT_STATE.WAITING_FOR_REPLY)
+      const expectedAlertSession = new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_REPLY)
       expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -83,14 +83,14 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.STARTED, // Pretend the AlertSession has started
+          CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
         ),
       )
 
       await this.braveAlerter.sendReminderMessageForSession({
         alertSession: new AlertSession(
           'guid-123',
-          ALERT_STATE.STARTED, // Pretend the AlertSession has been started
+          CHATBOT_STATE.STARTED, // Pretend the AlertSession has been started
         ),
         fromPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
@@ -124,7 +124,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.STARTED, // Pretend the AlertSession has started
+          CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
         ),
       )
 
@@ -162,7 +162,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.STARTED, // Pretend the AlertSession has started
+          CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
         ),
       )
 
@@ -198,7 +198,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
-      sinon.stub(this.braveAlerter, 'getAlertSession').returns(new AlertSession('guid-123', 'not ALERT_STATE.STARTED'))
+      sinon.stub(this.braveAlerter, 'getAlertSession').returns(new AlertSession('guid-123', 'not CHATBOT_STATE.STARTED'))
 
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',

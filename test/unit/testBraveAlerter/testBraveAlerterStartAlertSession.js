@@ -4,7 +4,7 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const ALERT_STATE = require('../../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
@@ -57,7 +57,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession('guid-123', ALERT_STATE.STARTED)
+      const expectedAlertSession = new AlertSession('guid-123', CHATBOT_STATE.STARTED)
       expect(this.fakeAlertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
