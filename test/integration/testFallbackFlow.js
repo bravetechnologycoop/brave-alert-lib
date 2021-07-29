@@ -7,7 +7,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const AlertSession = require('../../lib/alertSession')
-const ALERT_STATE = require('../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../lib/braveAlerter')
 const helpers = require('../../lib/helpers')
 
@@ -60,7 +60,7 @@ describe('fallback flow: responder never responds so fallback message is sent to
   beforeEach(() => {
     this.currentAlertSession = new AlertSession(
       sessionId,
-      ALERT_STATE.STARTED,
+      CHATBOT_STATE.STARTED,
       undefined,
       undefined,
       undefined,
@@ -97,15 +97,15 @@ describe('fallback flow: responder never responds so fallback message is sent to
     await this.braveAlerter.startAlertSession(initialAlertInfo)
 
     // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, ALERT_STATE.STARTED))
+    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
 
     // Wait for the reminder to send
     await helpers.sleep(2000)
 
     // Expect the state to change to WAITING_FOR_REPLY
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(sessionId, ALERT_STATE.WAITING_FOR_REPLY))
+    expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
 
-    this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_REPLY
+    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_REPLY
 
     // Wait for the fallbacks to send
     await helpers.sleep(3000)

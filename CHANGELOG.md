@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Security audit to Travis (CU-121j1qz).
+- `helpers.runQuery` (CU-tbazt8).
+
+### Updated
+
+- Values in `ALERT_TYPE` enum (CU-x1d6mq, CU-hjwfx2).
+- Name of `CHATBOT_STATE` enum (CU-x1d6mq).
 
 ### Security
 

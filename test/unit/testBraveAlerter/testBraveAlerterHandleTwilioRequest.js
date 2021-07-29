@@ -4,7 +4,7 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const ALERT_STATE = require('../../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
@@ -68,7 +68,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             .returns(
               new AlertSession(
                 'guid-123',
-                ALERT_STATE.WAITING_FOR_DETAILS,
+                CHATBOT_STATE.WAITING_FOR_DETAILS,
                 '3',
                 'my details',
                 'my fallback message',
@@ -78,7 +78,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
               ),
             )
           sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-            nextAlertState: ALERT_STATE.COMPLETED,
+            nextAlertState: CHATBOT_STATE.COMPLETED,
             incidentCategoryKey: '2',
             details: 'new details',
             returnMessage: 'return message',
@@ -103,7 +103,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
         it('should call the callback', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-            new AlertSession('guid-123', ALERT_STATE.COMPLETED, '2', 'new details'),
+            new AlertSession('guid-123', CHATBOT_STATE.COMPLETED, '2', 'new details'),
           )
         })
 
@@ -135,7 +135,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             .returns(
               new AlertSession(
                 this.guid,
-                ALERT_STATE.WAITING_FOR_DETAILS,
+                CHATBOT_STATE.WAITING_FOR_DETAILS,
                 '3',
                 'my details',
                 'my fallback message',
@@ -145,7 +145,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
               ),
             )
           sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-            nextAlertState: ALERT_STATE.COMPLETED,
+            nextAlertState: CHATBOT_STATE.COMPLETED,
             incidentCategoryKey: '2',
             details: 'new details',
             returnMessage: 'return message',
@@ -201,7 +201,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
         sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(null)
         sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-          nextAlertState: ALERT_STATE.COMPLETED,
+          nextAlertState: CHATBOT_STATE.COMPLETED,
           incidentCategoryKey: '2',
           details: 'new details',
           returnMessage: 'return message',
@@ -253,10 +253,10 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       sinon
         .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
         .returns(
-          new AlertSession('guid-123', ALERT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
+          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
         )
       sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-        nextAlertState: ALERT_STATE.COMPLETED,
+        nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
@@ -302,10 +302,10 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       sinon
         .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
         .returns(
-          new AlertSession('guid-123', ALERT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
+          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
         )
       sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-        nextAlertState: ALERT_STATE.COMPLETED,
+        nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
@@ -351,10 +351,10 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       sinon
         .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
         .returns(
-          new AlertSession('guid-123', ALERT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
+          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
         )
       sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-        nextAlertState: ALERT_STATE.COMPLETED,
+        nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
@@ -403,10 +403,10 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       sinon
         .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
         .returns(
-          new AlertSession('guid-123', ALERT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
+          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
         )
       sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-        nextAlertState: ALERT_STATE.COMPLETED,
+        nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',

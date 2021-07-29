@@ -4,7 +4,7 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const ALERT_STATE = require('../../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
@@ -43,7 +43,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -84,7 +84,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -125,7 +125,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -163,7 +163,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -201,7 +201,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -247,7 +247,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       sinon.stub(this.braveAlerter, 'getAlertSession').returns(
         new AlertSession(
           'guid-123',
-          ALERT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
+          CHATBOT_STATE.WAITING_FOR_REPLY, // Pretend the AlertSession is waiting for a response
         ),
       )
 
@@ -285,7 +285,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
 
       this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, this.fakeAlertSessionChangedCallback)
 
-      sinon.stub(this.braveAlerter, 'getAlertSession').returns(new AlertSession('guid-123', 'not ALERT_STATE.WAITING_FOR_REPLY'))
+      sinon.stub(this.braveAlerter, 'getAlertSession').returns(new AlertSession('guid-123', 'not CHATBOT_STATE.WAITING_FOR_REPLY'))
 
       await this.braveAlerter.sendFallbackMessagesForSession({
         sessionId: 'guid-123',

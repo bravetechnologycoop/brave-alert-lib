@@ -7,7 +7,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const AlertSession = require('../../lib/alertSession')
-const ALERT_STATE = require('../../lib/alertStateEnum')
+const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const BraveAlerter = require('../../lib/braveAlerter')
 const Twilio = require('../../lib/twilio')
 
@@ -68,7 +68,7 @@ describe('happy path integration test: responder responds right away and provide
 
     this.currentAlertSession = new AlertSession(
       sessionId,
-      ALERT_STATE.STARTED,
+      CHATBOT_STATE.STARTED,
       undefined,
       undefined,
       undefined,
@@ -112,9 +112,9 @@ describe('happy path integration test: responder responds right away and provide
     await this.braveAlerter.startAlertSession(initialAlertInfo)
 
     // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, ALERT_STATE.STARTED))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
 
-    this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_CATEGORY
+    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_CATEGORY
 
     // Responder replies 'Ok'
     let response = await chai.request(this.app).post('/alert/sms').send({
@@ -125,9 +125,9 @@ describe('happy path integration test: responder responds right away and provide
     expect(response).to.have.status(200)
 
     // Expect the state to change to WAITING_FOR_CATEGORY
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, ALERT_STATE.WAITING_FOR_CATEGORY))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY))
 
-    this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_CATEGORY
+    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_CATEGORY
 
     // Responder replies with an incident category
     response = await chai.request(this.app).post('/alert/sms').send({
@@ -139,10 +139,10 @@ describe('happy path integration test: responder responds right away and provide
 
     // Expect the state to change to WAITING_FOR_DETAILS and that the incident cateogry is updated to what the responder sent
     expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-      new AlertSession(sessionId, ALERT_STATE.WAITING_FOR_DETAILS, incidentCategoryKey),
+      new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_DETAILS, incidentCategoryKey),
     )
 
-    this.currentAlertSession.alertState = ALERT_STATE.WAITING_FOR_DETAILS
+    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_DETAILS
     this.currentAlertSession.incidentCategoryKey = incidentCategoryKey
 
     // Responder replies with incident details
@@ -154,9 +154,9 @@ describe('happy path integration test: responder responds right away and provide
     expect(response).to.have.status(200)
 
     // Expect the state to change to COMPLETED and that the incident details are updated to what the responder sent
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, ALERT_STATE.COMPLETED, undefined, details))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.COMPLETED, undefined, details))
 
-    this.currentAlertSession.alertState = ALERT_STATE.COMPLETED
+    this.currentAlertSession.alertState = CHATBOT_STATE.COMPLETED
     this.currentAlertSession.details = details
 
     // Let the reminder and fallback timer run out

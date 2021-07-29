@@ -199,7 +199,7 @@ An object representing an alert session. Contains the following fields:
 
 **sessionId (GUID):** Unique identifier for the alert session; should be the session ID from the DB
 
-**alertState (ALERT_STATE):** Thc current alert state of the alert session
+**alertState (CHATBOT_STATE):** Thc current alert state of the alert session
 
 **incidentCategoryKey (string):** The string representing the incident category associated with the alert session
 
@@ -228,9 +228,17 @@ human-readable DB value for the `validIncidentCategoryKeys[i]` value given by th
 Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
 human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
 
-## `ALERT_STATE` enum
+## `ALERT_TYPE` enum
+
+An enum of the possible types of alert that can be triggered.
+
+## `CHATBOT_STATE` enum
 
 An enum of the possible states the Alert Session could be in at any given time.
+
+## `SYSTEM` enum
+
+An enum of the types of Brave Devices that use `brave-alert-lib`.
 
 ## `helpers` functions
 
@@ -287,6 +295,20 @@ Logs the given string to stdout as appropriate for the situation. Also forwards 
 **logString (string):** The string to log
 
 **Returns:** nothing
+
+### runQuery(functionName, queryString, queryParams, pool, clientParam)
+
+Runs a database query with correct transaction- and error-handling if required.
+
+**functionName (string):** The name of the function that called `runQuery`. Used to make good error messages.
+
+**queryString (string):** The `pg`-style query string to run in the database.
+
+**queryParams (array):** The `pg`-style query parameters to be used in the `queryString`.
+
+**pool (pg.Pool):** The pool of `pg` database connections.
+
+**clientParam (pg.PoolClient):** The database connection client to be used if the query should be part of an ongoing transactions. Undefined if the query should not be part of an ongoing transaction.
 
 ### sleep(millis)
 
