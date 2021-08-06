@@ -4,9 +4,9 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
+const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
 
@@ -25,7 +25,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
       // Don't actually call Twilio
       sinon.stub(Twilio, 'sendTwilioMessage')
 
-      const braveAlerter = new BraveAlerter()
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       await braveAlerter.sendSingleAlert('+11231231234', '+11231231234', 'My message')
     })
@@ -44,7 +44,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
       // Don't actually call Twilio
       sinon.stub(Twilio, 'sendTwilioMessage').returns()
 
-      const braveAlerter = new BraveAlerter()
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       this.toNumber = '+11231231234'
       this.fromNumber = '+18885552222'

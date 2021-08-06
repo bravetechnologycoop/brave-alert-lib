@@ -7,14 +7,14 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 const helpers = require('../../lib/helpers')
-const BraveAlerter = require('../../lib/braveAlerter')
+const testingHelper = require('../testingHelpers')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
 
 describe('designateDevice.js integration tests: handleDesignateDevice', () => {
   beforeEach(() => {
-    this.braveAlerter = new BraveAlerter()
+    this.braveAlerter = testingHelper.braveAlerterFactory()
 
     this.app = express()
     this.app.use(this.braveAlerter.getRouter())

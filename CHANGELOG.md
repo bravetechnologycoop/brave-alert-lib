@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `POST /alert/acknowledgeAlertSession` to acknowledge an alert session through the Alert App (CU-10xfkhr).
+- `POST /alert/setIncidentCategory` to set the incident category for an alert session through the Alert App (CU-10xfkhr).
+
+### Changed
+
+- `POST /alert/designatedevice` also logs the given Responder Push ID (CU-10xfkhr).
+- `startAlertSession` and `sendAlertSessionUpdate` will send messages to the designated device using the Push Notification ID, if given one. Only if not given a Push Notification ID will it send the messages using SMS (CU-hjwjfj).
+
 ## [4.0.0] - 2021-07-29
 
 ### Added
@@ -28,10 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `GET /alert/newNotificationsCount` endpoint (CU-hjwcwk).
-
-### Changed
-
-- `POST /alert/designatedevice` also logs the given Responder Push ID (CU-10xfkhr).
 
 ## [3.4.0] - 2021-06-24
 

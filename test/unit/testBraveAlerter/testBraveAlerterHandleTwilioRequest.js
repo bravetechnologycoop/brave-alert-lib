@@ -5,45 +5,24 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
-const BraveAlerter = require('../../../lib/braveAlerter')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
 const AlertSession = require('../../../lib/alertSession')
+const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
 
-function dummyGetAlertSession() {
-  return 'getAlertSession'
-}
-
-function dummyGetAlertSessionByPhoneNumber() {
-  return 'getAlertSessionByPhoneNumber'
-}
-
-function dummyAlertSessionChangedCallback() {
-  return 'alertSessionChangedCallback'
-}
-
-function mockResponse() {
-  // From https://codewithhugo.com/express-request-response-mocking/
-  const res = {}
-  res.writeHead = sinon.stub().returns(res)
-  res.status = sinon.stub().returns(res)
-  res.send = sinon.stub().returns(res)
-
-  return res
-}
+const sandbox = sinon.createSandbox()
 
 describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   beforeEach(() => {
     // Don't actually log
-    sinon.stub(helpers, 'log')
-    sinon.stub(helpers, 'logError')
+    sandbox.stub(helpers, 'log')
+    sandbox.stub(helpers, 'logError')
   })
 
   afterEach(() => {
-    helpers.log.restore()
-    helpers.logError.restore()
+    sandbox.restore()
   })
 
   describe('given the required request parameters', () => {
@@ -59,46 +38,38 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             },
           }
 
-          this.fakeExpressResponse = mockResponse()
+          this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
           // Don't actually call braveAlerter methods
-          this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-          sinon
-            .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-            .returns(
-              new AlertSession(
-                'guid-123',
-                CHATBOT_STATE.WAITING_FOR_DETAILS,
-                '3',
-                'my details',
-                'my fallback message',
-                '+11231231234',
-                ['3'],
-                ['three'],
+          this.braveAlerter = testingHelpers.braveAlerterFactory({
+            alertSessionChangedCallback: sandbox.stub(),
+            getAlertSessionByPhoneNumber: sinon
+              .stub()
+              .returns(
+                new AlertSession(
+                  'guid-123',
+                  CHATBOT_STATE.WAITING_FOR_DETAILS,
+                  '3',
+                  'my details',
+                  'my fallback message',
+                  '+11231231234',
+                  ['3'],
+                  ['three'],
+                ),
               ),
-            )
-          sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+          })
+          sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
             incidentCategoryKey: '2',
             details: 'new details',
             returnMessage: 'return message',
           })
-          sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
           // Don't actually call Twilio
-          sinon.stub(Twilio, 'sendTwilioResponse')
-          sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
+          sandbox.stub(Twilio, 'sendTwilioResponse')
+          sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
           await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
-        })
-
-        afterEach(() => {
-          this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-          this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-          this.braveAlerter.alertSessionChangedCallback.restore()
-
-          Twilio.sendTwilioResponse.restore()
-          Twilio.isValidTwilioRequest.restore()
         })
 
         it('should call the callback', () => {
@@ -126,46 +97,38 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             },
           }
 
-          this.fakeExpressResponse = mockResponse()
+          this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
           // Don't actually call braveAlerter methods
-          this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-          sinon
-            .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-            .returns(
-              new AlertSession(
-                this.guid,
-                CHATBOT_STATE.WAITING_FOR_DETAILS,
-                '3',
-                'my details',
-                'my fallback message',
-                '+11231231234',
-                ['3'],
-                ['three'],
+          this.braveAlerter = testingHelpers.braveAlerterFactory({
+            alertSessionChangedCallback: sandbox.stub(),
+            getAlertSessionByPhoneNumber: sinon
+              .stub()
+              .returns(
+                new AlertSession(
+                  this.guid,
+                  CHATBOT_STATE.WAITING_FOR_DETAILS,
+                  '3',
+                  'my details',
+                  'my fallback message',
+                  '+11231231234',
+                  ['3'],
+                  ['three'],
+                ),
               ),
-            )
-          sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+          })
+          sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
             incidentCategoryKey: '2',
             details: 'new details',
             returnMessage: 'return message',
           })
-          sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
           // Don't actually call Twilio
-          sinon.stub(Twilio, 'sendTwilioResponse')
-          sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
+          sandbox.stub(Twilio, 'sendTwilioResponse')
+          sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
           await this.braveAlerter.handleTwilioRequest(invalidRequest, this.fakeExpressResponse)
-        })
-
-        afterEach(() => {
-          this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-          this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-          this.braveAlerter.alertSessionChangedCallback.restore()
-
-          Twilio.sendTwilioResponse.restore()
-          Twilio.isValidTwilioRequest.restore()
         })
 
         it('should log the error', () => {
@@ -195,33 +158,25 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           },
         }
 
-        this.fakeExpressResponse = mockResponse()
+        this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
         // Don't actually call braveAlerter methods
-        this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-        sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(null)
-        sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+        this.braveAlerter = testingHelpers.braveAlerterFactory({
+          getAlertSessionByPhoneNumber: sandbox.stub().returns(null),
+          alertSessionChangedCallback: sandbox.stub(),
+        })
+        sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
           nextAlertState: CHATBOT_STATE.COMPLETED,
           incidentCategoryKey: '2',
           details: 'new details',
           returnMessage: 'return message',
         })
-        sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
         // Don't actually call Twilio
-        sinon.stub(Twilio, 'sendTwilioResponse')
-        sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
+        sandbox.stub(Twilio, 'sendTwilioResponse')
+        sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
 
         await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
-      })
-
-      afterEach(() => {
-        this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-        this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-        this.braveAlerter.alertSessionChangedCallback.restore()
-
-        Twilio.sendTwilioResponse.restore()
-        Twilio.isValidTwilioRequest.restore()
       })
 
       it('should log the error', () => {
@@ -246,34 +201,37 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         },
       }
 
-      this.fakeExpressResponse = mockResponse()
+      this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
       // Don't actually call braveAlerter methods
-      this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-      sinon
-        .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-        .returns(
-          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
-        )
-      sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.stub(),
+        getAlertSessionByPhoneNumber: sinon
+          .stub()
+          .returns(
+            new AlertSession(
+              'guid-123',
+              CHATBOT_STATE.WAITING_FOR_DETAILS,
+              '3',
+              'my details',
+              'my fallback message',
+              '+11231231234',
+              ['3'],
+              ['three'],
+            ),
+          ),
+      })
+      sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
       })
-      sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(Twilio, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
-    })
-
-    afterEach(() => {
-      this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-      this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-      this.braveAlerter.alertSessionChangedCallback.restore()
-      Twilio.sendTwilioResponse.restore()
     })
 
     it('should log the error', () => {
@@ -295,34 +253,37 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         },
       }
 
-      this.fakeExpressResponse = mockResponse()
+      this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
       // Don't actually call braveAlerter methods
-      this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-      sinon
-        .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-        .returns(
-          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
-        )
-      sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.stub(),
+        getAlertSessionByPhoneNumber: sinon
+          .stub()
+          .returns(
+            new AlertSession(
+              'guid-123',
+              CHATBOT_STATE.WAITING_FOR_DETAILS,
+              '3',
+              'my details',
+              'my fallback message',
+              '+11231231234',
+              ['3'],
+              ['three'],
+            ),
+          ),
+      })
+      sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
       })
-      sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(Twilio, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
-    })
-
-    afterEach(() => {
-      this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-      this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-      this.braveAlerter.alertSessionChangedCallback.restore()
-      Twilio.sendTwilioResponse.restore()
     })
 
     it('should log the error', () => {
@@ -344,34 +305,37 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         },
       }
 
-      this.fakeExpressResponse = mockResponse()
+      this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
       // Don't actually call braveAlerter methods
-      this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-      sinon
-        .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-        .returns(
-          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
-        )
-      sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.stub(),
+        getAlertSessionByPhoneNumber: sinon
+          .stub()
+          .returns(
+            new AlertSession(
+              'guid-123',
+              CHATBOT_STATE.WAITING_FOR_DETAILS,
+              '3',
+              'my details',
+              'my fallback message',
+              '+11231231234',
+              ['3'],
+              ['three'],
+            ),
+          ),
+      })
+      sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
       })
-      sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(Twilio, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
-    })
-
-    afterEach(() => {
-      this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-      this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-      this.braveAlerter.alertSessionChangedCallback.restore()
-      Twilio.sendTwilioResponse.restore()
     })
 
     it('should log the error', () => {
@@ -396,37 +360,38 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         },
       }
 
-      this.fakeExpressResponse = mockResponse()
+      this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
       // Don't actually call braveAlerter methods
-      this.braveAlerter = new BraveAlerter(dummyGetAlertSession, dummyGetAlertSessionByPhoneNumber, dummyAlertSessionChangedCallback)
-      sinon
-        .stub(this.braveAlerter, 'getAlertSessionByPhoneNumber')
-        .returns(
-          new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', 'my fallback message', '+11231231234', ['3'], ['three']),
-        )
-      sinon.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.stub(),
+        getAlertSessionByPhoneNumber: sinon
+          .stub()
+          .returns(
+            new AlertSession(
+              'guid-123',
+              CHATBOT_STATE.WAITING_FOR_DETAILS,
+              '3',
+              'my details',
+              'my fallback message',
+              '+11231231234',
+              ['3'],
+              ['three'],
+            ),
+          ),
+      })
+      sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey: '2',
         details: 'new details',
         returnMessage: 'return message',
       })
-      sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
 
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioResponse')
-      sinon.stub(Twilio, 'isValidTwilioRequest').returns(false)
+      sandbox.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(Twilio, 'isValidTwilioRequest').returns(false)
 
       await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
-    })
-
-    afterEach(() => {
-      this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-      this.braveAlerter.alertStateMachine.processStateTransitionWithMessage.restore()
-      this.braveAlerter.alertSessionChangedCallback.restore()
-
-      Twilio.sendTwilioResponse.restore()
-      Twilio.isValidTwilioRequest.restore()
     })
 
     it('should log the error', () => {

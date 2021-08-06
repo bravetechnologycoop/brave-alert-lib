@@ -8,39 +8,14 @@ const sinonChai = require('sinon-chai')
 
 const AlertSession = require('../../lib/alertSession')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
-const BraveAlerter = require('../../lib/braveAlerter')
+const helpers = require('../../lib/helpers')
 const Twilio = require('../../lib/twilio')
+const testingHelpers = require('../testingHelpers')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
 
-function dummyGetAlertSession() {
-  return 'getAlertSession'
-}
-
-function dummyGetAlertSessionByPhoneNumber() {
-  return 'getAlertSessionByPhoneNumber'
-}
-
-function dummyAlertSessionChangedCallback() {
-  return 'alertSessionChangedCallback'
-}
-
-function dummyGetLocationByAlertApiKey() {
-  return 'getLocationByAlertApiKey'
-}
-
-function dummyGetHistoricAlertsByAlertApiKey() {
-  return 'getHistoricAlertsByAlertApiKey'
-}
-
-function dummyGetNewNotificationsCountByAlertApiKey() {
-  return 'getNewNotificationsCountByAlertApiKey'
-}
-
-function dummyGetRetunMessages(fromAlertState, toAlertState) {
-  return `${fromAlertState} --> ${toAlertState}`
-}
+const sandbox = sinon.createSandbox()
 
 const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
@@ -62,9 +37,9 @@ const initialAlertInfo = {
   fallbackFromPhoneNumber: '+13336669999',
 }
 
-describe('happy path integration test: responder responds right away and provides incident category and details', () => {
+describe('happy path Twilio integration test: responder responds right away and provides incident category and details', () => {
   beforeEach(() => {
-    this.clock = sinon.useFakeTimers()
+    this.clock = sandbox.useFakeTimers()
 
     this.currentAlertSession = new AlertSession(
       sessionId,
@@ -76,45 +51,34 @@ describe('happy path integration test: responder responds right away and provide
       validIncidentCategoryKeys,
     )
 
-    this.braveAlerter = new BraveAlerter(
-      dummyGetAlertSession,
-      dummyGetAlertSessionByPhoneNumber,
-      dummyAlertSessionChangedCallback,
-      dummyGetLocationByAlertApiKey,
-      dummyGetHistoricAlertsByAlertApiKey,
-      dummyGetNewNotificationsCountByAlertApiKey,
-      true,
-      dummyGetRetunMessages,
-    )
+    this.braveAlerter = testingHelpers.braveAlerterFactory({
+      getAlertSession: sandbox.stub().returns(this.currentAlertSession),
+      getAlertSessionByPhoneNumber: sandbox.stub().returns(this.currentAlertSession),
+      alertSessionChangedCallback: sandbox.stub(),
+    })
 
-    sinon.stub(this.braveAlerter, 'getAlertSession').returns(this.currentAlertSession)
-    sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(this.currentAlertSession)
-    sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
-
-    sinon.stub(Twilio, 'isValidTwilioRequest').returns(true)
+    sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+    sandbox.spy(helpers, 'log')
 
     this.app = express()
     this.app.use(this.braveAlerter.getRouter())
   })
 
   afterEach(() => {
-    this.braveAlerter.getAlertSession.restore()
-    this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-    this.braveAlerter.alertSessionChangedCallback.restore()
-
-    this.clock.restore()
-
-    Twilio.isValidTwilioRequest.restore()
+    sandbox.restore()
   })
 
   it('', async () => {
     // Initial alert sent to responder phone
     await this.braveAlerter.startAlertSession(initialAlertInfo)
 
+    // Expect to log the Twilio ID
+    expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by Twilio:')
+
     // Expect the state to change to STARTED
     expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
 
-    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_CATEGORY
+    this.currentAlertSession.alertState = CHATBOT_STATE.STARTED
 
     // Responder replies 'Ok'
     let response = await chai.request(this.app).post('/alert/sms').send({
