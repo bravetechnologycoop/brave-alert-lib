@@ -29,6 +29,11 @@ On your local machine, in the `brave-alert-lib` repository:
    - `TWILIO_SID_TEST`: The Twilio SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
+   - `ONESIGNAL_APP_ID`: The OneSignal app ID for our production account
+   - `ONESIGNAL_APP_ID_TEST`: The OneSignal app ID to use in testing
+   - `ONESIGNAL_API_KEY`: The OneSignal API Key for our production account
+   - `ONE_SIGNAL_API_KEY_TEST`: The OneSignal API Key to use in testing
+   - `TEST_ONESIGNAL_PUSH_ID`: A OneSignal Player ID that will be sent messages during the integration tests
 
 # How to setup a local dev environment
 
@@ -98,9 +103,11 @@ The main class of this library. It is used to send single alerts or to start ale
 
 ### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getHistoricAlertsByAlertApiKey, asksIncidentDetails, getReturnMessage)
 
-**getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given sessionId
+**getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
 **getAlertSessionByPhoneNumber (async function(toPhoneNumber)):** function that returns the AlertSession object for the most recent unfinished session with the given phone number
+
+**getAlertSessionBySessionIdAndAlertApiKey (async function(sessionId, alertApiKey)):** function that returns the AlertSession object with the given `sessionId` if and only if it is a session for a client using the given `alertApiKey`
 
 **alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB
 
@@ -144,6 +151,22 @@ The BraveAlerter's Express Router contains the routes
 
   On success, return `200` and the body an array of `HistoricAlert` objects corresponding to the most recent `maxHistoricAlerts` non-ongoing alerts for the location/installation with the given API key. If there is no corresponding location/installation, returns the body `[]`.
 
+- `POST /alert/acknowledgeAlertSession`
+
+  Expects the header to contain `X-API-KEY`.
+
+  Expects the body to contain `sessionId`.
+
+  Acknowledges an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This is the equivalent to a person replying 'Ok' after receiving the first text message in an alert session.
+
+- `POST /alert/setIncidentCategory`
+
+  Expects the header to contain `X-API-KEY`.
+
+  Expects the body to contain `sessionId` and `incidentCategory`.
+
+  If the Alert Session with the given `sessionId` was started by a device whose client has the given `alertApiKey` and for whom the given `incidentCategory` is valid, then update its incident category to `incidentCategory`.
+
 which can be added to an existing Express app by:
 
 ```
@@ -167,21 +190,43 @@ Sends the given `message` to the `toPhoneNumber` from the `fromPhoneNumber`.
 
 **Returns:** A promise that is resolved when the message is sent.
 
+### sendAlertSessionUpdate(sessionId, responderPushId, toPhoneNumber, fromPhoneNumber, textMessage, pushMessage)
+
+Updates an ongoing alert session.
+
+**sessionId (GUID):** Unique identifier for the alert session that was updated; this should match the session ID in the DB
+
+**responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the update to, or `undefined` to send a text message update instead.
+
+**toPhoneNumber (string):** The phone number to send text message alert to if `responderPushId` is `undefined`.
+
+**fromPhoneNumber (string):** The phone number to send text message alert from if `responderPushId` is `undefined`.
+
+**textMessage (string):** Message containing the update to be sent over SMS.
+
+**pushMessage (string):** Message containing the update to be sent over Push Notification.
+
 ### startAlertSession(alertInfo)
 
 Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.sessionId (GUID):** Unique identifier for the session; this should match the session ID in the DB
 
-**alertInfo.toPhoneNumber (string):** The phone number to send text message alert to
+**alertInfo.responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the alert to, or `undefined` to send a text message alert instead.
 
-**alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from
+**alertInfo.toPhoneNumber (string):** The phone number to send text message alert to if `alertInfo.responderPushId` is `undefined`.
+
+**alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from if `alertInfo.responderPushId` is `undefined`.
 
 **alertInfo.message (string):** First message to send as part of this session
 
+**alertInfo.deviceName (string):** The display name of the device that intiated the alert. This is often the unit number of the room.
+
+**alertInfo.alertType (ALERT_TYPE):** The Alert Type.
+
 **alertInfo.reminderTimeoutMillis (int):** How long to wait after initial alert before sending a reminder message; if falsy or not positive, will not send a reminder message
 
-**alertInfo.fallbackTimeoutMillis (int):** How long to wait after initial alert before sending the fallback message; if falsy or not positive, will not send a reminder message
+**alertInfo.fallbackTimeoutMillis (int):** How long to wait after initial alert before sending the fallback message; if falsy or not positive, will not send a fallback message
 
 **alertInfo.reminderMessage (string):** Message for the reminder
 
@@ -207,7 +252,7 @@ An object representing an alert session. Contains the following fields:
 
 **fallbackReturnMessage (string):** The message to send as a fallback for the alert session
 
-**responderPhoneNumber(string):** The phone number of th responder phone associated with the alert session
+**responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 
 **validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will
 be stored in the DB. For example:
@@ -247,6 +292,14 @@ A collection of functions that are useful across the Brave NodeJS applications.
 ### formatExpressValidationErrors(expressErrorObject)
 
 A function that can be sent as an argument to the Express Validation `formatWith` function (https://express-validator.github.io/docs/validation-result-api.html#formatwithformatter). It takes an Express error object and returns a consistent, readable string to be used for error logs and sending in error HTTP messages.
+
+## getAlertTypeDisplayName(alertType)
+
+Get a human-readable display name for the given `alertType`.
+
+**alertType (ALERT_TYPE):** the alert type whose display name to get
+
+**Returns:** the display name corresponding to the given `alertType`
 
 ### getEnvVars(name)
 

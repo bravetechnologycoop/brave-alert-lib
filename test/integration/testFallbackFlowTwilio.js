@@ -2,41 +2,19 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = require('chai').expect
 const express = require('express')
-const { afterEach, beforeEach, describe, it } = require('mocha')
+const { beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const AlertSession = require('../../lib/alertSession')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
-const BraveAlerter = require('../../lib/braveAlerter')
 const helpers = require('../../lib/helpers')
+const testingHelpers = require('../testingHelpers')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
 
-function dummyGetAlertSession() {
-  return 'getAlertSession'
-}
-
-function dummyGetAlertSessionByPhoneNumber() {
-  return 'getAlertSessionByPhoneNumber'
-}
-
-function dummyAlertSessionChangedCallback() {
-  return 'alertSessionChangedCallback'
-}
-
-function dummyGetLocationByAlertApiKey() {
-  return 'getLocationByAlertApiKey'
-}
-
-function dummyGetHistoricAlertsByAlertApiKey() {
-  return 'getHistoricAlertsByAlertApiKey'
-}
-
-function dummyGetRetunMessages(fromAlertState, toAlertState) {
-  return `${fromAlertState} --> ${toAlertState}`
-}
+const sandbox = sinon.createSandbox()
 
 const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
@@ -56,7 +34,7 @@ const initialAlertInfo = {
   fallbackFromPhoneNumber: '+15005550006',
 }
 
-describe('fallback flow: responder never responds so fallback message is sent to manager(s)', () => {
+describe('fallback flow with Twilio: responder never responds so fallback message is sent to manager(s)', () => {
   beforeEach(() => {
     this.currentAlertSession = new AlertSession(
       sessionId,
@@ -68,39 +46,37 @@ describe('fallback flow: responder never responds so fallback message is sent to
       validIncidentCategoryKeys,
     )
 
-    this.braveAlerter = new BraveAlerter(
-      dummyGetAlertSession,
-      dummyGetAlertSessionByPhoneNumber,
-      dummyAlertSessionChangedCallback,
-      dummyGetLocationByAlertApiKey,
-      dummyGetHistoricAlertsByAlertApiKey,
-      true,
-      dummyGetRetunMessages,
-    )
-
-    sinon.stub(this.braveAlerter, 'getAlertSession').returns(this.currentAlertSession)
-    sinon.stub(this.braveAlerter, 'getAlertSessionByPhoneNumber').returns(this.currentAlertSession)
-    sinon.stub(this.braveAlerter, 'alertSessionChangedCallback')
+    this.braveAlerter = testingHelpers.braveAlerterFactory({
+      getAlertSession: sandbox.stub().returns(this.currentAlertSession),
+      getAlertSessionByPhoneNumber: sandbox.stub().returns(this.currentAlertSession),
+      alertSessionChangedCallback: sandbox.stub(),
+    })
 
     this.app = express()
     this.app.use(this.braveAlerter.getRouter())
+
+    sandbox.spy(helpers, 'log')
   })
 
   afterEach(() => {
-    this.braveAlerter.getAlertSession.restore()
-    this.braveAlerter.getAlertSessionByPhoneNumber.restore()
-    this.braveAlerter.alertSessionChangedCallback.restore()
+    sandbox.restore()
   })
 
   it('', async () => {
     // Initial alert sent to responder phone
     await this.braveAlerter.startAlertSession(initialAlertInfo)
 
+    // Expect to log the Twilio ID
+    expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by Twilio:')
+
     // Expect the state to change to STARTED
     expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
 
     // Wait for the reminder to send
     await helpers.sleep(2000)
+
+    // Expect to log the Twilio ID
+    expect(helpers.log.getCall(1)).to.be.calledWithMatch('Sent by Twilio:')
 
     // Expect the state to change to WAITING_FOR_REPLY
     expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
@@ -109,6 +85,10 @@ describe('fallback flow: responder never responds so fallback message is sent to
 
     // Wait for the fallbacks to send
     await helpers.sleep(3000)
+
+    // Expect to log the Twilio ID for each fallback number
+    expect(helpers.log.getCall(2)).to.be.calledWithMatch('Sent by Twilio:')
+    expect(helpers.log.getCall(3)).to.be.calledWithMatch('Sent by Twilio:')
 
     // Expect the fallback return messages from a successful Twilio request to be 'queued' for each phone number
     expect(this.braveAlerter.alertSessionChangedCallback.getCall(2).args[0]).to.eql(

@@ -9,9 +9,9 @@ const chaiHttp = require('chai-http')
 
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
-const BraveAlerter = require('../../../lib/braveAlerter')
 const HistoricAlert = require('../../../lib/historicAlert')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
+const testingHelpers = require('../../testingHelpers')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
@@ -32,8 +32,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
         new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
       ]
 
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return this.fakeHistoricAlerts
+      const braveAlerter = testingHelpers.braveAlerterFactory({
+        getHistoricAlertsByAlertApiKey: () => {
+          return this.fakeHistoricAlerts
+        },
       })
 
       const app = express()
@@ -59,8 +61,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given valid request parameters but no historic alerts that corresponds to the API key', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return []
+      const braveAlerter = testingHelpers.braveAlerterFactory({
+        getHistoricAlertsByAlertApiKey: () => {
+          return []
+        },
       })
 
       const app = express()
@@ -86,23 +90,13 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that the API key is blank', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
 
       // eslint-disable-next-line prettier/prettier
-      this.response = await chai
-        .request(app)
-        .get('/alert/historicAlerts')
-        .set('X-API-KEY', '')
-        .query({ maxHistoricAlerts: 20 })
-        .send({})
+      this.response = await chai.request(app).get('/alert/historicAlerts').set('X-API-KEY', '').query({ maxHistoricAlerts: 20 }).send({})
     })
 
     it('should log the error', () => {
@@ -116,22 +110,13 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that the API key is missing', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
 
       // eslint-disable-next-line prettier/prettier
-      this.response = await chai
-        .request(app)
-        .get('/alert/historicAlerts')
-        .query({ maxHistoricAlerts: 20 })
-        .send({})
+      this.response = await chai.request(app).get('/alert/historicAlerts').query({ maxHistoricAlerts: 20 }).send({})
     })
 
     it('should log the error', () => {
@@ -145,12 +130,7 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that maxHistoricAlerts is blank', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
@@ -174,22 +154,13 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that maxHistoricAlerts is missing', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
 
       // eslint-disable-next-line prettier/prettier
-      this.response = await chai
-        .request(app)
-        .get('/alert/historicAlerts')
-        .set('X-API-KEY', '00000000-000000000000000')
-        .send({})
+      this.response = await chai.request(app).get('/alert/historicAlerts').set('X-API-KEY', '00000000-000000000000000').send({})
     })
 
     it('should log the error', () => {
@@ -203,12 +174,7 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that maxHistoricAlerts is not an integer', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
@@ -232,12 +198,7 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that maxHistoricAlerts is less than 0', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return [
-          new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-          new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
-        ]
-      })
+      const braveAlerter = testingHelpers.braveAlerterFactory()
 
       const app = express()
       app.use(braveAlerter.getRouter())
@@ -261,8 +222,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
   describe('given that something goes wrong getting the historic alerts', () => {
     beforeEach(async () => {
-      const braveAlerter = new BraveAlerter(null, null, null, null, () => {
-        return null
+      const braveAlerter = testingHelpers.braveAlerterFactory({
+        getHistoricAlertsByAlertApiKey: () => {
+          return null
+        },
       })
 
       const app = express()

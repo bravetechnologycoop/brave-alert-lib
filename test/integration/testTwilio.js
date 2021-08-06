@@ -29,7 +29,7 @@ describe('twilio.js integration tests:', () => {
       it('should log the returned Twilio SID', async () => {
         const response = await twilio.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
 
-        expect(helpers.log.getCall(0).args[0]).to.equal(response.sid)
+        expect(helpers.log.getCall(0).args[0]).to.equal(`Sent by Twilio: ${response.sid}`)
       })
     })
 
