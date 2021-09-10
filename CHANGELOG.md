@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `POST /alert/acknowledgeAlertSession` to acknowledge an alert session through the Alert App (CU-10xfkhr).
 - `POST /alert/respondToAlertSession` to respond to an alert session through the Alert App (CU-10xfkhr).
 - `POST /alert/setIncidentCategory` to set the incident category for an alert session through the Alert App (CU-10xfkhr).
+- `GET /alert/activeAlerts` to get the active alerts for a given client (CU-10xfkhr).
 
 ### Changed
 

@@ -145,6 +145,12 @@ The BraveAlerter's Express Router contains the routes
 
   On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
 
+- `GET /alert/activeAlerts`
+
+  Expects the header to contain `X-API-KEY`.
+
+  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
+
 - `GET /alert/historicAlerts`
 
   Expects the header to contain `X-API-KEY`.
