@@ -159,6 +159,15 @@ The BraveAlerter's Express Router contains the routes
 
   Acknowledges an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This is the equivalent to a person replying 'Ok' after receiving the first text message in an alert session.
 
+- `POST /alert/respondToAlertSession`
+
+  Expects the header to contain `X-API-KEY`.
+
+  Expects the body to contain `sessionId`.
+
+  Responds to an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This occurs when the person presses the 'Completed' button on an alert in the Brave Alert App.
+
+
 - `POST /alert/setIncidentCategory`
 
   Expects the header to contain `X-API-KEY`.

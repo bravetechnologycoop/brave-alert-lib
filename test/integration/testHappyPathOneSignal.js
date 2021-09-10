@@ -94,6 +94,19 @@ describe('happy path OneSignal integration test: responder responds right away a
       .send({ sessionId })
     expect(response).to.have.status(200)
 
+    // Expect the state to change to RESPONDING
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.RESPONDING))
+
+    this.currentAlertSession.alertState = CHATBOT_STATE.RESPONDING
+
+    // Responder responds to the alert
+    response = await chai
+      .request(this.app)
+      .post('/alert/respondToAlertSession')
+      .set('X-API-KEY', apiKey)
+      .send({ sessionId })
+    expect(response).to.have.status(200)
+
     // Expect the state to change to WAITING_FOR_CATEGORY
     expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY))
 
