@@ -1,3 +1,4 @@
+const ActiveAlert = require('./lib/activeAlert')
 const ALERT_TYPE = require('./lib/alertTypeEnum')
 const AlertSession = require('./lib/alertSession')
 const BraveAlerter = require('./lib/braveAlerter')
@@ -8,6 +9,7 @@ const Location = require('./lib/location')
 const SYSTEM = require('./lib/systemEnum')
 
 module.exports = {
+  ActiveAlert,
   ALERT_TYPE,
   AlertSession,
   BraveAlerter,
