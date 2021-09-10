@@ -100,6 +100,7 @@ describe('happy path OneSignal integration test: responder responds right away a
     this.currentAlertSession.alertState = CHATBOT_STATE.RESPONDING
 
     // Responder responds to the alert
+    // prettier-ignore
     response = await chai
       .request(this.app)
       .post('/alert/respondToAlertSession')

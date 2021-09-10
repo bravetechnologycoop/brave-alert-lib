@@ -21,6 +21,10 @@ function dummyGetLocationByAlertApiKey() {
   return 'getLocationByAlertApiKey'
 }
 
+function dummyGetActiveAlertsByAlertApiKey() {
+  return 'getActiveAlertsByAlertApiKey'
+}
+
 function dummyGetHistoricAlertsByAlertApiKey() {
   return 'getHistoricAlertsByAlertApiKey'
 }
@@ -40,6 +44,7 @@ function braveAlerterFactory(overrides = {}) {
     overrides.getAlertSessionBySessionIdAndAlertApiKey || dummyGetAlertSessionBySessionIdAndAlertApiKey,
     overrides.alertSessionChangedCallback || dummyAlertSessionChangedCallback,
     overrides.getLocationByAlertApiKey || dummyGetLocationByAlertApiKey,
+    overrides.getActiveAlertsByAlertApiKey || dummyGetActiveAlertsByAlertApiKey,
     overrides.getHistoricAlertsByAlertApiKey || dummyGetHistoricAlertsByAlertApiKey,
     overrides.getNewNotificationsCountByAlertApiKey || dummyGetNewNotificationsCountByAlertApiKey,
     overrides.asksIncidentDetails || true,
@@ -51,6 +56,7 @@ function mockResponse(sandbox) {
   // From https://codewithhugo.com/express-request-response-mocking/
   const res = {}
   res.writeHead = sandbox.stub().returns(res)
+  res.json = sandbox.stub().returns(res)
   res.status = sandbox.stub().returns(res)
   res.send = sandbox.stub().returns(res)
 

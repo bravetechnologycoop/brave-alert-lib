@@ -101,7 +101,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getHistoricAlertsByAlertApiKey, asksIncidentDetails, getReturnMessage)
+### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, asksIncidentDetails, getReturnMessage)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
@@ -112,6 +112,8 @@ The main class of this library. It is used to send single alerts or to start ale
 **alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB
 
 **getLocationByAlertApiKey (async function(alertApiKey)):** function that returns the `Location` object whose Alert API Key matches the given `alertApiKey`, or `null` if there is no match
+
+**getActiveAlertsByAlertApiKey (async function(alertApiKey)):** function that returns an array of `ActiveAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
 **getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
@@ -159,6 +161,8 @@ The BraveAlerter's Express Router contains the routes
 
   Acknowledges an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This is the equivalent to a person replying 'Ok' after receiving the first text message in an alert session.
 
+  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
+
 - `POST /alert/respondToAlertSession`
 
   Expects the header to contain `X-API-KEY`.
@@ -167,6 +171,7 @@ The BraveAlerter's Express Router contains the routes
 
   Responds to an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This occurs when the person presses the 'Completed' button on an alert in the Brave Alert App.
 
+  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
 
 - `POST /alert/setIncidentCategory`
 
@@ -175,6 +180,8 @@ The BraveAlerter's Express Router contains the routes
   Expects the body to contain `sessionId` and `incidentCategory`.
 
   If the Alert Session with the given `sessionId` was started by a device whose client has the given `alertApiKey` and for whom the given `incidentCategory` is valid, then update its incident category to `incidentCategory`.
+
+  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
 
 which can be added to an existing Express app by:
 
@@ -263,15 +270,13 @@ An object representing an alert session. Contains the following fields:
 
 **responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 
-**validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will
-be stored in the DB. For example:
+**validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:
 
 ```
 ['Accidental', 'Safer Use', 'Overdose', 'Other']
 ```
 
-Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
-human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
+Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
 
 **validIncidentCategoryKeys (array of strings):** The valid incident cateogry keys for this session. These are the values that the responder will use to select an incident category through text message. For example:
 
@@ -281,6 +286,42 @@ human-readable DB value for the `validIncidentCategoryKeys[i]` value given by th
 
 Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
 human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
+
+## `ActiveAlert` class
+
+An object representing an active alert session. Contains the following fields:
+
+**id (GUID):** Unique identifier for the alert session; should be the session ID from the DB
+
+**chatbotState (CHATBOT_STATE):** Thc current alert state of the alert session
+
+**deviceName (string):** The name of the device that triggered this alert session
+
+**alertType (ALERT_TYPE):** The current alert type of the alert session
+
+**validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:
+
+```
+['Accidental', 'Safer Use', 'Overdose', 'Other']
+```
+
+## `HistoricAlert` class
+
+An object representing a historic alert session. Contains the following fields:
+
+**id (GUID):** Unique identifier for the alert session; should be the session ID from the DB
+
+**deviceName (string):** The name of the device that triggered this alert session
+
+**category (string):** The incident category of this alert session
+
+**alertType (ALERT_TYPE):** The final alert type of the alert session
+
+**numButtonPresses (int):** The number of times the Button was pressed during this alert session, if applicable. `undefined` otherwise.
+
+**createdTimestamp (timestamp):** The UTC datetime when this alert session was created
+
+** respondedTimestamp (timestamp):** The UTC datetime when this alert was responded to
 
 ## `ALERT_TYPE` enum
 

@@ -12,6 +12,8 @@ const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
+const ALERT_TYPE = require('../../../lib/alertTypeEnum')
+const ActiveAlert = require('../../../lib/activeAlert')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
@@ -31,10 +33,14 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
   describe('given valid request parameters', () => {
     beforeEach(async () => {
       this.goodSessionId = 'mySessionId'
+      this.activeAlerts = [new ActiveAlert(this.goodSessionId, CHATBOT_STATE.RESPONDING, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2'])]
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSessionBySessionIdAndAlertApiKey: () => {
           return new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
+        },
+        getActiveAlertsByAlertApiKey: () => {
+          return this.activeAlerts
         },
         alertSessionChangedCallback: sandbox.stub(),
       })
@@ -51,6 +57,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
 
     it('should not log any errors', () => {
       expect(helpers.logError).not.to.be.called
+    })
+
+    it('should return the active alerts', () => {
+      expect(JSON.parse(this.response.body)).to.eql(this.activeAlerts)
     })
 
     it('should return 200', () => {

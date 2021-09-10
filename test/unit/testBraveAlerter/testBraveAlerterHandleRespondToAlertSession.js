@@ -10,6 +10,8 @@ const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
+const ALERT_TYPE = require('../../../lib/alertTypeEnum')
+const ActiveAlert = require('../../../lib/activeAlert')
 
 chai.use(sinonChai)
 
@@ -30,10 +32,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is STARTED', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -61,6 +69,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        })
+
         it('should return 200', () => {
           expect(this.fakeExpressResponse.status).to.be.calledWith(200)
         })
@@ -69,10 +81,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is WAITING_FOR_REPLY', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_REPLY)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -100,6 +118,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        })
+
         it('should return 200', () => {
           expect(this.fakeExpressResponse.status).to.be.calledWith(200)
         })
@@ -108,10 +130,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is RESPONDING', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -129,11 +157,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
           await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
-
         it('should call the callback', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
             new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY),
           )
+        })
+
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
         })
 
         it('should return 200', () => {
@@ -144,10 +175,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is WAITING_FOR_CATEGORY', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -175,6 +212,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        })
+
         it('should return 200', () => {
           expect(this.fakeExpressResponse.status).to.be.calledWith(200)
         })
@@ -183,10 +224,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is WAITING_FOR_DETAILS', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_DETAILS)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -214,6 +261,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        })
+
         it('should return 200', () => {
           expect(this.fakeExpressResponse.status).to.be.calledWith(200)
         })
@@ -222,10 +273,16 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
       describe('and the session state is COMPLETED', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
+          this.activeAlerts = [
+            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+          ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
               return new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED)
+            },
+            getActiveAlertsByAlertApiKey: () => {
+              return this.activeAlerts
             },
             alertSessionChangedCallback: sandbox.stub(),
           })
@@ -251,6 +308,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
         it('should not call alertSessionChangedCallback', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
+        })
+
+        it('should return the active alerts', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
         })
 
         it('should return 200', () => {

@@ -25,6 +25,10 @@ function dummyGetLocationByAlertApiKey() {
   return 'getLocationByAlertApiKey'
 }
 
+function dummyGetActiveAlertsByAlertApiKey() {
+  return 'getActiveAlertsByAlertApiKey'
+}
+
 function dummyGetHistoricAlertsByAlertApiKey() {
   return 'getHistoricAlertsByAlertApiKey'
 }
@@ -48,6 +52,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       dummyGetAlertSessionBySessionIdAndAlertApiKey,
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
+      dummyGetActiveAlertsByAlertApiKey,
       dummyGetHistoricAlertsByAlertApiKey,
       dummyGetNewNotificationsCountByAlertApiKey,
       true,
@@ -66,6 +71,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       ${this.braveAlerter.getAlertSessionBySessionIdAndAlertApiKey()}
       ${this.braveAlerter.alertSessionChangedCallback()}
       ${this.braveAlerter.getLocationByAlertApiKey()}
+      ${this.braveAlerter.getActiveAlertsByAlertApiKey()}
       ${this.braveAlerter.getHistoricAlertsByAlertApiKey()}
       ${this.braveAlerter.getNewNotificationsCountByAlertApiKey()}
     `
@@ -77,6 +83,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       getAlertSessionBySessionIdAndAlertApiKey
       alertSessionChangedCallback
       getLocationByAlertApiKey
+      getActiveAlertsByAlertApiKey
       getHistoricAlertsByAlertApiKey
       getNewNotificationsCountByAlertApiKey
     `,
