@@ -33,7 +33,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -82,7 +89,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -131,7 +145,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -176,7 +197,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -225,7 +253,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -274,7 +309,14 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
           this.activeAlerts = [
-            new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+            new ActiveAlert(
+              this.goodSessionId,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              'myDeviceId',
+              ALERT_TYPE.SENSOR_DURATION,
+              ['Cat1', 'Cat2'],
+              '2021-01-05T15:22:30.000Z',
+            ),
           ]
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({

@@ -311,6 +311,8 @@ An object representing an active alert session. Contains the following fields:
 ['Accidental', 'Safer Use', 'Overdose', 'Other']
 ```
 
+**createdTimestamp (timestamp):** The UTC datetime when this alert session was created
+
 ## `HistoricAlert` class
 
 An object representing a historic alert session. Contains the following fields:
@@ -327,7 +329,7 @@ An object representing a historic alert session. Contains the following fields:
 
 **createdTimestamp (timestamp):** The UTC datetime when this alert session was created
 
-** respondedTimestamp (timestamp):** The UTC datetime when this alert was responded to
+**respondedTimestamp (timestamp):** The UTC datetime when this alert was responded to
 
 ## `ALERT_TYPE` enum
 

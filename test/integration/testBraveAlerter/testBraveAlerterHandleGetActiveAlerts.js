@@ -29,8 +29,16 @@ describe('braveAlerter.js integration tests: handleGetActiveAlerts', () => {
   describe('given valid request parameters and activeAlerts that corresponds to the API key', () => {
     beforeEach(async () => {
       this.fakeActiveAlerts = [
-        new ActiveAlert('fakeId', CHATBOT_STATE.STARTED, 'fakeDeviceName', ALERT_TYPE.BUTTONS_URGENT, ['Cat1', 'Cat2']),
-        new ActiveAlert('fakeId2', CHATBOT_STATE.RESPONDING, 'fakeDeviceName2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, ['Cat1', 'Cat2']),
+        new ActiveAlert('fakeId', CHATBOT_STATE.STARTED, 'fakeDeviceName', ALERT_TYPE.BUTTONS_URGENT, ['Cat1', 'Cat2'], '2021-01-05T15:22:30.000Z'),
+        new ActiveAlert(
+          'fakeId2',
+          CHATBOT_STATE.RESPONDING,
+          'fakeDeviceName2',
+          ALERT_TYPE.BUTTONS_NOT_URGENT,
+          4,
+          ['Cat1', 'Cat2'],
+          '2021-01-05T15:22:35.000Z',
+        ),
       ]
 
       const braveAlerter = testingHelpers.braveAlerterFactory({

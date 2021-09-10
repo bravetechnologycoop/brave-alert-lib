@@ -37,7 +37,14 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
             alertSession.validIncidentCategories = ['My Category']
             alertSession.validIncidentCategoryKeys = ['1']
             this.activeAlerts = [
-              new ActiveAlert(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_DETAILS, 'myDeviceId', ALERT_TYPE.SENSOR_DURATION, ['Cat1', 'Cat2']),
+              new ActiveAlert(
+                this.goodSessionId,
+                CHATBOT_STATE.WAITING_FOR_DETAILS,
+                'myDeviceId',
+                ALERT_TYPE.SENSOR_DURATION,
+                ['Cat1', 'Cat2'],
+                '2021-01-05T15:22:30.000Z',
+              ),
             ]
 
             this.braveAlerter = testingHelpers.braveAlerterFactory({
