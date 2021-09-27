@@ -17,7 +17,7 @@ chai.use(sinonChai)
 
 const sandbox = sinon.createSandbox()
 
-describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
+describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
   beforeEach(() => {
     sandbox.spy(helpers, 'log')
     sandbox.spy(helpers, 'logError')
@@ -35,7 +35,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -54,7 +54,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -63,11 +63,17 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
-        it('should call the callback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING))
+        it('should log the failure', () => {
+          expect(helpers.log).to.be.calledWith(
+            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.STARTED})`,
+          )
+        })
+
+        it('should not call alertSessionChangedCallback', () => {
+          expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
         it('should return the active alerts', () => {
@@ -85,7 +91,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -104,7 +110,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -113,11 +119,17 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
-        it('should call the callback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING))
+        it('should log the failure', () => {
+          expect(helpers.log).to.be.calledWith(
+            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.WAITING_FOR_REPLY})`,
+          )
+        })
+
+        it('should not call alertSessionChangedCallback', () => {
+          expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
         it('should return the active alerts', () => {
@@ -135,7 +147,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -154,7 +166,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -163,17 +175,13 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
-        it('should log the failure', () => {
-          expect(helpers.log).to.be.calledWith(
-            `Failed to acknowledge alert for session ${this.goodSessionId}: Session has already been acknowledged (current state: ${CHATBOT_STATE.RESPONDING})`,
+        it('should call the callback', () => {
+          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+            new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY),
           )
-        })
-
-        it('should not call alertSessionChangedCallback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
         it('should return the active alerts', () => {
@@ -191,7 +199,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -210,7 +218,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -219,12 +227,12 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
         it('should log the failure', () => {
           expect(helpers.log).to.be.calledWith(
-            `Failed to acknowledge alert for session ${this.goodSessionId}: Session has already been acknowledged (current state: ${CHATBOT_STATE.WAITING_FOR_CATEGORY})`,
+            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.WAITING_FOR_CATEGORY})`,
           )
         })
 
@@ -247,7 +255,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -266,7 +274,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -275,12 +283,12 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
         it('should log the failure', () => {
           expect(helpers.log).to.be.calledWith(
-            `Failed to acknowledge alert for session ${this.goodSessionId}: Session has already been acknowledged (current state: ${CHATBOT_STATE.WAITING_FOR_DETAILS})`,
+            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.WAITING_FOR_DETAILS})`,
           )
         })
 
@@ -303,7 +311,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           this.activeAlerts = [
             new ActiveAlert(
               this.goodSessionId,
-              CHATBOT_STATE.RESPONDING,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
               'myDeviceId',
               ALERT_TYPE.SENSOR_DURATION,
               ['Cat1', 'Cat2'],
@@ -322,7 +330,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           })
 
           const validRequest = {
-            path: '/alert/acknowledgeAlertSession',
+            path: '/alert/respondToAlertSession',
             header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
             body: {
               sessionId: this.goodSessionId,
@@ -331,12 +339,12 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-          await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
         })
 
         it('should log the failure', () => {
           expect(helpers.log).to.be.calledWith(
-            `Failed to acknowledge alert for session ${this.goodSessionId}: Session has already been acknowledged (current state: ${CHATBOT_STATE.COMPLETED})`,
+            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.COMPLETED})`,
           )
         })
 
@@ -366,7 +374,7 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
         })
 
         const validRequest = {
-          path: '/alert/acknowledgeAlertSession',
+          path: '/alert/respondToAlertSession',
           header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
           body: {
             sessionId: this.badSessionId,
@@ -375,11 +383,11 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
         this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
 
-        await this.braveAlerter.handleAcknowledgeAlertSession(validRequest, this.fakeExpressResponse)
+        await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
       })
 
       it('should log the failure', () => {
-        expect(helpers.logError).to.be.calledWith(`Failed to acknowledge alert for session ${this.badSessionId}: No corresponding session`)
+        expect(helpers.logError).to.be.calledWith(`Failed to respond to alert for session ${this.badSessionId}: No corresponding session`)
       })
 
       it('should not call alertSessionChangedCallback', () => {

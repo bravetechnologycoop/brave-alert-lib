@@ -41,7 +41,7 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       const app = express()
       app.use(braveAlerter.getRouter())
 
-      // eslint-disable-next-line prettier/prettier
+      // prettier-ignore
       this.response = await chai
         .request(app)
         .get('/alert/historicAlerts')
@@ -70,7 +70,7 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       const app = express()
       app.use(braveAlerter.getRouter())
 
-      // eslint-disable-next-line prettier/prettier
+      // prettier-ignore
       this.response = await chai
         .request(app)
         .get('/alert/historicAlerts')
@@ -95,8 +95,13 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       const app = express()
       app.use(braveAlerter.getRouter())
 
-      // eslint-disable-next-line prettier/prettier
-      this.response = await chai.request(app).get('/alert/historicAlerts').set('X-API-KEY', '').query({ maxHistoricAlerts: 20 }).send({})
+      // prettier-ignore
+      this.response = await chai
+        .request(app)
+        .get('/alert/historicAlerts')
+        .set('X-API-KEY', '')
+        .query({ maxHistoricAlerts: 20 })
+        .send({})
     })
 
     it('should log the error', () => {
@@ -115,8 +120,12 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       const app = express()
       app.use(braveAlerter.getRouter())
 
-      // eslint-disable-next-line prettier/prettier
-      this.response = await chai.request(app).get('/alert/historicAlerts').query({ maxHistoricAlerts: 20 }).send({})
+      // prettier-ignore
+      this.response = await chai
+        .request(app)
+        .get('/alert/historicAlerts')
+        .query({ maxHistoricAlerts: 20 })
+        .send({})
     })
 
     it('should log the error', () => {
@@ -159,8 +168,12 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       const app = express()
       app.use(braveAlerter.getRouter())
 
-      // eslint-disable-next-line prettier/prettier
-      this.response = await chai.request(app).get('/alert/historicAlerts').set('X-API-KEY', '00000000-000000000000000').send({})
+      // prettier-ignore
+      this.response = await chai
+        .request(app)
+        .get('/alert/historicAlerts')
+        .set('X-API-KEY', '00000000-000000000000000')
+        .send({})
     })
 
     it('should log the error', () => {

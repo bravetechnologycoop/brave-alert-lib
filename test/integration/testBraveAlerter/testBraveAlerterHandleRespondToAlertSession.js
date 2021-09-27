@@ -11,16 +11,16 @@ const chaiHttp = require('chai-http')
 const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
 const AlertSession = require('../../../lib/alertSession')
-const ActiveAlert = require('../../../lib/activeAlert')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
+const ActiveAlert = require('../../../lib/activeAlert')
 
 chai.use(chaiHttp)
 chai.use(sinonChai)
 
 const sandbox = sinon.createSandbox()
 
-describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
+describe('braveAlerter.js integration tests: handleRespondToAlertSession', () => {
   beforeEach(() => {
     sandbox.spy(helpers, 'log')
     sandbox.spy(helpers, 'logError')
@@ -33,13 +33,10 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
   describe('given valid request parameters', () => {
     beforeEach(async () => {
       this.goodSessionId = 'mySessionId'
-      const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
-      alertSession.validIncidentCategories = ['My Category']
-      alertSession.validIncidentCategoryKeys = ['1']
       this.activeAlerts = [
         new ActiveAlert(
           this.goodSessionId,
-          CHATBOT_STATE.WAITING_FOR_DETAILS,
+          CHATBOT_STATE.WAITING_FOR_CATEGORY,
           'myDeviceId',
           ALERT_TYPE.SENSOR_DURATION,
           ['Cat1', 'Cat2'],
@@ -49,7 +46,7 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSessionBySessionIdAndAlertApiKey: () => {
-          return alertSession
+          return new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
         },
         getActiveAlertsByAlertApiKey: () => {
           return this.activeAlerts
@@ -62,9 +59,9 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
 
       this.response = await chai
         .request(app)
-        .post('/alert/setIncidentCategory')
+        .post('/alert/respondToAlertSession')
         .set('X-API-KEY', '00000000-000000000000000')
-        .send({ sessionId: this.goodSessionId, incidentCategory: 'My Category' })
+        .send({ sessionId: this.goodSessionId })
     })
 
     it('should not log any errors', () => {
@@ -90,13 +87,13 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
       // prettier-ignore
       this.response = await chai
         .request(app)
-        .post('/alert/setIncidentCategory')
+        .post('/alert/respondToAlertSession')
         .set('X-API-KEY', '00000000-000000000000000')
-        .send({ incidentCategory: 'My Category' })
+        .send({})
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: sessionId (Invalid value)')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/respondToAlertSession: sessionId (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -113,60 +110,13 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
 
       this.response = await chai
         .request(app)
-        .post('/alert/setIncidentCategory')
+        .post('/alert/respondToAlertSession')
         .set('X-API-KEY', '00000000-000000000000000')
-        .send({ sessionId: '', incidentCategory: 'My Category' })
+        .send({ sessionId: '' })
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: sessionId (Invalid value)')
-    })
-
-    it('should return 400', () => {
-      expect(this.response.status).to.equal(400)
-    })
-  })
-
-  describe('given that incidentCategory is missing', () => {
-    beforeEach(async () => {
-      const braveAlerter = testingHelpers.braveAlerterFactory()
-
-      const app = express()
-      app.use(braveAlerter.getRouter())
-
-      // prettier-ignore
-      this.response = await chai
-        .request(app)
-        .post('/alert/setIncidentCategory')
-        .set('X-API-KEY', '00000000-000000000000000')
-        .send({ sessionId: 'sessionId' })
-    })
-
-    it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: incidentCategory (Invalid value)')
-    })
-
-    it('should return 400', () => {
-      expect(this.response.status).to.equal(400)
-    })
-  })
-
-  describe('given that sessionId is blank', () => {
-    beforeEach(async () => {
-      const braveAlerter = testingHelpers.braveAlerterFactory()
-
-      const app = express()
-      app.use(braveAlerter.getRouter())
-
-      this.response = await chai
-        .request(app)
-        .post('/alert/setIncidentCategory')
-        .set('X-API-KEY', '00000000-000000000000000')
-        .send({ sessionId: 'sessionId', incidentCategory: '' })
-    })
-
-    it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: incidentCategory (Invalid value)')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/respondToAlertSession: sessionId (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -184,12 +134,12 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
       // prettier-ignore
       this.response = await chai
         .request(app)
-        .post('/alert/setIncidentCategory')
-        .send({ sessionId: 'sessionId', incidentCategory: 'My Category' })
+        .post('/alert/respondToAlertSession')
+        .send({ sessionId: 'sessionId' })
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: x-api-key (Invalid value)')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/respondToAlertSession: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {
@@ -207,13 +157,13 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
       // prettier-ignore
       this.response = await chai
         .request(app)
-        .post('/alert/setIncidentCategory')
+        .post('/alert/respondToAlertSession')
         .set('X-API-KEY', '')
-        .send({ sessionId: 'sessionId', incidentCategory: 'My Category' })
+        .send({ sessionId: 'sessionId' })
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Bad request to /alert/setIncidentCategory: x-api-key (Invalid value)')
+      expect(helpers.logError).to.be.calledWith('Bad request to /alert/respondToAlertSession: x-api-key (Invalid value)')
     })
 
     it('should return 400', () => {

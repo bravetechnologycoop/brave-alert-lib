@@ -10,6 +10,8 @@ const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
+const ALERT_TYPE = require('../../../lib/alertTypeEnum')
+const ActiveAlert = require('../../../lib/activeAlert')
 
 chai.use(sinonChai)
 
@@ -34,10 +36,23 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
             const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
             alertSession.validIncidentCategories = ['My Category']
             alertSession.validIncidentCategoryKeys = ['1']
+            this.activeAlerts = [
+              new ActiveAlert(
+                this.goodSessionId,
+                CHATBOT_STATE.WAITING_FOR_DETAILS,
+                'myDeviceId',
+                ALERT_TYPE.SENSOR_DURATION,
+                ['Cat1', 'Cat2'],
+                '2021-01-05T15:22:30.000Z',
+              ),
+            ]
 
             this.braveAlerter = testingHelpers.braveAlerterFactory({
               getAlertSessionBySessionIdAndAlertApiKey: () => {
                 return alertSession
+              },
+              getActiveAlertsByAlertApiKey: () => {
+                return this.activeAlerts
               },
               alertSessionChangedCallback: sandbox.stub(),
             })
@@ -58,6 +73,10 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
 
           it('should call the callback', () => {
             expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED, '1'))
+          })
+
+          it('should return the active alerts', () => {
+            expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
           })
 
           it('should return 200', () => {
