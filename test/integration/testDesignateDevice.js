@@ -1,4 +1,4 @@
-const { expect, assert } = require('chai')
+const { expect } = require('chai')
 const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
@@ -41,14 +41,6 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
       expect(helpers.log).to.be.calledWith(
         '************* Verification Code: ABC123 Alert API Key: 00000000-000000000000000 Responder Push ID: pushID',
       )
-    })
-
-    it('should return a JSON response body', async () => {
-      try {
-        JSON.parse(this.response.body)
-      } catch (e) {
-        assert.fail('Getting the JSON string should not throw an error. Make sure that your response is sent with ".json(JSON.stringify(...))"')
-      }
     })
 
     it('should return 200', () => {
