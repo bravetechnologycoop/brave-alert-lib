@@ -44,8 +44,12 @@ describe('braveAlerter.js integration tests: handleGetNewNotificationsCount', ()
       expect(this.response).to.have.status(200)
     })
 
-    it('should return a JSON response body', async () => {
-      expect(this.response.body).to.equal(JSON.stringify(this.fakeNewNotificationsCount))
+    it('should return the notification count', async () => {
+      expect(this.response.body).to.equal(this.fakeNewNotificationsCount)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -67,6 +71,10 @@ describe('braveAlerter.js integration tests: handleGetNewNotificationsCount', ()
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that the API key is missing', () => {
@@ -86,6 +94,10 @@ describe('braveAlerter.js integration tests: handleGetNewNotificationsCount', ()
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 })

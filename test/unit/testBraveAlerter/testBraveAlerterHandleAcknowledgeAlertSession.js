@@ -70,8 +70,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING))
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -120,8 +120,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING))
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -176,8 +176,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -232,8 +232,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -288,8 +288,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -344,8 +344,8 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
 
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+        it('should return the active alerts as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -380,6 +380,12 @@ describe('braveAlerter.js unit tests: handleAcknowledgeAlertSession', () => {
 
       it('should log the failure', () => {
         expect(helpers.logError).to.be.calledWith(`Failed to acknowledge alert for session ${this.badSessionId}: No corresponding session`)
+      })
+
+      it('should return the error message as JSON', () => {
+        expect(this.fakeExpressResponse.json).to.be.calledWith(
+          `Failed to acknowledge alert for session ${this.badSessionId}: No corresponding session`,
+        )
       })
 
       it('should not call alertSessionChangedCallback', () => {

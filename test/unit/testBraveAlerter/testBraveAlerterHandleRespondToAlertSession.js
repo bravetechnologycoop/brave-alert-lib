@@ -77,7 +77,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -133,7 +133,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -185,7 +185,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -241,7 +241,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -297,7 +297,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {
@@ -353,7 +353,7 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
 
         it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
         })
 
         it('should return 200', () => {

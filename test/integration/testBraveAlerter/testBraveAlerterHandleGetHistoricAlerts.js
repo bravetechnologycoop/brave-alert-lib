@@ -28,8 +28,24 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
   describe('given valid request parameters and historicAlerts that corresponds to the API key', () => {
     beforeEach(async () => {
       this.fakeHistoricAlerts = [
-        new HistoricAlert('fakeId', 'fakeDeviceName', 'fakeCategory', ALERT_TYPE.BUTTONS_URGENT, 4, '2021-01-05T15:22:30.000Z'),
-        new HistoricAlert('fakeId2', 'fakeDeviceName2', 'fakeCategory2', ALERT_TYPE.BUTTONS_NOT_URGENT, 4, '2021-01-06T15:22:30.000Z'),
+        new HistoricAlert(
+          'fakeId',
+          'fakeDeviceName',
+          'fakeCategory',
+          ALERT_TYPE.BUTTONS_URGENT,
+          4,
+          '2021-01-05T15:22:30.000Z',
+          '2021-01-05T15:25:00.000Z',
+        ),
+        new HistoricAlert(
+          'fakeId2',
+          'fakeDeviceName2',
+          'fakeCategory2',
+          ALERT_TYPE.BUTTONS_NOT_URGENT,
+          4,
+          '2021-01-06T15:22:30.000Z',
+          '2021-01-05T15:25:00.000Z',
+        ),
       ]
 
       const braveAlerter = testingHelpers.braveAlerterFactory({
@@ -54,8 +70,12 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       expect(this.response).to.have.status(200)
     })
 
-    it('should return a JSON response body', async () => {
-      expect(this.response.body).to.equal(JSON.stringify(this.fakeHistoricAlerts))
+    it('should return the historic alerts', async () => {
+      expect(this.response.body).to.eql(this.fakeHistoricAlerts)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -83,8 +103,12 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
       expect(this.response).to.have.status(200)
     })
 
-    it('should return a JSON response body', async () => {
-      expect(this.response.body).to.equal('[]')
+    it('should return no historic alerts', async () => {
+      expect(this.response.body).to.eql([])
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -111,6 +135,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that the API key is missing', () => {
@@ -134,6 +162,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -159,6 +191,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that maxHistoricAlerts is missing', () => {
@@ -182,6 +218,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -207,6 +247,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that maxHistoricAlerts is less than 0', () => {
@@ -230,6 +274,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -258,6 +306,10 @@ describe('braveAlerter.js integration tests: handleGetHistoricAlerts', () => {
 
     it('should return 500', () => {
       expect(this.response.status).to.equal(500)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 })

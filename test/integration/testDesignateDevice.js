@@ -46,6 +46,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     it('should return 200', () => {
       expect(this.response.status).to.equal(200)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that verificationCode is missing', () => {
@@ -63,6 +67,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -82,6 +90,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that responderPushId is missing', () => {
@@ -99,6 +111,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -118,6 +134,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that the API key is missing', () => {
@@ -131,6 +151,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -149,6 +173,10 @@ describe('designateDevice.js integration tests: handleDesignateDevice', () => {
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 })

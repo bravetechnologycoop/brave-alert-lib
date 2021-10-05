@@ -69,11 +69,15 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
     })
 
     it('should return the active alerts', () => {
-      expect(JSON.parse(this.response.body)).to.eql(this.activeAlerts)
+      expect(this.response.body).to.eql(this.activeAlerts)
     })
 
     it('should return 200', () => {
       expect(this.response.status).to.equal(200)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -99,6 +103,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that sessionId is blank', () => {
@@ -121,6 +129,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 
@@ -145,6 +157,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
     })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
+    })
   })
 
   describe('given that the API key is blank', () => {
@@ -168,6 +184,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
 
     it('should return 400', () => {
       expect(this.response.status).to.equal(400)
+    })
+
+    it('should return json', () => {
+      expect(this.response).to.be.json
     })
   })
 })
