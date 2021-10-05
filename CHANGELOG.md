@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed the return values to be more consistent across all the endpoints.
+
 ### Fixed
 
 - Designate Device response now returns JSON.

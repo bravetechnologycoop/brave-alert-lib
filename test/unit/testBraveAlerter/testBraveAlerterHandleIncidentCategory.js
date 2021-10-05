@@ -75,8 +75,8 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
             expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED, '1'))
           })
 
-          it('should return the active alerts', () => {
-            expect(this.fakeExpressResponse.json).to.be.calledWith(JSON.stringify(this.activeAlerts))
+          it('should return the active alerts as JSON', () => {
+            expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
           })
 
           it('should return 200', () => {
@@ -116,6 +116,12 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
 
           it('should log the failure', () => {
             expect(helpers.logError).to.be.calledWith(
+              `Failed to record incident category ${this.incidentCategory} for session ${this.goodSessionId}: Session is not waiting for incident category (current state: ${CHATBOT_STATE.COMPLETED})`,
+            )
+          })
+
+          it('should return the error message as JSON', () => {
+            expect(this.fakeExpressResponse.json).to.be.calledWith(
               `Failed to record incident category ${this.incidentCategory} for session ${this.goodSessionId}: Session is not waiting for incident category (current state: ${CHATBOT_STATE.COMPLETED})`,
             )
           })
@@ -166,6 +172,12 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
           )
         })
 
+        it('should return the error message as JSON', () => {
+          expect(this.fakeExpressResponse.json).to.be.calledWith(
+            `Failed to record incident category ${this.incidentCategory} for session ${this.goodSessionId}: Invalid category for client`,
+          )
+        })
+
         it('should not call alertSessionChangedCallback', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
         })
@@ -205,6 +217,12 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
 
       it('should log the failure', () => {
         expect(helpers.logError).to.be.calledWith(
+          `Failed to record incident category ${this.incidentCategory} for session ${this.badSessionId}: No corresponding session`,
+        )
+      })
+
+      it('should return the error message as JSON', () => {
+        expect(this.fakeExpressResponse.json).to.be.calledWith(
           `Failed to record incident category ${this.incidentCategory} for session ${this.badSessionId}: No corresponding session`,
         )
       })
