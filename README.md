@@ -34,6 +34,7 @@ On your local machine, in the `brave-alert-lib` repository:
    - `ONESIGNAL_API_KEY`: The OneSignal API Key for our production account
    - `ONE_SIGNAL_API_KEY_TEST`: The OneSignal API Key to use in testing
    - `TEST_ONESIGNAL_PUSH_ID`: A OneSignal Player ID that will be sent messages during the integration tests
+   - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
 
 # How to setup a local dev environment
 
