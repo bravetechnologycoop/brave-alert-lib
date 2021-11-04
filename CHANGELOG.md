@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [6.1.0] - 2021-11-04
+
 ### Added
 
 - Sound effects to push notifications (CU-10xfkhr).
+
+### Security
+
+- Updated dependencies.
 
 ## [6.0.0] - 2021-10-07
 
@@ -160,7 +166,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.1.0...HEAD
+[6.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v5.0.0...v6.0.0
 [5.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v4.0.0...v5.0.0
 [4.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v3.5.0...v4.0.0
