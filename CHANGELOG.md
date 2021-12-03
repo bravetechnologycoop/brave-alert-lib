@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Use `express.json()` instead of `body-parser` (CU-13kqxyt).
+- `logSentry` also logs to the console.
 
 ## [6.1.0] - 2021-11-04
 
