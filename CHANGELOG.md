@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
+
+## [6.2.0] - 2021-12-06
 
 ### Changed
 
@@ -171,7 +173,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.1.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.2.0...HEAD
+[6.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v5.0.0...v6.0.0
 [5.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v4.0.0...v5.0.0
