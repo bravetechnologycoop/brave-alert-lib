@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.3.0] - 2022-01-14
+
 ### Security
 
 - Updated eslint and mocha to address moderate security vulnerabilities.
@@ -177,7 +179,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.2.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.3.0...HEAD
+[6.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.2.0...v6.3.0
 [6.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v5.0.0...v6.0.0
