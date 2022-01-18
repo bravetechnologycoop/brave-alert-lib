@@ -332,6 +332,38 @@ An object representing a historic alert session. Contains the following fields:
 
 **respondedTimestamp (timestamp):** The UTC datetime when this alert was responded to
 
+## `Client` class
+
+An object representing a client. Contains the following fields:
+
+**id (GUID):** Unique identifier for the client; should be the database value `client.id`
+
+**displayName (string):** Client name is a displayable format; should be the database value `client.display_name`
+
+**responderPhoneNumber (string):** Client's responder phone number in the form `+133344455555`; should be the database value `client.responder_phone_number`
+
+**responderPushId (string):** Client's Alert App Responder Push ID; should be the database value `client.responder_push_id`
+
+**alertApiKey (string):** Client's Alert App API Key; should be the database value `client.alert_api_key`
+
+**reminderTimeout (int):** Number of seconds after the initial alert before a reminder is sent; should be the database value `client.reminder_timeout`
+
+**fallbackPhoneNumbers (array of strings):** Array of the Client's fallback phone numbers in the form `'["+12223334444","+19998887777"]'`; should be the database value `client.fallback_phone_numbers`
+
+**fromPhoneNumber (string):** Twilio phone number that is used to send fallback and vitals messages in the form `+12223334444`; should be the database value `client.from_phone_number`
+
+**fallbackTimeout (int):** Number of seconds after the initial alert before a fallback message is sent; should be the database value `client.fallback_timeout`
+
+**heartbeatPhoneNumbers (array of strings):** Array of phone numbers to receive vitals/heartbeat messages about this Client, in the form `'["+12223334444","+19998887777"]'`; should be the database value `client.heartbeat_phone_numbers`
+
+**incidentCategories (array of strings):** Array of incident categories the Client's responder will be asked to choose from for each alert; should be the database value `client.incident_categories`
+
+**isActive (boolean):** If this Client is currently active (can be used for things like hiding on the Dashboard and not sending out vitals/heartbeat messages); should be the database value `client.is_active`
+
+**createdAt (Date):** When the Client was created in the database; should be the database value `client.created_at`
+
+**updatedAt (Date):** When the Client was last updated in the database; should be the database value `client.updated_at`
+
 ## `ALERT_TYPE` enum
 
 An enum of the possible types of alert that can be triggered.
@@ -443,3 +475,21 @@ Set up Sentry for tracking errors and outages. NOTE: this needs to be called _af
 **releaseName (string):** The name of the release you are tracking errors for
 
 **Returns:** nothing
+
+## `factories` functions
+
+A collection of functions that are used to create valid, customizable model objects or insert models into the database
+
+### clientDBFactory(db, overrides = {})
+
+Insert a row into the `clients` table in the given `db` with valid default values unless they are overridden by values in the given `overrides` array.
+
+**db (Buttons or Sensors db object):** The database that contains a `createClient` function usable to insert a row into the `clients` table
+
+**overrides (object):** Any custom values to use for the new `client` row other than the defaults
+
+### clientFactory(overrides = {})
+
+Create a new `Client` object with valid default values unless they are overridden by the values in the given `overries` array
+
+**overrides (object):** Any custom values to use for the new `Client` object other than the defaults

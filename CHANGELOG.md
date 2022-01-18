@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Client model and factories to be used by both Buttons and Sensors (CU-13kqjz8).
+
 ## [6.4.0] - 2022-01-14
 
 ### Security
