@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- generateCalculatedTimeDifferenceString function.
+
+### Security
+
+- Updated dependencies.
+
 ## [6.5.0] - 2022-01-27
 
 ### Added
