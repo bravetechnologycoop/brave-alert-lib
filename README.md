@@ -400,6 +400,16 @@ In the test environment, returns the test version of the environment variable wi
 
 **Returns:** the correct environment variable for the situation.
 
+### generateCalculatedTimeDifferenceString(timeToCompare, db)
+
+Returns an English string containing the time difference between the given `timeToCompare` and now according to an async function `db.getCurrentTime()`.
+
+**timeToCompare (Date):** the date to compare to
+
+**db (object):** object containing an async function `getCurrentTime()` that resolves to a Date respresenting the current time
+
+**Returns:** the English string containing the time difference between the given `timeToCompare` and the date returned by `db.getCurrentTime`
+
 ### isTestEnvironment()
 
 Determines whether we are executing in a test environment (i.e. with the value of NODE_ENV === 'test').
