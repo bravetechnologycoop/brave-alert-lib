@@ -380,6 +380,14 @@ An enum of the types of Brave Devices that use `brave-alert-lib`.
 
 A collection of functions that are useful across the Brave NodeJS applications.
 
+### formatDateTimeForDashboard(date)
+
+Format the given `date` into English and Pacific Time
+
+** date (Date):** the JS Date object to format
+
+** Returns:** a string with the given `date` formatted into English and Pacific Time
+
 ### formatExpressValidationErrors(expressErrorObject)
 
 A function that can be sent as an argument to the Express Validation `formatWith` function (https://express-validator.github.io/docs/validation-result-api.html#formatwithformatter). It takes an Express error object and returns a consistent, readable string to be used for error logs and sending in error HTTP messages.

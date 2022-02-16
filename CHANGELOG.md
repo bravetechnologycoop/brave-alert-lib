@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- generateCalculatedTimeDifferenceString function.
+- generateCalculatedTimeDifferenceString helper function.
+- formatDateTimeForDashboard helper.
 
 ### Security
 
