@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.6.0] 2022-02-17
+
 ### Added
 
 - generateCalculatedTimeDifferenceString helper function.
@@ -200,7 +202,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.5.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...HEAD
+[6.6.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.5.0...v6.6.0
 [6.5.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.4.0...v6.5.0
 [6.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.3.0...v6.4.0
 [6.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.2.0...v6.3.0
