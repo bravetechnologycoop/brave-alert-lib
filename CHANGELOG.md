@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Session states for a Device Naming workflow (CU-24bxdpq).
+
+### Removed
+
+- Stop tracking the Twilio fallback message responses.
+
 ## [6.6.0] 2022-02-17
 
 ### Added

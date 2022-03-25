@@ -74,9 +74,6 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     // Expect to log the OneSignal ID
     expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by OneSignal:')
 
-    // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
-
     // Wait for the reminder to send
     await helpers.sleep(2000)
 
@@ -84,7 +81,7 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     expect(helpers.log.getCall(1)).to.be.calledWithMatch('Sent by OneSignal:')
 
     // Expect the state to change to WAITING_FOR_REPLY
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
+    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
 
     this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_REPLY
 
@@ -94,10 +91,5 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     // Expect to log the Twilio ID for each fallback number
     expect(helpers.log.getCall(2)).to.be.calledWithMatch('Sent by Twilio:')
     expect(helpers.log.getCall(3)).to.be.calledWithMatch('Sent by Twilio:')
-
-    // Expect the fallback return messages from a successful Twilio request to be 'queued' for each phone number
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(2).args[0]).to.eql(
-      new AlertSession(sessionId, undefined, undefined, undefined, 'queued, queued'),
-    )
   })
 })

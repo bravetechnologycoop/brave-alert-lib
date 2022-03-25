@@ -80,9 +80,6 @@ describe('happy path OneSignal integration test: responder responds right away a
     // Expect to log the OneSignal ID
     expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by OneSignal:')
 
-    // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
-
     this.currentAlertSession.alertState = CHATBOT_STATE.STARTED
 
     // Responder acknowledges the alert

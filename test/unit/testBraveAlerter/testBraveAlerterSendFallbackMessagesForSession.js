@@ -53,10 +53,8 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       expect(Twilio.sendTwilioMessage).to.be.calledOnce
     })
 
-    it('should call the callback with the session ID and fallback response status', () => {
-      const expectedAlertSession = new AlertSession('guid-123')
-      expectedAlertSession.fallbackReturnMessage = 'my status'
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
@@ -91,10 +89,8 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       expect(Twilio.sendTwilioMessage).to.be.calledThrice
     })
 
-    it('should call the callback with the session ID and fallback response statuses', () => {
-      const expectedAlertSession = new AlertSession('guid-123')
-      expectedAlertSession.fallbackReturnMessage = 'my status, my status, my status'
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
@@ -242,10 +238,8 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
       expect(Twilio.sendTwilioMessage).to.be.calledThrice
     })
 
-    it('should call the callback with the session ID and fallback response statuses, in the same order as the fallbackToPhoneNumbers array', () => {
-      const expectedAlertSession = new AlertSession('guid-123')
-      expectedAlertSession.fallbackReturnMessage = 'no_response, my status, my status'
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 

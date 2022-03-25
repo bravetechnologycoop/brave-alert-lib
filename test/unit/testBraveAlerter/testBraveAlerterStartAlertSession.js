@@ -7,7 +7,6 @@ const sinonChai = require('sinon-chai')
 
 // In-house dependencies
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
-const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
 const Twilio = require('../../../lib/twilio')
 const OneSignal = require('../../../lib/oneSignal')
@@ -72,9 +71,8 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       )
     })
 
-    it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
@@ -121,9 +119,8 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       )
     })
 
-    it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
@@ -159,9 +156,8 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(OneSignal.sendOneSignalMessage).not.to.be.called
     })
 
-    it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 

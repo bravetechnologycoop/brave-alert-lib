@@ -120,7 +120,7 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **asksIncidentDetails (boolean):** `true` if alert sessions should ask for incident details, `false` otherwise
 
-**getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
+**getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories, deviceName)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session. Sometimes this message needs to know the newly created `deviceName` for this Device.
 
 ### getRouter()
 
@@ -273,7 +273,7 @@ An object representing an alert session. Contains the following fields:
 
 **details (string):** The incident details associated with the alert session
 
-**fallbackReturnMessage (string):** The message to send as a fallback for the alert session
+**deviceName (string):** The new name for the Device that started the alert session
 
 **responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 

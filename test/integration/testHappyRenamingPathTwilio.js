@@ -2,13 +2,14 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const expect = require('chai').expect
 const express = require('express')
-const { beforeEach, describe, it } = require('mocha')
+const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const AlertSession = require('../../lib/alertSession')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const helpers = require('../../lib/helpers')
+const Twilio = require('../../lib/twilio')
 const testingHelpers = require('../testingHelpers')
 
 chai.use(chaiHttp)
@@ -19,31 +20,25 @@ const sandbox = sinon.createSandbox()
 const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
 const devicePhoneNumber = '+15005550006'
-const initialMessage = 'Ok'
-const validIncidentCategoryKeys = ['1']
+const initialMessage = 'New Button 123'
 const initialAlertInfo = {
   sessionId,
   toPhoneNumber: responderPhoneNumber,
   fromPhoneNumber: devicePhoneNumber,
   message: initialMessage,
-  reminderTimeoutMillis: 1, // 1 ms
-  fallbackTimeoutMillis: 3000, // 3 seconds
-  reminderMessage: 'Reminder message',
-  fallbackMessage: 'Fallback message',
-  fallbackToPhoneNumbers: ['+15147332272', '+15146141784'],
-  fallbackFromPhoneNumber: '+15005550006',
 }
 
-describe('fallback flow with Twilio: responder never responds so fallback message is sent to manager(s)', () => {
+describe('happy path renaming Twilio integration test: responder responds right away with a valid name', () => {
   beforeEach(() => {
+    this.clock = sandbox.useFakeTimers()
+
     this.currentAlertSession = new AlertSession(
       sessionId,
-      CHATBOT_STATE.STARTED,
+      CHATBOT_STATE.NAMING_STARTED,
       undefined,
       undefined,
-      undefined,
+      'fake serial number',
       responderPhoneNumber,
-      validIncidentCategoryKeys,
     )
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -52,10 +47,11 @@ describe('fallback flow with Twilio: responder never responds so fallback messag
       alertSessionChangedCallback: sandbox.stub(),
     })
 
+    sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+    sandbox.spy(helpers, 'log')
+
     this.app = express()
     this.app.use(this.braveAlerter.getRouter())
-
-    sandbox.spy(helpers, 'log')
   })
 
   afterEach(() => {
@@ -63,28 +59,29 @@ describe('fallback flow with Twilio: responder never responds so fallback messag
   })
 
   it('', async () => {
-    // Initial alert sent to responder phone
+    // Initial renaming message sent to responder phone
     await this.braveAlerter.startAlertSession(initialAlertInfo)
 
     // Expect to log the Twilio ID
     expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by Twilio:')
 
-    // Wait for the reminder to send
-    await helpers.sleep(2000)
+    this.currentAlertSession.alertState = CHATBOT_STATE.NAMING_STARTED
+    this.currentAlertSession.deviceName = initialMessage
 
-    // Expect to log the Twilio ID
-    expect(helpers.log.getCall(1)).to.be.calledWithMatch('Sent by Twilio:')
+    // Responder replies 'New Button 123'
+    const response = await chai.request(this.app).post('/alert/sms').send({
+      From: responderPhoneNumber,
+      To: devicePhoneNumber,
+      Body: initialMessage,
+    })
+    expect(response).to.have.status(200)
 
-    // Expect the state to change to WAITING_FOR_REPLY
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
+    this.currentAlertSession.alertState = CHATBOT_STATE.NAMING_COMPLETED
+    this.currentAlertSession.deviceName = initialMessage
 
-    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_REPLY
-
-    // Wait for the fallbacks to send
-    await helpers.sleep(3000)
-
-    // Expect to log the Twilio ID for each fallback number
-    expect(helpers.log.getCall(2)).to.be.calledWithMatch('Sent by Twilio:')
-    expect(helpers.log.getCall(3)).to.be.calledWithMatch('Sent by Twilio:')
+    // Expect the state to change to NAMING_COMPLETED
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+      new AlertSession(sessionId, CHATBOT_STATE.NAMING_COMPLETED, undefined, undefined, initialMessage),
+    )
   })
 })
