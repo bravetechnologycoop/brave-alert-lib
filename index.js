@@ -9,6 +9,7 @@ const helpers = require('./lib/helpers')
 const HistoricAlert = require('./lib/historicAlert')
 const Location = require('./lib/location')
 const SYSTEM = require('./lib/systemEnum')
+const twilioHelpers = require('./lib/twilioHelpers')
 
 module.exports = {
   ActiveAlert,
@@ -22,4 +23,5 @@ module.exports = {
   HistoricAlert,
   Location,
   SYSTEM,
+  twilioHelpers,
 }
