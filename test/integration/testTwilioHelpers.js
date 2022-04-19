@@ -1,24 +1,32 @@
+// Third-party dependencies
+const chai = require('chai')
 const expect = require('chai').expect
 const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
 
+// In-house dependencies
 const helpers = require('../../lib/helpers')
 const twilioHelpers = require('../../lib/twilioHelpers')
 
+chai.use(sinonChai)
+
+const sandbox = sinon.createSandbox()
+
 describe('twilioHelpers.js integration tests:', () => {
+  beforeEach(() => {
+    sandbox.spy(helpers, 'log')
+    sandbox.spy(helpers, 'logError')
+  })
+
+  afterEach(() => {
+    sandbox.restore()
+  })
+
   describe('sendTwilioMessage', () => {
     describe('given valid phone numbers', () => {
       const validToPhoneNumber = '+12345678900'
       const validFromPhoneNumber = '+15005550006'
-
-      beforeEach(() => {
-        // Do not actually log
-        sinon.stub(helpers, 'log')
-      })
-
-      afterEach(() => {
-        helpers.log.restore()
-      })
 
       it('should return the message status', async () => {
         const response = await twilioHelpers.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
@@ -37,15 +45,6 @@ describe('twilioHelpers.js integration tests:', () => {
       const invalidToPhoneNumber = '+15005550009'
       const validFromPhoneNumber = '+15005550006'
 
-      beforeEach(() => {
-        // Do not actually log
-        sinon.stub(helpers, 'logError')
-      })
-
-      afterEach(() => {
-        helpers.logError.restore()
-      })
-
       it('should return nothing', async () => {
         const response = await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
 
@@ -56,6 +55,22 @@ describe('twilioHelpers.js integration tests:', () => {
         await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
 
         expect(helpers.logError.getCall(0).args[0]).matches(/^Error/)
+      })
+    })
+  })
+
+  describe('buyAndConfigureTwilioPhoneNumber', () => {
+    describe('given an invalid area code', () => {
+      beforeEach(async () => {
+        this.response = await twilioHelpers.buyAndConfigureTwilioPhoneNumber('invalidAreaCode', 'friendlyName')
+      })
+
+      it('should return an error object', async () => {
+        expect(this.response).to.eql({ message: 'Error in Purchasing Twilio Number' })
+      })
+
+      it('should log the error', async () => {
+        expect(helpers.logError).to.be.called
       })
     })
   })

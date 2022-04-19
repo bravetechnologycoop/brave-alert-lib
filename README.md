@@ -27,6 +27,8 @@ On your local machine, in the `brave-alert-lib` repository:
 1. Must have a `.env` file containing following environment variables:
    - `TWILIO_SID`: The Twilio SID to use in production
    - `TWILIO_SID_TEST`: The Twilio SID to use in testing
+   - `TWILIO_MESSAGING_SERVICE_SID`: The Twilio Messaging Service SID to use in production
+     - `TWILIO_MESSAGING_SERVICE_SID_TEST`: The Twilio Messaging Service SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
    - `ONESIGNAL_APP_ID`: The OneSignal app ID for our production account
@@ -35,6 +37,8 @@ On your local machine, in the `brave-alert-lib` repository:
    - `ONE_SIGNAL_API_KEY_TEST`: The OneSignal API Key to use in testing
    - `TEST_ONESIGNAL_PUSH_ID`: A OneSignal Player ID that will be sent messages during the integration tests
    - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
+   - `DOMAIN`: The domain name pointing to this server in production
+   - `DOMAIN_TEST`: The domain name pointing to this server in testing
 
 # How to setup a local dev environment
 
@@ -375,6 +379,20 @@ An enum of the possible states the Alert Session could be in at any given time.
 ## `SYSTEM` enum
 
 An enum of the types of Brave Devices that use `brave-alert-lib`.
+
+## `twilioHelpers` functions
+
+Small collection of functions that handle the interaction with the Twilio client.
+
+### buyAndConfigureTwilioPhoneNumber(areaCode, friendlyName)
+
+Buys and configures a Twilio Phone number for use with the current server (i.e. using the Buttons project, webhook, and messaging service if deployed on Buttons, and using the Sensor project, webhook, and messaging service if deployed on Sensor).
+
+** areaCode (string):** the three-digit US or Canadian area code of the phone number to buy and configure
+
+** friendlyName (string):** the friendly name to assign to the phone number within Twilio
+
+** Returns:** if successful, an object with `message: 'success'` and other key/values of interest; if not successful, an object with `message` explaining the error and other key/values of interest
 
 ## `helpers` functions
 

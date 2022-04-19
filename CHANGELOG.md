@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- twilioHelpers.buyAndConfigureTwilioPhoneNumber helper function to be used by PA (CU-21ghk0x).
+
 ## [6.6.0] 2022-02-17
 
 ### Added
