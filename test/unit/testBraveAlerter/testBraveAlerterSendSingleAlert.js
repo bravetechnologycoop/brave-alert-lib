@@ -5,7 +5,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const helpers = require('../../../lib/helpers')
-const Twilio = require('../../../lib/twilio')
+const twilioHelpers = require('../../../lib/twilioHelpers')
 const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
@@ -23,7 +23,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
   describe('if successfully sends the alert', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage')
+      sinon.stub(twilioHelpers, 'sendTwilioMessage')
 
       const braveAlerter = testingHelpers.braveAlerterFactory()
 
@@ -31,18 +31,18 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should send alert', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledOnce
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnce
     })
   })
 
   describe('if fails to send the alert', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns()
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns()
 
       const braveAlerter = testingHelpers.braveAlerterFactory()
 
@@ -53,7 +53,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should log the response error', () => {

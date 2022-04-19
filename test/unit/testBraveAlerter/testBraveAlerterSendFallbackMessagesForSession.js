@@ -6,7 +6,7 @@ const sinonChai = require('sinon-chai')
 
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
-const Twilio = require('../../../lib/twilio')
+const twilioHelpers = require('../../../lib/twilioHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 
@@ -25,7 +25,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if AlertSession is waiting for a response', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({ status: 'my status' })
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns({ status: 'my status' })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(
@@ -46,11 +46,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should send the fallback message', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledOnce
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnce
     })
 
     it('should call the callback with the session ID and fallback response status', () => {
@@ -63,7 +63,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if there is more than one toFallbackPhoneNumbers', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({ status: 'my status' })
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns({ status: 'my status' })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(
@@ -84,11 +84,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should send all the fallback messages', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledThrice
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledThrice
     })
 
     it('should call the callback with the session ID and fallback response statuses', () => {
@@ -101,7 +101,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if there is no toFallbackPhoneNumbers', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({ status: 'my status' })
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns({ status: 'my status' })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(
@@ -121,11 +121,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should not send the fallback message', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {
@@ -136,7 +136,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if there is no fromFallbackPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({ status: 'my status' })
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns({ status: 'my status' })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(
@@ -156,11 +156,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should not send the fallback message', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {
@@ -171,7 +171,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if twilio fails to send the fallback messages', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').resolves()
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').resolves()
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(
@@ -192,7 +192,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should not call the callback', () => {
@@ -208,7 +208,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sinon
-        .stub(Twilio, 'sendTwilioMessage')
+        .stub(twilioHelpers, 'sendTwilioMessage')
         .onCall(0)
         .returns()
         .onCall(1)
@@ -235,11 +235,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should send the fallback messages', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledThrice
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledThrice
     })
 
     it('should call the callback with the session ID and fallback response statuses, in the same order as the fallbackToPhoneNumbers array', () => {
@@ -252,7 +252,7 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
   describe('if AlertSession is not waiting for a response', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sinon.stub(Twilio, 'sendTwilioMessage').returns({ status: 'my status' })
+      sinon.stub(twilioHelpers, 'sendTwilioMessage').returns({ status: 'my status' })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sinon.stub().returns(new AlertSession('guid-123', 'not CHATBOT_STATE.WAITING_FOR_REPLY')),
@@ -268,11 +268,11 @@ describe('braveAlerter.js unit tests: sendFallbackMessagesForSession', () => {
     })
 
     afterEach(() => {
-      Twilio.sendTwilioMessage.restore()
+      twilioHelpers.sendTwilioMessage.restore()
     })
 
     it('should not send the fallback message', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {

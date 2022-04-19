@@ -9,7 +9,7 @@ const sinonChai = require('sinon-chai')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
-const Twilio = require('../../../lib/twilio')
+const twilioHelpers = require('../../../lib/twilioHelpers')
 const OneSignal = require('../../../lib/oneSignal')
 const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
@@ -30,7 +30,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if there is responderPushId, toPhoneNumber, and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -61,7 +61,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should not send Twilio alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.calledOnce
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.calledOnce
     })
 
     it('should send OneSignal alert with the right parameters', () => {
@@ -81,7 +81,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if there is responderPushId', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -110,7 +110,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should not send Twilio alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.calledOnce
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.calledOnce
     })
 
     it('should send OneSignal alert with the right parameters', () => {
@@ -130,7 +130,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if there is no responderPushId but there is toPhoneNumber and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -152,7 +152,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should send Twilio alert with the right parameters', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumber, this.fromPhoneNumber, this.message)
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumber, this.fromPhoneNumber, this.message)
     })
 
     it('should not send OneSignal alert', () => {
@@ -168,7 +168,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if there is no responderPushId and no toPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -185,7 +185,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should not send Twilio alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not send OneSignal alert', () => {
@@ -200,7 +200,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if there is no responderPushId and no fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -217,7 +217,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should not send Twilio alert', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not send OneSignal alert', () => {
@@ -232,7 +232,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if twilio fails to send the message', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns()
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns()
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -259,7 +259,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
   describe('if onesignal fails to send the message', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
       // Don't actually call OneSignal
       sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({

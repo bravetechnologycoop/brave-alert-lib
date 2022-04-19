@@ -9,7 +9,7 @@ const sinonChai = require('sinon-chai')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const helpers = require('../../../lib/helpers')
-const Twilio = require('../../../lib/twilio')
+const twilioHelpers = require('../../../lib/twilioHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 const OneSignal = require('../../../lib/oneSignal')
@@ -21,7 +21,7 @@ const sandbox = sinon.createSandbox()
 describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
   beforeEach(() => {
     // Don't actually call Twilio
-    sandbox.stub(Twilio, 'sendTwilioMessage').returns({})
+    sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
 
     // Don't actually call OneSignal
     sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
@@ -58,7 +58,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should not send the reminder using Twilio', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
     it('should send the reminder using OneSignal', () => {
       expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly('pushId', 'guid-123 REMINDER', 'Button Press Alert Reminder:\nBathroom 2')
@@ -93,7 +93,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should send the reminder using Twilio', () => {
-      expect(Twilio.sendTwilioMessage).to.be.calledOnceWithExactly('+11231231234', '+11231231235', 'My message')
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly('+11231231234', '+11231231235', 'My message')
     })
 
     it('should not send the reminder using OneSignal', () => {
@@ -128,7 +128,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should not send the reminder using Twilio', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not send the reminder using OneSignal', () => {
@@ -162,7 +162,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should not send the reminder using Twilio', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not send the reminder using OneSignal', () => {
@@ -176,8 +176,8 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
   describe('if twilio fails to send the message', () => {
     beforeEach(async () => {
-      Twilio.sendTwilioMessage.restore()
-      sandbox.stub(Twilio, 'sendTwilioMessage').returns()
+      twilioHelpers.sendTwilioMessage.restore()
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns()
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
@@ -247,7 +247,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should not send the reminder using Twilio', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should log the error', () => {
@@ -273,7 +273,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should not send the reminder', () => {
-      expect(Twilio.sendTwilioMessage).not.to.be.called
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
     it('should not call the callback', () => {
