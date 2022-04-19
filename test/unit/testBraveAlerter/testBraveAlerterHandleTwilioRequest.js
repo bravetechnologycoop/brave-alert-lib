@@ -6,7 +6,7 @@ const sinonChai = require('sinon-chai')
 
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
-const Twilio = require('../../../lib/twilio')
+const twilioHelpers = require('../../../lib/twilioHelpers')
 const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 
@@ -66,8 +66,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           })
 
           // Don't actually call Twilio
-          sandbox.stub(Twilio, 'sendTwilioResponse')
-          sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+          sandbox.stub(twilioHelpers, 'sendTwilioResponse')
+          sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
 
           await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
         })
@@ -79,7 +79,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should send the Twilio response', () => {
-          expect(Twilio.sendTwilioResponse).to.be.calledWith(this.fakeExpressResponse, 'return message')
+          expect(twilioHelpers.sendTwilioResponse).to.be.calledWith(this.fakeExpressResponse, 'return message')
         })
       })
 
@@ -125,8 +125,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           })
 
           // Don't actually call Twilio
-          sandbox.stub(Twilio, 'sendTwilioResponse')
-          sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+          sandbox.stub(twilioHelpers, 'sendTwilioResponse')
+          sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
 
           await this.braveAlerter.handleTwilioRequest(invalidRequest, this.fakeExpressResponse)
         })
@@ -173,8 +173,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         // Don't actually call Twilio
-        sandbox.stub(Twilio, 'sendTwilioResponse')
-        sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+        sandbox.stub(twilioHelpers, 'sendTwilioResponse')
+        sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
 
         await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
       })
@@ -229,7 +229,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(twilioHelpers, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
@@ -281,7 +281,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(twilioHelpers, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
@@ -333,7 +333,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioResponse')
+      sandbox.stub(twilioHelpers, 'sendTwilioResponse')
 
       await this.braveAlerter.handleTwilioRequest(inValidRequest, this.fakeExpressResponse)
     })
@@ -388,8 +388,8 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       // Don't actually call Twilio
-      sandbox.stub(Twilio, 'sendTwilioResponse')
-      sandbox.stub(Twilio, 'isValidTwilioRequest').returns(false)
+      sandbox.stub(twilioHelpers, 'sendTwilioResponse')
+      sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(false)
 
       await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
     })

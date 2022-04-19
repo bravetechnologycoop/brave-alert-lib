@@ -3,9 +3,9 @@ const { afterEach, beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 
 const helpers = require('../../lib/helpers')
-const twilio = require('../../lib/twilio')
+const twilioHelpers = require('../../lib/twilioHelpers')
 
-describe('twilio.js integration tests:', () => {
+describe('twilioHelpers.js integration tests:', () => {
   describe('sendTwilioMessage', () => {
     describe('given valid phone numbers', () => {
       const validToPhoneNumber = '+12345678900'
@@ -21,13 +21,13 @@ describe('twilio.js integration tests:', () => {
       })
 
       it('should return the message status', async () => {
-        const response = await twilio.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
+        const response = await twilioHelpers.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
 
         expect(response.status).not.to.be.undefined
       })
 
       it('should log the returned Twilio SID', async () => {
-        const response = await twilio.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
+        const response = await twilioHelpers.sendTwilioMessage(validToPhoneNumber, validFromPhoneNumber, 'test message')
 
         expect(helpers.log.getCall(0).args[0]).to.equal(`Sent by Twilio: ${response.sid}`)
       })
@@ -47,13 +47,13 @@ describe('twilio.js integration tests:', () => {
       })
 
       it('should return nothing', async () => {
-        const response = await twilio.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
+        const response = await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
 
         expect(response).to.be.undefined
       })
 
       it('should log an error', async () => {
-        await twilio.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
+        await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
 
         expect(helpers.logError.getCall(0).args[0]).matches(/^Error/)
       })

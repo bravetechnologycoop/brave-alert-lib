@@ -9,7 +9,7 @@ const sinonChai = require('sinon-chai')
 const AlertSession = require('../../lib/alertSession')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const helpers = require('../../lib/helpers')
-const Twilio = require('../../lib/twilio')
+const twilioHelpers = require('../../lib/twilioHelpers')
 const testingHelpers = require('../testingHelpers')
 
 chai.use(chaiHttp)
@@ -57,7 +57,7 @@ describe('happy path Twilio integration test: responder responds right away and 
       alertSessionChangedCallback: sandbox.stub(),
     })
 
-    sandbox.stub(Twilio, 'isValidTwilioRequest').returns(true)
+    sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
     sandbox.spy(helpers, 'log')
 
     this.app = express()
