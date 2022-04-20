@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - twilioHelpers.buyAndConfigureTwilioPhoneNumber helper function to be used by PA (CU-21ghk0x).
+- clickUpHelpers.clickUpChecker for use in authentication middleware (CU-21ghk0x).
 
 ### Security
 
