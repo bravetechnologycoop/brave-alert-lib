@@ -28,7 +28,7 @@ On your local machine, in the `brave-alert-lib` repository:
    - `TWILIO_SID`: The Twilio SID to use in production
    - `TWILIO_SID_TEST`: The Twilio SID to use in testing
    - `TWILIO_MESSAGING_SERVICE_SID`: The Twilio Messaging Service SID to use in production
-     - `TWILIO_MESSAGING_SERVICE_SID_TEST`: The Twilio Messaging Service SID to use in testing
+   - `TWILIO_MESSAGING_SERVICE_SID_TEST`: The Twilio Messaging Service SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
    - `ONESIGNAL_APP_ID`: The OneSignal app ID for our production account
@@ -39,6 +39,10 @@ On your local machine, in the `brave-alert-lib` repository:
    - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
    - `DOMAIN`: The domain name pointing to this server in production
    - `DOMAIN_TEST`: The domain name pointing to this server in testing
+   - `CLICKUP_TEAM_NAME`: The full name of the Brave ClickUp Team
+   - `CLICKUP_TEAM_NAME_TEST`: The full name of the Brave ClickUp Team
+   - `CLICKUP_TEAM_ID`: The ID of the Brave ClickUp Team
+   - `CLICKUP_TEAM_ID_TEST`: The ID of the Brave ClickUp Team
 
 # How to setup a local dev environment
 
@@ -393,6 +397,20 @@ Buys and configures a Twilio Phone number for use with the current server (i.e. 
 ** friendlyName (string):** the friendly name to assign to the phone number within Twilio
 
 ** Returns:** if successful, an object with `message: 'success'` and other key/values of interest; if not successful, an object with `message` explaining the error and other key/values of interest
+
+## `clickUpHelpers` functions
+
+A collection of functions that use the ClickUp API.
+
+### clickUpChecker(req, res, next)
+
+Express middleware that checks if the given `req.body.clickupToken` is valid for the Brave ClickUp Team
+
+** req (Request):** The Express request to check
+
+** res (Response):** The Express response to use to send back an error code if the ClickUp check fails
+
+** next (function):** The next handler function for this Express endpoint if the ClickUp check passes
 
 ## `helpers` functions
 
