@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.7.0] - 2022-04-25
+
 ### Added
 
 - twilioHelpers.buyAndConfigureTwilioPhoneNumber helper function to be used by PA (CU-21ghk0x).
@@ -16,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated dependencies.
 
-## [6.6.0] 2022-02-17
+## [6.6.0] - 2022-02-17
 
 ### Added
 
@@ -211,7 +213,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...HEAD
+[6.7.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...v6.67.0
 [6.6.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.5.0...v6.6.0
 [6.5.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.4.0...v6.5.0
 [6.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.3.0...v6.4.0
