@@ -43,6 +43,7 @@ On your local machine, in the `brave-alert-lib` repository:
    - `CLICKUP_TEAM_NAME_TEST`: The full name of the Brave ClickUp Team
    - `CLICKUP_TEAM_ID`: The ID of the Brave ClickUp Team
    - `CLICKUP_TEAM_ID_TEST`: The ID of the Brave ClickUp Team
+   - `IS_DB_LOGGING`: Whether (true) or not (false) we are printing DB debug logs to the console
 
 # How to setup a local dev environment
 
@@ -453,6 +454,12 @@ Returns an English string containing the time difference between the given `time
 **db (object):** object containing an async function `getCurrentTime()` that resolves to a Date respresenting the current time
 
 **Returns:** the English string containing the time difference between the given `timeToCompare` and the date returned by `db.getCurrentTime`
+
+### isDbLogging()
+
+Controls whether the program should output DB debug logs.
+
+**Returns:** `true` if the program should output DB debug logs. `false` otherwise. Under normal circumstances, this should be `false`.
 
 ### isTestEnvironment()
 
