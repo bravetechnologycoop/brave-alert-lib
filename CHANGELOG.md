@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.8.0] - 2022-05-13
+
 ### Added
 
 - DB debug logging that is controlled by an environment variable (CU-2atyr1z).
@@ -217,8 +219,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...HEAD
-[6.7.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...v6.67.0
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.8.0...HEAD
+[6.8.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...v6.8.0
+[6.7.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...v6.7.0
 [6.6.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.5.0...v6.6.0
 [6.5.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.4.0...v6.5.0
 [6.4.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.3.0...v6.4.0
