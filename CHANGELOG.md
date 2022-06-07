@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.9.0] - 2022-06-07
+
 ### Removed
 
 - Log message containing the body of text messages sent when there are no open sessions.
@@ -223,7 +225,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.8.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.9.0...HEAD
+[6.9.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.8.0...v6.9.0
 [6.8.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...v6.8.0
 [6.7.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.6.0...v6.7.0
 [6.6.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.5.0...v6.6.0
