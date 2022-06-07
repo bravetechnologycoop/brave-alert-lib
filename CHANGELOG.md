@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Log message containing the body of text messages sent when there are no open sessions.
+
 ## [6.8.0] - 2022-05-13
 
 ### Added

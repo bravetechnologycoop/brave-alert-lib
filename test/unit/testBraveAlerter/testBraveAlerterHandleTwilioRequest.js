@@ -180,9 +180,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       })
 
       it('should log the error', () => {
-        expect(helpers.log).to.be.calledWith(
-          `Received twilio message from ${this.fromNumber} to ${this.toNumber} with no corresponding open session: ${this.body}`,
-        )
+        expect(helpers.log).to.be.calledWith(`Received twilio message from ${this.fromNumber} to ${this.toNumber} with no corresponding open session`)
       })
 
       it('should return 200', () => {
