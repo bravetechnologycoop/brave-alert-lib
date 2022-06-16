@@ -42,19 +42,11 @@ const initialAlertInfo = {
   fallbackFromPhoneNumber: '+13336669999',
 }
 
-describe('happy path OneSignal integration test: responder responds right away and provides incident category and details', () => {
+describe('happy path OneSignal integration test: responder responds right away and provides incident category', () => {
   beforeEach(() => {
     this.clock = sandbox.useFakeTimers()
 
-    this.currentAlertSession = new AlertSession(
-      sessionId,
-      CHATBOT_STATE.STARTED,
-      undefined,
-      undefined,
-      undefined,
-      validIncidentCategoryKeys,
-      validIncidentCategories,
-    )
+    this.currentAlertSession = new AlertSession(sessionId, CHATBOT_STATE.STARTED, undefined, validIncidentCategoryKeys, validIncidentCategories)
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),

@@ -47,7 +47,6 @@ function braveAlerterFactory(overrides = {}) {
     overrides.getActiveAlertsByAlertApiKey || dummyGetActiveAlertsByAlertApiKey,
     overrides.getHistoricAlertsByAlertApiKey || dummyGetHistoricAlertsByAlertApiKey,
     overrides.getNewNotificationsCountByAlertApiKey || dummyGetNewNotificationsCountByAlertApiKey,
-    overrides.asksIncidentDetails || true,
     overrides.getReturnMessage || dummyGetReturnMessage,
   )
 }

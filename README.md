@@ -111,7 +111,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, asksIncidentDetails, getReturnMessage)
+### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, getReturnMessage)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
@@ -126,8 +126,6 @@ The main class of this library. It is used to send single alerts or to start ale
 **getActiveAlertsByAlertApiKey (async function(alertApiKey)):** function that returns an array of `ActiveAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
 **getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
-
-**asksIncidentDetails (boolean):** `true` if alert sessions should ask for incident details, `false` otherwise
 
 **getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
@@ -279,8 +277,6 @@ An object representing an alert session. Contains the following fields:
 **alertState (CHATBOT_STATE):** Thc current alert state of the alert session
 
 **incidentCategoryKey (string):** The string representing the incident category associated with the alert session
-
-**details (string):** The incident details associated with the alert session
 
 **responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 

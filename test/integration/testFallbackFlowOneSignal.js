@@ -45,7 +45,6 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
       CHATBOT_STATE.STARTED,
       undefined,
       undefined,
-      undefined,
       validIncidentCategoryKeys,
       validIncidentCategories,
     )

@@ -55,7 +55,6 @@ describe('braveAlerter.js unit tests: constructor', () => {
       dummyGetActiveAlertsByAlertApiKey,
       dummyGetHistoricAlertsByAlertApiKey,
       dummyGetNewNotificationsCountByAlertApiKey,
-      true,
       dummyGetReturnMessage,
     )
   })
@@ -92,10 +91,6 @@ describe('braveAlerter.js unit tests: constructor', () => {
 
   it('should initialize the router', () => {
     expect(this.braveAlerter.router).to.not.be.undefined
-  })
-
-  it('should initialize the state machine with whether to ask for incident details', () => {
-    expect(this.braveAlerter.alertStateMachine.asksIncidentDetails).to.be.true
   })
 
   it('should initialize the state machine with the function to get the return messages', () => {
