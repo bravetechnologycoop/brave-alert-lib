@@ -7,7 +7,6 @@ const sinonChai = require('sinon-chai')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
 const twilioHelpers = require('../../../lib/twilioHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
@@ -43,9 +42,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             alertSessionChangedCallback: sandbox.stub(),
-            getAlertSessionByPhoneNumber: sinon
-              .stub()
-              .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+            getAlertSessionByPhoneNumber: sinon.stub().returns(
+              testingHelpers.alertSessionFactory({
+                sessionId: 'guid-123',
+                alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+                incidentCategoryKey: '3',
+                responderPhoneNumber: '+11231231234',
+                validIncidentCategoryKeys: ['3'],
+                validIncidentCategories: ['three'],
+              }),
+            ),
           })
           sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -61,7 +67,13 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should call the callback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession('guid-123', CHATBOT_STATE.COMPLETED, '2'))
+          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+            testingHelpers.alertSessionFactory({
+              sessionId: 'guid-123',
+              alertState: CHATBOT_STATE.COMPLETED,
+              incidentCategoryKey: '2',
+            }),
+          )
         })
 
         it('should send the Twilio response', () => {
@@ -88,9 +100,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             alertSessionChangedCallback: sandbox.stub(),
-            getAlertSessionByPhoneNumber: sinon
-              .stub()
-              .returns(new AlertSession(this.guid, CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+            getAlertSessionByPhoneNumber: sinon.stub().returns(
+              testingHelpers.alertSessionFactory({
+                sessionId: this.guid,
+                alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+                incidentCategoryKey: '3',
+                responderPhoneNumber: '+11231231234',
+                validIncidentCategoryKeys: ['3'],
+                validIncidentCategories: ['three'],
+              }),
+            ),
           })
           sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -177,9 +196,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon
-          .stub()
-          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+        getAlertSessionByPhoneNumber: sinon.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            incidentCategoryKey: '3',
+            responderPhoneNumber: '+11231231234',
+            validIncidentCategoryKeys: ['3'],
+            validIncidentCategories: ['three'],
+          }),
+        ),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -217,9 +243,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon
-          .stub()
-          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+        getAlertSessionByPhoneNumber: sinon.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            incidentCategoryKey: '3',
+            responderPhoneNumber: '+11231231234',
+            validIncidentCategoryKeys: ['3'],
+            validIncidentCategories: ['three'],
+          }),
+        ),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -257,9 +290,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon
-          .stub()
-          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+        getAlertSessionByPhoneNumber: sinon.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            incidentCategoryKey: '3',
+            responderPhoneNumber: '+11231231234',
+            validIncidentCategoryKeys: ['3'],
+            validIncidentCategories: ['three'],
+          }),
+        ),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -300,9 +340,16 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon
-          .stub()
-          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_CATEGORY, '3', '+11231231234', ['3'], ['three'])),
+        getAlertSessionByPhoneNumber: sinon.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            incidentCategoryKey: '3',
+            responderPhoneNumber: '+11231231234',
+            validIncidentCategoryKeys: ['3'],
+            validIncidentCategories: ['three'],
+          }),
+        ),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,

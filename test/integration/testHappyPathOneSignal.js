@@ -8,7 +8,6 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 // In-house dependencies
-const AlertSession = require('../../lib/alertSession')
 const ALERT_TYPE = require('../../lib/alertTypeEnum')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const helpers = require('../../lib/helpers')
@@ -46,7 +45,12 @@ describe('happy path OneSignal integration test: responder responds right away a
   beforeEach(() => {
     this.clock = sandbox.useFakeTimers()
 
-    this.currentAlertSession = new AlertSession(sessionId, CHATBOT_STATE.STARTED, undefined, validIncidentCategoryKeys, validIncidentCategories)
+    this.currentAlertSession = testingHelpers.alertSessionFactory({
+      sessionId,
+      alertState: CHATBOT_STATE.STARTED,
+      validIncidentCategoryKeys,
+      validIncidentCategories,
+    })
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
@@ -72,7 +76,9 @@ describe('happy path OneSignal integration test: responder responds right away a
     expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by OneSignal:')
 
     // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.STARTED }),
+    )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.STARTED
 
@@ -86,7 +92,9 @@ describe('happy path OneSignal integration test: responder responds right away a
     expect(response).to.have.status(200)
 
     // Expect the state to change to RESPONDING
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.RESPONDING))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.RESPONDING }),
+    )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.RESPONDING
 
@@ -100,7 +108,9 @@ describe('happy path OneSignal integration test: responder responds right away a
     expect(response).to.have.status(200)
 
     // Expect the state to change to WAITING_FOR_CATEGORY
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY }),
+    )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_CATEGORY
 
@@ -113,7 +123,13 @@ describe('happy path OneSignal integration test: responder responds right away a
     expect(response).to.have.status(200)
 
     // Expect the state to change to COMPLETED and that the incident cateogry is updated to what the responder sent
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.COMPLETED, incidentCategoryKey))
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+      testingHelpers.alertSessionFactory({
+        sessionId,
+        alertState: CHATBOT_STATE.COMPLETED,
+        incidentCategoryKey,
+      }),
+    )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.COMPLETED
     this.currentAlertSession.incidentCategoryKey = incidentCategoryKey

@@ -8,7 +8,6 @@ const chai = require('chai')
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const ActiveAlert = require('../../../lib/activeAlert')
@@ -33,7 +32,10 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
         describe('and the session state is WAITING_FOR_CATEGORY', () => {
           beforeEach(async () => {
             this.goodSessionId = 'mySessionId'
-            const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
+            const alertSession = testingHelpers.alertSessionFactory({
+              sessionId: this.goodSessionId,
+              alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            })
             alertSession.validIncidentCategories = ['My Category']
             alertSession.validIncidentCategoryKeys = ['1']
             this.activeAlerts = [
@@ -72,7 +74,13 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
           })
 
           it('should call the callback', () => {
-            expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED, '1'))
+            expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+              testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.COMPLETED,
+                incidentCategoryKey: '1',
+              }),
+            )
           })
 
           it('should return the active alerts as JSON', () => {
@@ -87,9 +95,12 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
         describe('and the session state is not WAITING_FOR_CATEGORY', () => {
           beforeEach(async () => {
             this.goodSessionId = 'mySessionId'
-            const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED)
-            alertSession.validIncidentCategories = ['My Category']
-            alertSession.validIncidentCategoryKeys = ['1']
+            const alertSession = testingHelpers.alertSessionFactory({
+              sessionId: this.goodSessionId,
+              alertState: CHATBOT_STATE.COMPLETED,
+              validIncidentCategories: ['My Category'],
+              validIncidentCategoryKeys: ['1'],
+            })
 
             this.braveAlerter = testingHelpers.braveAlerterFactory({
               getAlertSessionBySessionIdAndAlertApiKey: () => {
@@ -139,9 +150,12 @@ describe('braveAlerter.js unit tests: handleIncidentCategory', () => {
       describe('and the given incident category is not valid for the client', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
-          const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
-          alertSession.validIncidentCategories = ['My Category']
-          alertSession.validIncidentCategoryKeys = ['1']
+          const alertSession = testingHelpers.alertSessionFactory({
+            sessionId: this.goodSessionId,
+            alertState: CHATBOT_STATE.STARTED,
+            validIncidentCategories: ['My Category'],
+            validIncidentCategoryKeys: ['1'],
+          })
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {

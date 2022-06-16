@@ -8,7 +8,6 @@ const chai = require('chai')
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const ActiveAlert = require('../../../lib/activeAlert')
@@ -45,7 +44,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
+              return testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.STARTED,
+              })
             },
             getActiveAlertsByAlertApiKey: () => {
               return this.activeAlerts
@@ -101,7 +103,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_REPLY)
+              return testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.WAITING_FOR_REPLY,
+              })
             },
             getActiveAlertsByAlertApiKey: () => {
               return this.activeAlerts
@@ -157,7 +162,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.RESPONDING)
+              return testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.RESPONDING,
+              })
             },
             getActiveAlertsByAlertApiKey: () => {
               return this.activeAlerts
@@ -180,7 +188,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
         it('should call the callback', () => {
           expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-            new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY),
+            testingHelpers.alertSessionFactory({
+              sessionId: this.goodSessionId,
+              alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            }),
           )
         })
 
@@ -209,7 +220,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
+              return testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              })
             },
             getActiveAlertsByAlertApiKey: () => {
               return this.activeAlerts
@@ -265,7 +279,10 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
 
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.COMPLETED)
+              return testingHelpers.alertSessionFactory({
+                sessionId: this.goodSessionId,
+                alertState: CHATBOT_STATE.COMPLETED,
+              })
             },
             getActiveAlertsByAlertApiKey: () => {
               return this.activeAlerts
