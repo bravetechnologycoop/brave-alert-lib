@@ -45,18 +45,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             alertSessionChangedCallback: sandbox.stub(),
             getAlertSessionByPhoneNumber: sinon
               .stub()
-              .returns(
-                new AlertSession(
-                  'guid-123',
-                  CHATBOT_STATE.WAITING_FOR_DETAILS,
-                  '3',
-                  'my details',
-                  'my fallback message',
-                  '+11231231234',
-                  ['3'],
-                  ['three'],
-                ),
-              ),
+              .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
           })
           sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -104,18 +93,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             alertSessionChangedCallback: sandbox.stub(),
             getAlertSessionByPhoneNumber: sinon
               .stub()
-              .returns(
-                new AlertSession(
-                  this.guid,
-                  CHATBOT_STATE.WAITING_FOR_DETAILS,
-                  '3',
-                  'my details',
-                  'my fallback message',
-                  '+11231231234',
-                  ['3'],
-                  ['three'],
-                ),
-              ),
+              .returns(new AlertSession(this.guid, CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
           })
           sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -206,18 +184,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         alertSessionChangedCallback: sandbox.stub(),
         getAlertSessionByPhoneNumber: sinon
           .stub()
-          .returns(
-            new AlertSession(
-              'guid-123',
-              CHATBOT_STATE.WAITING_FOR_DETAILS,
-              '3',
-              'my details',
-              'my fallback message',
-              '+11231231234',
-              ['3'],
-              ['three'],
-            ),
-          ),
+          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -258,18 +225,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         alertSessionChangedCallback: sandbox.stub(),
         getAlertSessionByPhoneNumber: sinon
           .stub()
-          .returns(
-            new AlertSession(
-              'guid-123',
-              CHATBOT_STATE.WAITING_FOR_DETAILS,
-              '3',
-              'my details',
-              'my fallback message',
-              '+11231231234',
-              ['3'],
-              ['three'],
-            ),
-          ),
+          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -310,18 +266,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         alertSessionChangedCallback: sandbox.stub(),
         getAlertSessionByPhoneNumber: sinon
           .stub()
-          .returns(
-            new AlertSession(
-              'guid-123',
-              CHATBOT_STATE.WAITING_FOR_DETAILS,
-              '3',
-              'my details',
-              'my fallback message',
-              '+11231231234',
-              ['3'],
-              ['three'],
-            ),
-          ),
+          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -365,18 +310,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         alertSessionChangedCallback: sandbox.stub(),
         getAlertSessionByPhoneNumber: sinon
           .stub()
-          .returns(
-            new AlertSession(
-              'guid-123',
-              CHATBOT_STATE.WAITING_FOR_DETAILS,
-              '3',
-              'my details',
-              'my fallback message',
-              '+11231231234',
-              ['3'],
-              ['three'],
-            ),
-          ),
+          .returns(new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_DETAILS, '3', 'my details', '+11231231234', ['3'], ['three'])),
       })
       sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
         nextAlertState: CHATBOT_STATE.COMPLETED,

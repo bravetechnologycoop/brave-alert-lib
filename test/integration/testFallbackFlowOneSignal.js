@@ -46,7 +46,6 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
       undefined,
       undefined,
       undefined,
-      undefined,
       validIncidentCategoryKeys,
       validIncidentCategories,
     )
@@ -94,10 +93,5 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     // Expect to log the Twilio ID for each fallback number
     expect(helpers.log.getCall(2)).to.be.calledWithMatch('Sent by Twilio:')
     expect(helpers.log.getCall(3)).to.be.calledWithMatch('Sent by Twilio:')
-
-    // Expect the fallback return messages from a successful Twilio request to be 'queued' for each phone number
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(2).args[0]).to.eql(
-      new AlertSession(sessionId, undefined, undefined, undefined, 'queued, queued'),
-    )
   })
 })
