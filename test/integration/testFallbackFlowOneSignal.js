@@ -6,7 +6,6 @@ const { beforeEach, describe, it } = require('mocha')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const AlertSession = require('../../lib/alertSession')
 const ALERT_TYPE = require('../../lib/alertTypeEnum')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const helpers = require('../../lib/helpers')
@@ -40,14 +39,12 @@ const initialAlertInfo = {
 
 describe('fallback flow with OneSignal: responder never responds so fallback message is sent to manager(s)', () => {
   beforeEach(() => {
-    this.currentAlertSession = new AlertSession(
+    this.currentAlertSession = testingHelpers.alertSessionFactory({
       sessionId,
-      CHATBOT_STATE.STARTED,
-      undefined,
-      undefined,
+      alertState: CHATBOT_STATE.STARTED,
       validIncidentCategoryKeys,
       validIncidentCategories,
-    )
+    })
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
@@ -73,7 +70,9 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     expect(helpers.log.getCall(0)).to.be.calledWithMatch('Sent by OneSignal:')
 
     // Expect the state to change to STARTED
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.STARTED))
+    expect(this.braveAlerter.alertSessionChangedCallback.getCall(0).args[0]).to.eql(
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.STARTED }),
+    )
 
     // Wait for the reminder to send
     await helpers.sleep(2000)
@@ -82,7 +81,9 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     expect(helpers.log.getCall(1)).to.be.calledWithMatch('Sent by OneSignal:')
 
     // Expect the state to change to WAITING_FOR_REPLY
-    expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_REPLY))
+    expect(this.braveAlerter.alertSessionChangedCallback.getCall(1).args[0]).to.eql(
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.WAITING_FOR_REPLY }),
+    )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_REPLY
 

@@ -11,7 +11,6 @@ const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
 const twilioHelpers = require('../../../lib/twilioHelpers')
 const OneSignal = require('../../../lib/oneSignal')
-const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
@@ -73,7 +72,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
+      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -122,7 +121,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
+      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -160,7 +159,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
 
     it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = new AlertSession(this.sessionId, CHATBOT_STATE.STARTED)
+      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -178,7 +177,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
 
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fromPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
       })
@@ -210,7 +209,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
 
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         toPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
       })
@@ -298,7 +297,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('non-negative should send a reminder', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         reminderTimeoutMillis: 1,
       })
       sandbox.clock.tick(2)
@@ -308,7 +307,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('negative should not send a reminder', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         reminderTimeoutMillis: -1,
       })
       sandbox.clock.tick(2)
@@ -318,7 +317,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('not given should not send a reminder', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
       })
       sandbox.clock.tick(2)
 
@@ -336,7 +335,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('non-negative should send a fallback alert', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fallbackTimeoutMillis: 1,
       })
       sandbox.clock.tick(2)
@@ -346,7 +345,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('negative should not send a fallback alert', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fallbackTimeoutMillis: -1,
       })
       sandbox.clock.tick(2)
@@ -356,7 +355,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('not given should not send a fallback alert', async () => {
       await this.braveAlerter.startAlertSession({
-        alertSession: new AlertSession('guid-123'),
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
       })
       sandbox.clock.tick(2)
 

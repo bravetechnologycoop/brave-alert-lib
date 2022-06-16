@@ -10,7 +10,6 @@ const chaiHttp = require('chai-http')
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const ActiveAlert = require('../../../lib/activeAlert')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
@@ -33,7 +32,10 @@ describe('braveAlerter.js integration tests: handleIncidentCategory', () => {
   describe('given valid request parameters', () => {
     beforeEach(async () => {
       this.goodSessionId = 'mySessionId'
-      const alertSession = new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_CATEGORY)
+      const alertSession = testingHelpers.alertSessionFactory({
+        sessionId: this.goodSessionId,
+        alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+      })
       alertSession.validIncidentCategories = ['My Category']
       alertSession.validIncidentCategoryKeys = ['1']
       this.activeAlerts = [

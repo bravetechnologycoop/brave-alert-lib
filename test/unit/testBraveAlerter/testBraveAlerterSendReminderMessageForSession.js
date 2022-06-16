@@ -10,7 +10,6 @@ const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const helpers = require('../../../lib/helpers')
 const twilioHelpers = require('../../../lib/twilioHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const testingHelpers = require('../../testingHelpers')
 const OneSignal = require('../../../lib/oneSignal')
 
@@ -38,10 +37,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -65,7 +64,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should call the callback with session ID and alert state WAITING_FOR_REPLY', () => {
-      const expectedAlertSession = new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_REPLY)
+      const expectedAlertSession = testingHelpers.alertSessionFactory({
+        sessionId: 'guid-123',
+        alertState: CHATBOT_STATE.WAITING_FOR_REPLY,
+      })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -74,10 +76,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -101,7 +103,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
 
     it('should call the callback with session ID and alert state WAITING_FOR_REPLY', () => {
-      const expectedAlertSession = new AlertSession('guid-123', CHATBOT_STATE.WAITING_FOR_REPLY)
+      const expectedAlertSession = testingHelpers.alertSessionFactory({
+        sessionId: 'guid-123',
+        alertState: CHATBOT_STATE.WAITING_FOR_REPLY,
+      })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
@@ -110,10 +115,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -144,10 +149,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -181,10 +186,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -225,10 +230,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
-          new AlertSession(
-            'guid-123',
-            CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
-          ),
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
         ),
         alertSessionChangedCallback: sandbox.fake(),
       })
@@ -260,7 +265,12 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
   describe('if AlertSession is not started', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
-        getAlertSession: sandbox.stub().returns(new AlertSession('guid-123', 'not CHATBOT_STATE.STARTED')),
+        getAlertSession: sandbox.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: 'not CHATBOT_STATE.STARTED',
+          }),
+        ),
         alertSessionChangedCallback: sandbox.fake(),
       })
 

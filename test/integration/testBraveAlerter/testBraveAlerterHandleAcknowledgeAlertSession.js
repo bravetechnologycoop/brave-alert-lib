@@ -10,7 +10,6 @@ const chaiHttp = require('chai-http')
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
 const testingHelpers = require('../../testingHelpers')
-const AlertSession = require('../../../lib/alertSession')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const ActiveAlert = require('../../../lib/activeAlert')
@@ -46,7 +45,10 @@ describe('braveAlerter.js integration tests: handleAcknowledgeAlertSession', () 
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSessionBySessionIdAndAlertApiKey: () => {
-          return new AlertSession(this.goodSessionId, CHATBOT_STATE.STARTED)
+          return testingHelpers.alertSessionFactory({
+            sessionId: this.goodSessionId,
+            alertState: CHATBOT_STATE.STARTED,
+          })
         },
         getActiveAlertsByAlertApiKey: () => {
           return this.activeAlerts
