@@ -282,8 +282,6 @@ An object representing an alert session. Contains the following fields:
 
 **details (string):** The incident details associated with the alert session
 
-**fallbackReturnMessage (string):** The message to send as a fallback for the alert session
-
 **responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
 
 **validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:

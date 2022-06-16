@@ -46,7 +46,6 @@ describe('happy path Twilio integration test: responder responds right away and 
       CHATBOT_STATE.STARTED,
       undefined,
       undefined,
-      undefined,
       responderPhoneNumber,
       validIncidentCategoryKeys,
     )

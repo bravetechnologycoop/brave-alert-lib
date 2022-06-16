@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated CHATBOT_STATE enum to make it more obvious that these values shouldn't be changed.
 
+### Removed
+
+- Fallback Twilio Status.
+
 ## [6.9.0] - 2022-06-07
 
 ### Removed

@@ -52,7 +52,6 @@ describe('happy path OneSignal integration test: responder responds right away a
       undefined,
       undefined,
       undefined,
-      undefined,
       validIncidentCategoryKeys,
       validIncidentCategories,
     )
