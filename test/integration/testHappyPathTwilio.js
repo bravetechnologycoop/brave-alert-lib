@@ -22,7 +22,6 @@ const responderPhoneNumber = '+15147886598'
 const devicePhoneNumber = '+15005550006'
 const initialMessage = 'Ok'
 const incidentCategoryKey = '1'
-const details = 'my details'
 const validIncidentCategoryKeys = ['1', '2']
 const initialAlertInfo = {
   sessionId,
@@ -37,18 +36,11 @@ const initialAlertInfo = {
   fallbackFromPhoneNumber: '+13336669999',
 }
 
-describe('happy path Twilio integration test: responder responds right away and provides incident category and details', () => {
+describe('happy path Twilio integration test: responder responds right away and provides incident category', () => {
   beforeEach(() => {
     this.clock = sandbox.useFakeTimers()
 
-    this.currentAlertSession = new AlertSession(
-      sessionId,
-      CHATBOT_STATE.STARTED,
-      undefined,
-      undefined,
-      responderPhoneNumber,
-      validIncidentCategoryKeys,
-    )
+    this.currentAlertSession = new AlertSession(sessionId, CHATBOT_STATE.STARTED, undefined, responderPhoneNumber, validIncidentCategoryKeys)
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
@@ -100,27 +92,10 @@ describe('happy path Twilio integration test: responder responds right away and 
     })
     expect(response).to.have.status(200)
 
-    // Expect the state to change to WAITING_FOR_DETAILS and that the incident cateogry is updated to what the responder sent
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-      new AlertSession(sessionId, CHATBOT_STATE.WAITING_FOR_DETAILS, incidentCategoryKey),
-    )
-
-    this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_DETAILS
-    this.currentAlertSession.incidentCategoryKey = incidentCategoryKey
-
-    // Responder replies with incident details
-    response = await chai.request(this.app).post('/alert/sms').send({
-      From: responderPhoneNumber,
-      To: devicePhoneNumber,
-      Body: details,
-    })
-    expect(response).to.have.status(200)
-
-    // Expect the state to change to COMPLETED and that the incident details are updated to what the responder sent
-    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.COMPLETED, undefined, details))
+    // Expect the state to change to COMPLETED and that the incident cateogry is updated to what the responder sent
+    expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(new AlertSession(sessionId, CHATBOT_STATE.COMPLETED, incidentCategoryKey))
 
     this.currentAlertSession.alertState = CHATBOT_STATE.COMPLETED
-    this.currentAlertSession.details = details
 
     // Let the reminder and fallback timer run out
     this.clock.tick(6 * 60 * 1000)

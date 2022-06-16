@@ -36,14 +36,7 @@ const initialAlertInfo = {
 
 describe('fallback flow with Twilio: responder never responds so fallback message is sent to manager(s)', () => {
   beforeEach(() => {
-    this.currentAlertSession = new AlertSession(
-      sessionId,
-      CHATBOT_STATE.STARTED,
-      undefined,
-      undefined,
-      responderPhoneNumber,
-      validIncidentCategoryKeys,
-    )
+    this.currentAlertSession = new AlertSession(sessionId, CHATBOT_STATE.STARTED, undefined, responderPhoneNumber, validIncidentCategoryKeys)
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),

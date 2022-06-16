@@ -249,62 +249,6 @@ describe('braveAlerter.js unit tests: handleRespondToAlertSession', () => {
         })
       })
 
-      describe('and the session state is WAITING_FOR_DETAILS', () => {
-        beforeEach(async () => {
-          this.goodSessionId = 'mySessionId'
-          this.activeAlerts = [
-            new ActiveAlert(
-              this.goodSessionId,
-              CHATBOT_STATE.WAITING_FOR_CATEGORY,
-              'myDeviceId',
-              ALERT_TYPE.SENSOR_DURATION,
-              ['Cat1', 'Cat2'],
-              '2021-01-05T15:22:30.000Z',
-            ),
-          ]
-
-          this.braveAlerter = testingHelpers.braveAlerterFactory({
-            getAlertSessionBySessionIdAndAlertApiKey: () => {
-              return new AlertSession(this.goodSessionId, CHATBOT_STATE.WAITING_FOR_DETAILS)
-            },
-            getActiveAlertsByAlertApiKey: () => {
-              return this.activeAlerts
-            },
-            alertSessionChangedCallback: sandbox.stub(),
-          })
-
-          const validRequest = {
-            path: '/alert/respondToAlertSession',
-            header: sandbox.stub().withArgs('X-API-KEY').returns('00000000-000000000000000'),
-            body: {
-              sessionId: this.goodSessionId,
-            },
-          }
-
-          this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
-
-          await this.braveAlerter.handleRespondToAlertSession(validRequest, this.fakeExpressResponse)
-        })
-
-        it('should log the failure', () => {
-          expect(helpers.log).to.be.calledWith(
-            `Failed to respond to alert for session ${this.goodSessionId}: Session has already been responded to (current state: ${CHATBOT_STATE.WAITING_FOR_DETAILS})`,
-          )
-        })
-
-        it('should not call alertSessionChangedCallback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
-        })
-
-        it('should return the active alerts', () => {
-          expect(this.fakeExpressResponse.json).to.be.calledWith(this.activeAlerts)
-        })
-
-        it('should return 200', () => {
-          expect(this.fakeExpressResponse.status).to.be.calledWith(200)
-        })
-      })
-
       describe('and the session state is COMPLETED', () => {
         beforeEach(async () => {
           this.goodSessionId = 'mySessionId'
