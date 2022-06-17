@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated CHATBOT_STATE enum to make it more obvious that these values shouldn't be changed.
 - Use a factory function for creating test AlertSessions.
+- AlertSession and Client objects take an array of responderPhoneNumbers (CU-2dm6x2j).
+- startAlertSession and sendAlertSessionUpdate take an array of toPhoneNumbers (CU-2dm6x2j).
 
 ### Removed
 
