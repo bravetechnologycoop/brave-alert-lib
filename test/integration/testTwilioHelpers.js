@@ -41,18 +41,18 @@ describe('twilioHelpers.js integration tests:', () => {
       })
     })
 
-    describe('given an invalid toPhoneNumber', () => {
-      const invalidToPhoneNumber = '+15005550009'
+    describe('given invalid toPhoneNumbers', () => {
+      const invalidToPhoneNumbers = ['+15005550009']
       const validFromPhoneNumber = '+15005550006'
 
       it('should return nothing', async () => {
-        const response = await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
+        const response = await twilioHelpers.sendTwilioMessage(invalidToPhoneNumbers, validFromPhoneNumber, 'test message')
 
         expect(response).to.be.undefined
       })
 
       it('should log an error', async () => {
-        await twilioHelpers.sendTwilioMessage(invalidToPhoneNumber, validFromPhoneNumber, 'test message')
+        await twilioHelpers.sendTwilioMessage(invalidToPhoneNumbers, validFromPhoneNumber, 'test message')
 
         expect(helpers.logError.getCall(0).args[0]).matches(/^Error/)
       })

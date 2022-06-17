@@ -26,7 +26,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     sandbox.restore()
   })
 
-  describe('if there is responderPushId, toPhoneNumber, and fromPhoneNumber', () => {
+  describe('if there is responderPushId, toPhoneNumbers, and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
@@ -49,7 +49,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       this.fallbackTimeoutMillis = 60000
       await this.braveAlerter.startAlertSession({
         responderPushId: this.responderPushId,
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
         sessionId: this.sessionId,
         message: this.message,
@@ -126,7 +126,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
   })
 
-  describe('if there is no responderPushId but there is toPhoneNumber and fromPhoneNumber', () => {
+  describe('if there is no responderPushId but there is toPhoneNumbers and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
@@ -139,19 +139,19 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
 
       this.sessionId = 'guid-123'
-      this.toPhoneNumber = '+11231231234'
+      this.toPhoneNumbers = ['+11231231234']
       this.fromPhoneNumber = '+18887776666'
       this.message = 'my message'
       await this.braveAlerter.startAlertSession({
         sessionId: this.sessionId,
-        toPhoneNumber: this.toPhoneNumber,
+        toPhoneNumbers: this.toPhoneNumbers,
         fromPhoneNumber: this.fromPhoneNumber,
         message: this.message,
       })
     })
 
     it('should send Twilio alert with the right parameters', () => {
-      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumber, this.fromPhoneNumber, this.message)
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumbers[0], this.fromPhoneNumber, this.message)
     })
 
     it('should not send OneSignal alert', () => {
@@ -164,7 +164,49 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     })
   })
 
-  describe('if there is no responderPushId and no toPhoneNumber', () => {
+  describe('if there is no responderPushId but there is multiple toPhoneNumbers and fromPhoneNumber', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
+
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.fake(),
+      })
+
+      this.sessionId = 'guid-123'
+      this.toPhoneNumbers = ['+11231231234', '+19998885555']
+      this.fromPhoneNumber = '+18887776666'
+      this.message = 'my message'
+      await this.braveAlerter.startAlertSession({
+        sessionId: this.sessionId,
+        toPhoneNumbers: this.toPhoneNumbers,
+        fromPhoneNumber: this.fromPhoneNumber,
+        message: this.message,
+      })
+    })
+
+    it('should send Twilio alert with the right parameters to first responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(this.toPhoneNumbers[0], this.fromPhoneNumber, this.message)
+    })
+
+    it('should send Twilio alert with the right parameters to second responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(this.toPhoneNumbers[1], this.fromPhoneNumber, this.message)
+    })
+
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
+    })
+
+    it('should call the callback with session ID and alert state STARTED', () => {
+      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
+      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    })
+  })
+
+  describe('if there is no responderPushId and no toPhoneNumbers', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
@@ -210,7 +252,39 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
+        reminderMessage: 'My message',
+      })
+    })
+
+    it('should not send Twilio alert', () => {
+      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
+    })
+
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
+    })
+
+    it('should not call the callback', () => {
+      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
+    })
+  })
+
+  describe('if there is no responderPushId and no fromPhoneNumber', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
+
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        alertSessionChangedCallback: sandbox.fake(),
+      })
+
+      await this.braveAlerter.startAlertSession({
+        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
+        toPhoneNumbers: ['+11231231234'],
         reminderMessage: 'My message',
       })
     })
@@ -241,7 +315,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       })
       await this.braveAlerter.startAlertSession({
         sessionId: 'guid-123',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
       })
     })

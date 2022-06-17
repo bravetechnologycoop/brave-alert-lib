@@ -26,7 +26,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
   describe('given the required request parameters', () => {
     describe('and there is an open session for the phone', () => {
-      describe('and the request is from the responder phone', () => {
+      describe('and the request is from one of the responder phones', () => {
         beforeEach(async () => {
           const validRequest = {
             path: '/alert/sms',
@@ -47,7 +47,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
                 sessionId: 'guid-123',
                 alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
                 incidentCategoryKey: '3',
-                responderPhoneNumber: '+11231231234',
+                responderPhoneNumbers: ['not-the-from-number', '+11231231234', 'also-not-the-from-number'],
                 validIncidentCategoryKeys: ['3'],
                 validIncidentCategories: ['three'],
               }),
@@ -105,7 +105,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
                 sessionId: this.guid,
                 alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
                 incidentCategoryKey: '3',
-                responderPhoneNumber: '+11231231234',
+                responderPhoneNumbers: ['+11231231234'],
                 validIncidentCategoryKeys: ['3'],
                 validIncidentCategories: ['three'],
               }),
@@ -201,7 +201,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
             incidentCategoryKey: '3',
-            responderPhoneNumber: '+11231231234',
+            responderPhoneNumbers: ['+11231231234'],
             validIncidentCategoryKeys: ['3'],
             validIncidentCategories: ['three'],
           }),
@@ -248,7 +248,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
             incidentCategoryKey: '3',
-            responderPhoneNumber: '+11231231234',
+            responderPhoneNumbers: ['+11231231234'],
             validIncidentCategoryKeys: ['3'],
             validIncidentCategories: ['three'],
           }),
@@ -295,7 +295,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
             incidentCategoryKey: '3',
-            responderPhoneNumber: '+11231231234',
+            responderPhoneNumbers: ['+11231231234'],
             validIncidentCategoryKeys: ['3'],
             validIncidentCategories: ['three'],
           }),
@@ -345,7 +345,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
             incidentCategoryKey: '3',
-            responderPhoneNumber: '+11231231234',
+            responderPhoneNumbers: ['+11231231234'],
             validIncidentCategoryKeys: ['3'],
             validIncidentCategories: ['three'],
           }),

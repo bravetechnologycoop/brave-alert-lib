@@ -60,7 +60,7 @@ function alertSessionFactory(overrides = {}) {
     overrides.sessionId !== undefined ? overrides.sessionId : '2e4f7e78-1259-4e4c-a26f-91d79929f41a',
     overrides.alertState !== undefined ? overrides.alertState : CHATBOT_STATE.STARTED,
     overrides.incidentCategoryKey !== undefined ? overrides.incidentCategoryKey : undefined,
-    overrides.responderPhoneNumber !== undefined ? overrides.responderPhoneNumber : undefined,
+    overrides.responderPhoneNumbers !== undefined ? overrides.responderPhoneNumbers : undefined,
     overrides.validIncidentCategoryKeys !== undefined ? overrides.validIncidentCategoryKeys : undefined,
     overrides.validIncidentCategories !== undefined ? overrides.validIncidentCategories : undefined,
   )

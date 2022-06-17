@@ -48,7 +48,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',
         responderPushId: 'pushId',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
@@ -72,7 +72,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
   })
 
-  describe('if AlertSession is started and has toPhoneNumber and fromPhoneNumber but not responderPushId', () => {
+  describe('if AlertSession is started and has toPhoneNumbers and fromPhoneNumber but not responderPushId', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
@@ -86,7 +86,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231235',
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
@@ -111,7 +111,50 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
     })
   })
 
-  describe('if there is no responderPushId and no toPhoneNumber', () => {
+  describe('if AlertSession is started and has multiple toPhoneNumbers and fromPhoneNumber but not responderPushId', () => {
+    beforeEach(async () => {
+      this.braveAlerter = testingHelpers.braveAlerterFactory({
+        getAlertSession: sandbox.stub().returns(
+          testingHelpers.alertSessionFactory({
+            sessionId: 'guid-123',
+            alertState: CHATBOT_STATE.STARTED, // Pretend the AlertSession has started
+          }),
+        ),
+        alertSessionChangedCallback: sandbox.fake(),
+      })
+
+      await this.braveAlerter.sendReminderMessageForSession({
+        sessionId: 'guid-123',
+        toPhoneNumbers: ['+11231231234', '+13336665555'],
+        fromPhoneNumber: '+11231231235',
+        alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
+        deviceName: 'Bathroom 2',
+        reminderMessage: 'My message',
+      })
+    })
+
+    it('should send the reminder using Twilio to the first responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly('+11231231234', '+11231231235', 'My message')
+    })
+
+    it('should send the reminder using Twilio to the second responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly('+13336665555', '+11231231235', 'My message')
+    })
+
+    it('should not send the reminder using OneSignal', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
+    })
+
+    it('should call the callback with session ID and alert state WAITING_FOR_REPLY', () => {
+      const expectedAlertSession = testingHelpers.alertSessionFactory({
+        sessionId: 'guid-123',
+        alertState: CHATBOT_STATE.WAITING_FOR_REPLY,
+      })
+      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
+    })
+  })
+
+  describe('if there is no responderPushId and no toPhoneNumbers', () => {
     beforeEach(async () => {
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         getAlertSession: sandbox.stub().returns(
@@ -159,7 +202,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
         reminderMessage: 'My message',
@@ -196,7 +239,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
@@ -276,7 +319,7 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
 
       await this.braveAlerter.sendReminderMessageForSession({
         sessionId: 'guid-123',
-        toPhoneNumber: '+11231231234',
+        toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
       })

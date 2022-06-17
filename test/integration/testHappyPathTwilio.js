@@ -24,7 +24,7 @@ const incidentCategoryKey = '1'
 const validIncidentCategoryKeys = ['1', '2']
 const initialAlertInfo = {
   sessionId,
-  toPhoneNumber: responderPhoneNumber,
+  toPhoneNumbers: [responderPhoneNumber],
   fromPhoneNumber: devicePhoneNumber,
   message: initialMessage,
   reminderTimeoutMillis: 1 * 60 * 1000, // 1 minute
@@ -42,7 +42,7 @@ describe('happy path Twilio integration test: responder responds right away and 
     this.currentAlertSession = testingHelpers.alertSessionFactory({
       sessionId,
       alertState: CHATBOT_STATE.STARTED,
-      responderPhoneNumber,
+      responderPhoneNumbers: [responderPhoneNumber],
       validIncidentCategoryKeys,
     })
 

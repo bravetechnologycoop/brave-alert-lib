@@ -22,7 +22,7 @@ const initialMessage = 'Ok'
 const validIncidentCategoryKeys = ['1']
 const initialAlertInfo = {
   sessionId,
-  toPhoneNumber: responderPhoneNumber,
+  toPhoneNumbers: [responderPhoneNumber],
   fromPhoneNumber: devicePhoneNumber,
   message: initialMessage,
   reminderTimeoutMillis: 1, // 1 ms
@@ -38,7 +38,7 @@ describe('fallback flow with Twilio: responder never responds so fallback messag
     this.currentAlertSession = testingHelpers.alertSessionFactory({
       sessionId,
       alertState: CHATBOT_STATE.STARTED,
-      responderPhoneNumber,
+      responderPhoneNumbers: [responderPhoneNumber],
       validIncidentCategoryKeys,
     })
 

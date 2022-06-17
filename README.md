@@ -220,7 +220,7 @@ Sends the given `message` to the `toPhoneNumber` from the `fromPhoneNumber`.
 
 **Returns:** A promise that is resolved when the message is sent.
 
-### sendAlertSessionUpdate(sessionId, responderPushId, toPhoneNumber, fromPhoneNumber, textMessage, pushMessage)
+### sendAlertSessionUpdate(sessionId, responderPushId, toPhoneNumbers, fromPhoneNumber, textMessage, pushMessage)
 
 Updates an ongoing alert session.
 
@@ -228,7 +228,7 @@ Updates an ongoing alert session.
 
 **responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the update to, or `undefined` to send a text message update instead.
 
-**toPhoneNumber (string):** The phone number to send text message alert to if `responderPushId` is `undefined`.
+**toPhoneNumbers (array of strings):** The phone numbers to send text message alert to if `responderPushId` is `undefined`.
 
 **fromPhoneNumber (string):** The phone number to send text message alert from if `responderPushId` is `undefined`.
 
@@ -244,7 +244,7 @@ Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the alert to, or `undefined` to send a text message alert instead.
 
-**alertInfo.toPhoneNumber (string):** The phone number to send text message alert to if `alertInfo.responderPushId` is `undefined`.
+**alertInfo.toPhoneNumbers (string):** The phone numbers to send text message alert to if `alertInfo.responderPushId` is `undefined`.
 
 **alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from if `alertInfo.responderPushId` is `undefined`.
 
@@ -278,7 +278,7 @@ An object representing an alert session. Contains the following fields:
 
 **incidentCategoryKey (string):** The string representing the incident category associated with the alert session
 
-**responderPhoneNumber (string):** The phone number of th responder phone associated with the alert session
+**responderPhoneNumbers (array of string):** The phone numbers of th responder phones associated with the alert session
 
 **validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:
 
@@ -343,7 +343,7 @@ An object representing a client. Contains the following fields:
 
 **displayName (string):** Client name is a displayable format; should be the database value `client.display_name`
 
-**responderPhoneNumber (string):** Client's responder phone number in the form `+133344455555`; should be the database value `client.responder_phone_number`
+**responderPhoneNumbers (array of string):** Client's responder phone numbers in the form `+133344455555`; should be the database value `client.responder_phone_numbers`
 
 **responderPushId (string):** Client's Alert App Responder Push ID; should be the database value `client.responder_push_id`
 

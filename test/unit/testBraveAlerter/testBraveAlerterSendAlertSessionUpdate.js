@@ -24,7 +24,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     sandbox.restore()
   })
 
-  describe('if there is responderPushId, toPhoneNumber, and fromPhoneNumber', () => {
+  describe('if there is responderPushId, toPhoneNumbers, and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
@@ -79,7 +79,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     })
   })
 
-  describe('if there is no responderPushId but there is toPhoneNumber and fromPhoneNumber', () => {
+  describe('if there is no responderPushId but there is toPhoneNumbers and fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
@@ -90,12 +90,12 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
       this.braveAlerter = testingHelpers.braveAlerterFactory()
 
       this.sessionId = 'guid-123'
-      this.toPhoneNumber = '+11231231234'
+      this.toPhoneNumbers = ['+11231231234']
       this.fromPhoneNumber = '+18887776666'
       await this.braveAlerter.sendAlertSessionUpdate(
         this.sessionId,
         undefined,
-        this.toPhoneNumber,
+        this.toPhoneNumbers,
         this.fromPhoneNumber,
         'text message',
         'push message',
@@ -103,7 +103,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     })
 
     it('should send Twilio alert with the right parameters', () => {
-      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumber, this.fromPhoneNumber, 'text message')
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumbers[0], this.fromPhoneNumber, 'text message')
     })
 
     it('should not send OneSignal alert', () => {
@@ -111,7 +111,43 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     })
   })
 
-  describe('if there is no responderPushId and no toPhoneNumber', () => {
+  describe('if there is no responderPushId but there is multiple toPhoneNumbers and fromPhoneNumber', () => {
+    beforeEach(async () => {
+      // Don't actually call Twilio
+      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
+
+      // Don't actually call OneSignal
+      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
+
+      this.braveAlerter = testingHelpers.braveAlerterFactory()
+
+      this.sessionId = 'guid-123'
+      this.toPhoneNumbers = ['+11231231234', '+15557778888']
+      this.fromPhoneNumber = '+18887776666'
+      await this.braveAlerter.sendAlertSessionUpdate(
+        this.sessionId,
+        undefined,
+        this.toPhoneNumbers,
+        this.fromPhoneNumber,
+        'text message',
+        'push message',
+      )
+    })
+
+    it('should send Twilio alert with the right parameters to the first responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(this.toPhoneNumbers[0], this.fromPhoneNumber, 'text message')
+    })
+
+    it('should send Twilio alert with the right parameters to the second responder phone', () => {
+      expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(this.toPhoneNumbers[1], this.fromPhoneNumber, 'text message')
+    })
+
+    it('should not send OneSignal alert', () => {
+      expect(OneSignal.sendOneSignalMessage).not.to.be.called
+    })
+  })
+
+  describe('if there is no responderPushId and no toPhoneNumbers', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
