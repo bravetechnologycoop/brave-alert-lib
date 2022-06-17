@@ -35,8 +35,12 @@ function dummyGetNewNotificationsCountByAlertApiKey() {
   return 'getNewNotificationsCountByAlertApiKey'
 }
 
-function dummyGetReturnMessage(fromAlertState, toAlertState) {
-  return `${fromAlertState} --> ${toAlertState}`
+function dummyGetReturnMessageToRespondedByPhoneNumber(fromAlertState, toAlertState) {
+  return `To RespondedByPhoneNumber: ${fromAlertState} --> ${toAlertState}`
+}
+
+function dummyGetReturnMessageToOtherResponderPhoneNumbers(fromAlertState, toAlertState) {
+  return `To OtherResponderPhoneNumbers: ${fromAlertState} --> ${toAlertState}`
 }
 
 function braveAlerterFactory(overrides = {}) {
@@ -50,7 +54,8 @@ function braveAlerterFactory(overrides = {}) {
     overrides.getActiveAlertsByAlertApiKey !== undefined ? overrides.getActiveAlertsByAlertApiKey : dummyGetActiveAlertsByAlertApiKey,
     overrides.getHistoricAlertsByAlertApiKey !== undefined ? overrides.getHistoricAlertsByAlertApiKey : dummyGetHistoricAlertsByAlertApiKey,
     overrides.getNewNotificationsCountByAlertApiKey !== undefined ? overrides.getNewNotificationsCountByAlertApiKey : dummyGetNewNotificationsCountByAlertApiKey,
-    overrides.getReturnMessage !== undefined ? overrides.getReturnMessage : dummyGetReturnMessage,
+    overrides.getReturnMessageToRespondedByPhoneNumber !== undefined ? overrides.getReturnMessageToRespondedByPhoneNumber : dummyGetReturnMessageToRespondedByPhoneNumber,
+    overrides.getReturnMessageToOtherResponderPhoneNumbers !== undefined ? overrides.getReturnMessageToOtherResponderPhoneNumbers : dummyGetReturnMessageToOtherResponderPhoneNumbers,
   )
 }
 
@@ -59,6 +64,7 @@ function alertSessionFactory(overrides = {}) {
   return new AlertSession(
     overrides.sessionId !== undefined ? overrides.sessionId : '2e4f7e78-1259-4e4c-a26f-91d79929f41a',
     overrides.alertState !== undefined ? overrides.alertState : CHATBOT_STATE.STARTED,
+    overrides.respondedByPhoneNumber !== undefined ? overrides.respondedByPhoneNumber : undefined,
     overrides.incidentCategoryKey !== undefined ? overrides.incidentCategoryKey : undefined,
     overrides.responderPhoneNumbers !== undefined ? overrides.responderPhoneNumbers : undefined,
     overrides.validIncidentCategoryKeys !== undefined ? overrides.validIncidentCategoryKeys : undefined,

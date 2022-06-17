@@ -55,7 +55,7 @@ describe('happy path OneSignal integration test: responder responds right away a
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
       getAlertSessionBySessionIdAndAlertApiKey: sandbox.stub().returns(this.currentAlertSession),
-      alertSessionChangedCallback: sandbox.stub(),
+      alertSessionChangedCallback: sandbox.stub().returns(undefined),
     })
 
     this.app = express()

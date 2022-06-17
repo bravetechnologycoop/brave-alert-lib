@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use a factory function for creating test AlertSessions.
 - AlertSession and Client objects take an array of responderPhoneNumbers (CU-2dm6x2j).
 - startAlertSession and sendAlertSessionUpdate take an array of toPhoneNumbers (CU-2dm6x2j).
+- `AlertSession` now distinguishes between the responder phone number that responded first to the first messasge (thus becoming the respondedByPhoneNumber) and all the others
+- Split the getReturnMessage function into two: one for the respondedByPhoneNumber and one for all the otherResponderPhoneNumbers. This changed the BraveAlerter constructor (CU-2dm6x2j).
+- Require that the `alertSessionChangedCallback` returns the value of the `respondedByPhoneNumber` for the session after making any changes to the session (CU-2dm6x2j).
 
 ### Removed
 

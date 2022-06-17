@@ -37,8 +37,12 @@ function dummyGetNewNotificationsCountByAlertApiKey() {
   return 'getNewNotificationsCountByAlertApiKey'
 }
 
-function dummyGetReturnMessage() {
-  return 'getReturnMessage'
+function dummyGetReturnMessageToRespondedByPhoneNumber() {
+  return 'getReturnMessageToRespondedByPhoneNumber'
+}
+
+function dummyGetReturnMessageToOtherResponderPhoneNumbers() {
+  return 'getReturnMessageToOtherResponderPhoneNumbers'
 }
 
 describe('braveAlerter.js unit tests: constructor', () => {
@@ -55,7 +59,8 @@ describe('braveAlerter.js unit tests: constructor', () => {
       dummyGetActiveAlertsByAlertApiKey,
       dummyGetHistoricAlertsByAlertApiKey,
       dummyGetNewNotificationsCountByAlertApiKey,
-      dummyGetReturnMessage,
+      dummyGetReturnMessageToRespondedByPhoneNumber,
+      dummyGetReturnMessageToOtherResponderPhoneNumbers,
     )
   })
 
@@ -73,6 +78,8 @@ describe('braveAlerter.js unit tests: constructor', () => {
       ${this.braveAlerter.getActiveAlertsByAlertApiKey()}
       ${this.braveAlerter.getHistoricAlertsByAlertApiKey()}
       ${this.braveAlerter.getNewNotificationsCountByAlertApiKey()}
+      ${this.braveAlerter.getReturnMessageToRespondedByPhoneNumber()}
+      ${this.braveAlerter.getReturnMessageToOtherResponderPhoneNumbers()}
     `
 
     expect(result).to.equal(
@@ -85,6 +92,8 @@ describe('braveAlerter.js unit tests: constructor', () => {
       getActiveAlertsByAlertApiKey
       getHistoricAlertsByAlertApiKey
       getNewNotificationsCountByAlertApiKey
+      getReturnMessageToRespondedByPhoneNumber
+      getReturnMessageToOtherResponderPhoneNumbers
     `,
     )
   })
@@ -94,6 +103,12 @@ describe('braveAlerter.js unit tests: constructor', () => {
   })
 
   it('should initialize the state machine with the function to get the return messages', () => {
-    expect(this.braveAlerter.alertStateMachine.getReturnMessage()).to.equal('getReturnMessage')
+    expect(this.braveAlerter.alertStateMachine.getReturnMessageToRespondedByPhoneNumber()).to.equal('getReturnMessageToRespondedByPhoneNumber')
+  })
+
+  it('should initialize the state machine with the function to get the return messages', () => {
+    expect(this.braveAlerter.alertStateMachine.getReturnMessageToOtherResponderPhoneNumbers()).to.equal(
+      'getReturnMessageToOtherResponderPhoneNumbers',
+    )
   })
 })
