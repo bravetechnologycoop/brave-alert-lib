@@ -49,7 +49,7 @@ describe('fallback flow with OneSignal: responder never responds so fallback mes
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
       getAlertSessionBySessionIdAndAlertApiKey: sandbox.stub().returns(this.currentAlertSession),
-      alertSessionChangedCallback: sandbox.stub(),
+      alertSessionChangedCallback: sandbox.stub().returns(undefined),
     })
 
     this.app = express()

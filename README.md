@@ -111,7 +111,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, getReturnMessage)
+### constructor(getAlertSession, getAlertSessionByPhoneNumber, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
@@ -119,7 +119,7 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getAlertSessionBySessionIdAndAlertApiKey (async function(sessionId, alertApiKey)):** function that returns the AlertSession object with the given `sessionId` if and only if it is a session for a client using the given `alertApiKey`
 
-**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB
+**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return the respondedAtPhoneNumber for the alertSession
 
 **getLocationByAlertApiKey (async function(alertApiKey)):** function that returns the `Location` object whose Alert API Key matches the given `alertApiKey`, or `null` if there is no match
 
@@ -127,7 +127,9 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
-**getReturnMessage (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send back when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
+**getReturnMessageToRespondedByPhoneNumber (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
+
+**getReturnMessageToOtherResponderPhoneNumbers (function(fromAlertState, toAlertState, selectedIncidentCategory)):** function that returns the message to send to all the other Responder Phone Numbers (i.e. not the RespondedByPhoneNumber) when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know which incidentCategory was chosen by the respondedByPhoneNumber for the particular session.
 
 ### getRouter()
 
@@ -278,7 +280,9 @@ An object representing an alert session. Contains the following fields:
 
 **incidentCategoryKey (string):** The string representing the incident category associated with the alert session
 
-**responderPhoneNumbers (array of string):** The phone numbers of th responder phones associated with the alert session
+**respondedByPhoneNumber (string):** The phone number of the Responded Phone who first responded to the sessions and that will be the only one to continue progressing the chatbot
+
+**responderPhoneNumbers (array of string):** The phone numbers of the Responder Phones associated with the alert session
 
 **validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:
 

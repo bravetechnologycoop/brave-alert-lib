@@ -4,8 +4,12 @@ const { beforeEach, describe, it } = require('mocha')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const AlertStateMachine = require('../../lib/alertStateMachine')
 
-function dummyGetRetunMessages(fromAlertState, toAlertState, incidentCategories) {
-  return `${fromAlertState} --> ${toAlertState} with ${JSON.stringify(incidentCategories)}`
+function dummyGetReturnMessageToRespondedByPhoneNumber(fromAlertState, toAlertState, incidentCategories) {
+  return `To RespondedByPhoneNumber: ${fromAlertState} --> ${toAlertState} with ${JSON.stringify(incidentCategories)}`
+}
+
+function dummyGetReturnMessageToOtherResponderPhoneNumbers(fromAlertState, toAlertState, selectedIncidentCategory) {
+  return `To OtherResponderPhoneNumbers: ${fromAlertState} --> ${toAlertState} with "${selectedIncidentCategory}"`
 }
 
 const dummyIncidentCategoryKeys = ['1', '2', '3', '4']
@@ -14,17 +18,24 @@ const dummyIncidentCategories = ['One', 'Two', 'Three', 'Four']
 describe('alertStateMachine.js unit tests:', () => {
   describe('constructor', () => {
     beforeEach(() => {
-      this.alertStateMachine = new AlertStateMachine(() => 'my state')
+      this.alertStateMachine = new AlertStateMachine(
+        () => 'to respondedByPhoneNumber',
+        () => 'to others',
+      )
     })
 
-    it('should be able to call the getReturnMessage function set in the constructor', () => {
-      expect(this.alertStateMachine.getReturnMessage()).to.equal('my state')
+    it('should be able to call the getReturnMessageToRespondedByPhoneNumber function set in the constructor', () => {
+      expect(this.alertStateMachine.getReturnMessageToRespondedByPhoneNumber()).to.equal('to respondedByPhoneNumber')
+    })
+
+    it('should be able to call the getReturnMessageToOtherResponderPhoneNumbers function set in the constructor', () => {
+      expect(this.alertStateMachine.getReturnMessageToOtherResponderPhoneNumbers()).to.equal('to others')
     })
   })
 
   describe('processStateTransitionWithMessage', () => {
     beforeEach(() => {
-      this.alertStateMachine = new AlertStateMachine(dummyGetRetunMessages)
+      this.alertStateMachine = new AlertStateMachine(dummyGetReturnMessageToRespondedByPhoneNumber, dummyGetReturnMessageToOtherResponderPhoneNumbers)
     })
 
     describe('given alert state is STARTED', () => {
@@ -50,15 +61,30 @@ describe('alertStateMachine.js unit tests:', () => {
         expect(incidentCategoryKey).to.be.undefined
       })
 
-      it('should give the return message for STARTED --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+      it('should give the return message to respondedByPhoneNumber for STARTED --> WAITING_FOR_CATEGORY', () => {
+        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
           CHATBOT_STATE.STARTED,
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
         )
 
-        expect(returnMessage).to.equal(`${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`)
+        expect(returnMessageToRespondedByPhoneNumber).to.equal(
+          `To RespondedByPhoneNumber: ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+        )
+      })
+
+      it('should give the return message to otherResponderPhoneNumbers for STARTED --> WAITING_FOR_CATEGORY', () => {
+        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+          CHATBOT_STATE.STARTED,
+          '3',
+          dummyIncidentCategoryKeys,
+          dummyIncidentCategories,
+        )
+
+        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+        )
       })
     })
 
@@ -85,16 +111,29 @@ describe('alertStateMachine.js unit tests:', () => {
         expect(incidentCategoryKey).to.be.undefined
       })
 
-      it('should give the return message for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+      it('should give the return message to respondedByPhoneNumber for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
+        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
           CHATBOT_STATE.WAITING_FOR_REPLY,
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
         )
 
-        expect(returnMessage).to.equal(
-          `${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+        expect(returnMessageToRespondedByPhoneNumber).to.equal(
+          `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+        )
+      })
+
+      it('should give the return message  to otherResponderPhoneNumbers for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
+        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+          CHATBOT_STATE.WAITING_FOR_REPLY,
+          '3',
+          dummyIncidentCategoryKeys,
+          dummyIncidentCategories,
+        )
+
+        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
         )
       })
     })
@@ -145,15 +184,30 @@ describe('alertStateMachine.js unit tests:', () => {
           expect(incidentCategoryKey).to.equal('2')
         })
 
-        it('should give the return message for WAITING_FOR_CATEGORY --> COMPLETED', () => {
-          const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> COMPLETED', () => {
+          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
             '3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
           )
 
-          expect(returnMessage).to.equal(`${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`)
+          expect(returnMessageToRespondedByPhoneNumber).to.equal(
+            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> COMPLETED', () => {
+          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            '3',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+          )
+
+          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with "Three"`,
+          )
         })
       })
 
@@ -180,16 +234,29 @@ describe('alertStateMachine.js unit tests:', () => {
           expect(incidentCategoryKey).to.be.undefined
         })
 
-        it('should give the return message for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+        it('should give the return message to respondedByPhoneNumberfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
             '0',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
           )
 
-          expect(returnMessage).to.equal(
-            `${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          expect(returnMessageToRespondedByPhoneNumber).to.equal(
+            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            '0',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+          )
+
+          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -217,16 +284,29 @@ describe('alertStateMachine.js unit tests:', () => {
           expect(incidentCategoryKey).to.be.undefined
         })
 
-        it('should give the return message for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
             '5',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
           )
 
-          expect(returnMessage).to.equal(
-            `${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          expect(returnMessageToRespondedByPhoneNumber).to.equal(
+            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbersfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            '5',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+          )
+
+          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -254,16 +334,29 @@ describe('alertStateMachine.js unit tests:', () => {
           expect(incidentCategoryKey).to.be.undefined
         })
 
-        it('should give the return message for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
             '2A3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
           )
 
-          expect(returnMessage).to.equal(
-            `${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          expect(returnMessageToRespondedByPhoneNumber).to.equal(
+            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            '2A3',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+          )
+
+          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -292,15 +385,30 @@ describe('alertStateMachine.js unit tests:', () => {
         expect(incidentCategoryKey).to.be.undefined
       })
 
-      it('should give the return message for COMPLETED --> COMPLETED', () => {
-        const { returnMessage } = this.alertStateMachine.processStateTransitionWithMessage(
+      it('should give the return message to respondedByPhoneNumber for COMPLETED --> COMPLETED', () => {
+        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
           CHATBOT_STATE.COMPLETED,
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
         )
 
-        expect(returnMessage).to.equal(`${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`)
+        expect(returnMessageToRespondedByPhoneNumber).to.equal(
+          `To RespondedByPhoneNumber: ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+        )
+      })
+
+      it('should give the return message to otherResponderPhoneNumbers for COMPLETED --> COMPLETED', () => {
+        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
+          CHATBOT_STATE.COMPLETED,
+          '3',
+          dummyIncidentCategoryKeys,
+          dummyIncidentCategories,
+        )
+
+        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
+          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with "undefined"`,
+        )
       })
     })
   })

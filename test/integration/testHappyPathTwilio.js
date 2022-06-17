@@ -18,13 +18,15 @@ const sandbox = sinon.createSandbox()
 
 const sessionId = 'guid-123'
 const responderPhoneNumber = '+15147886598'
+const otherResponderPhoneNumber = '+15148885555'
 const devicePhoneNumber = '+15005550006'
-const initialMessage = 'Ok'
+const initialMessage = 'There was an alert in Bathroom 4'
 const incidentCategoryKey = '1'
 const validIncidentCategoryKeys = ['1', '2']
+const validIncidentCategories = ['Cat 1', 'Cat 2']
 const initialAlertInfo = {
   sessionId,
-  toPhoneNumbers: [responderPhoneNumber],
+  toPhoneNumbers: [responderPhoneNumber, otherResponderPhoneNumber],
   fromPhoneNumber: devicePhoneNumber,
   message: initialMessage,
   reminderTimeoutMillis: 1 * 60 * 1000, // 1 minute
@@ -42,17 +44,19 @@ describe('happy path Twilio integration test: responder responds right away and 
     this.currentAlertSession = testingHelpers.alertSessionFactory({
       sessionId,
       alertState: CHATBOT_STATE.STARTED,
-      responderPhoneNumbers: [responderPhoneNumber],
+      responderPhoneNumbers: [responderPhoneNumber, otherResponderPhoneNumber],
       validIncidentCategoryKeys,
+      validIncidentCategories,
     })
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
       getAlertSessionByPhoneNumber: sandbox.stub().returns(this.currentAlertSession),
-      alertSessionChangedCallback: sandbox.stub(),
+      alertSessionChangedCallback: sandbox.stub().returns(responderPhoneNumber),
     })
 
     sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
+    sandbox.spy(twilioHelpers, 'sendTwilioMessage')
     sandbox.spy(helpers, 'log')
 
     this.app = express()
@@ -75,30 +79,54 @@ describe('happy path Twilio integration test: responder responds right away and 
       testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.STARTED }),
     )
 
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(responderPhoneNumber, devicePhoneNumber, initialMessage)
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(otherResponderPhoneNumber, devicePhoneNumber, initialMessage)
+
     this.currentAlertSession.alertState = CHATBOT_STATE.STARTED
 
     // Responder replies 'Ok'
-    let response = await chai.request(this.app).post('/alert/sms').send({
+    await chai.request(this.app).post('/alert/sms').send({
       From: responderPhoneNumber,
       To: devicePhoneNumber,
       Body: initialMessage,
     })
-    expect(response).to.have.status(200)
+
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
+      responderPhoneNumber,
+      devicePhoneNumber,
+      'To RespondedByPhoneNumber: STARTED --> WAITING_FOR_CATEGORY',
+    )
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
+      otherResponderPhoneNumber,
+      devicePhoneNumber,
+      'To OtherResponderPhoneNumbers: STARTED --> WAITING_FOR_CATEGORY',
+    )
 
     // Expect the state to change to WAITING_FOR_CATEGORY
     expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY }),
+      testingHelpers.alertSessionFactory({ sessionId, alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY, respondedByPhoneNumber: responderPhoneNumber }),
     )
 
     this.currentAlertSession.alertState = CHATBOT_STATE.WAITING_FOR_CATEGORY
+    this.currentAlertSession.respondedByPhoneNumber = responderPhoneNumber
 
     // Responder replies with an incident category
-    response = await chai.request(this.app).post('/alert/sms').send({
+    await chai.request(this.app).post('/alert/sms').send({
       From: responderPhoneNumber,
       To: devicePhoneNumber,
       Body: incidentCategoryKey,
     })
-    expect(response).to.have.status(200)
+
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
+      responderPhoneNumber,
+      devicePhoneNumber,
+      'To RespondedByPhoneNumber: WAITING_FOR_CATEGORY --> COMPLETED',
+    )
+    expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
+      otherResponderPhoneNumber,
+      devicePhoneNumber,
+      'To OtherResponderPhoneNumbers: WAITING_FOR_CATEGORY --> COMPLETED',
+    )
 
     // Expect the state to change to COMPLETED and that the incident cateogry is updated to what the responder sent
     expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
@@ -106,6 +134,7 @@ describe('happy path Twilio integration test: responder responds right away and 
         sessionId,
         alertState: CHATBOT_STATE.COMPLETED,
         incidentCategoryKey,
+        respondedByPhoneNumber: responderPhoneNumber,
       }),
     )
 
