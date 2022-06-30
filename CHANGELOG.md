@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Client-specific language settings (CU-2dtutrx).
+
 ## [7.0.0] - 2022-06-23
 
 ### Changed
