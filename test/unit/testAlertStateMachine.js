@@ -4,16 +4,17 @@ const { beforeEach, describe, it } = require('mocha')
 const CHATBOT_STATE = require('../../lib/chatbotStateEnum')
 const AlertStateMachine = require('../../lib/alertStateMachine')
 
-function dummyGetReturnMessageToRespondedByPhoneNumber(fromAlertState, toAlertState, incidentCategories) {
-  return `To RespondedByPhoneNumber: ${fromAlertState} --> ${toAlertState} with ${JSON.stringify(incidentCategories)}`
+function dummyGetReturnMessageToRespondedByPhoneNumber(language, fromAlertState, toAlertState, incidentCategories) {
+  return `To RespondedByPhoneNumber (${language}): ${fromAlertState} --> ${toAlertState} with ${JSON.stringify(incidentCategories)}`
 }
 
-function dummyGetReturnMessageToOtherResponderPhoneNumbers(fromAlertState, toAlertState, selectedIncidentCategory) {
-  return `To OtherResponderPhoneNumbers: ${fromAlertState} --> ${toAlertState} with "${selectedIncidentCategory}"`
+function dummyGetReturnMessageToOtherResponderPhoneNumbers(language, fromAlertState, toAlertState, selectedIncidentCategory) {
+  return `To OtherResponderPhoneNumbers (${language}): ${fromAlertState} --> ${toAlertState} with "${selectedIncidentCategory}"`
 }
 
 const dummyIncidentCategoryKeys = ['1', '2', '3', '4']
 const dummyIncidentCategories = ['One', 'Two', 'Three', 'Four']
+const dummyLanguage = 'my_lng'
 
 describe('alertStateMachine.js unit tests:', () => {
   describe('constructor', () => {
@@ -45,6 +46,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
@@ -56,6 +58,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(incidentCategoryKey).to.be.undefined
@@ -67,10 +70,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber: ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
         )
       })
 
@@ -80,10 +84,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
         )
       })
     })
@@ -95,6 +100,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
@@ -106,6 +112,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(incidentCategoryKey).to.be.undefined
@@ -117,10 +124,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
         )
       })
 
@@ -130,10 +138,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
         )
       })
     })
@@ -146,6 +155,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
@@ -157,6 +167,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '1',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.equal('1')
@@ -168,6 +179,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '4',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.equal('4')
@@ -179,6 +191,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '   2    ',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.equal('2')
@@ -190,10 +203,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
           )
         })
 
@@ -203,10 +217,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with "Three"`,
+            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with "Three"`,
           )
         })
       })
@@ -218,6 +233,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '0',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
@@ -229,6 +245,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '0',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.be.undefined
@@ -240,10 +257,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '0',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
           )
         })
 
@@ -253,10 +271,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '0',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -268,6 +287,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '5',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
@@ -279,6 +299,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '5',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.be.undefined
@@ -290,10 +311,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '5',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
           )
         })
 
@@ -303,10 +325,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '5',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -318,6 +341,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '2A3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
@@ -329,6 +353,7 @@ describe('alertStateMachine.js unit tests:', () => {
             '  2A3  ',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(incidentCategoryKey).to.be.undefined
@@ -340,10 +365,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '2A3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
           )
         })
 
@@ -353,10 +379,11 @@ describe('alertStateMachine.js unit tests:', () => {
             '2A3',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
+            dummyLanguage,
           )
 
           expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
           )
         })
       })
@@ -369,6 +396,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
@@ -380,6 +408,7 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(incidentCategoryKey).to.be.undefined
@@ -391,10 +420,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber: ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
         )
       })
 
@@ -404,10 +434,11 @@ describe('alertStateMachine.js unit tests:', () => {
           '3',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
+          dummyLanguage,
         )
 
         expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers: ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with "undefined"`,
+          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with "undefined"`,
         )
       })
     })

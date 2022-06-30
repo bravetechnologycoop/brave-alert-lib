@@ -24,6 +24,7 @@ const initialMessage = 'There was an alert in Bathroom 4'
 const incidentCategoryKey = '1'
 const validIncidentCategoryKeys = ['1', '2']
 const validIncidentCategories = ['Cat 1', 'Cat 2']
+const language = 'my_lng'
 const initialAlertInfo = {
   sessionId,
   toPhoneNumbers: [responderPhoneNumber, otherResponderPhoneNumber],
@@ -47,6 +48,7 @@ describe('happy path Twilio integration test: responder responds right away and 
       responderPhoneNumbers: [responderPhoneNumber, otherResponderPhoneNumber],
       validIncidentCategoryKeys,
       validIncidentCategories,
+      language,
     })
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
@@ -94,12 +96,12 @@ describe('happy path Twilio integration test: responder responds right away and 
     expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
       responderPhoneNumber,
       devicePhoneNumber,
-      'To RespondedByPhoneNumber: STARTED --> WAITING_FOR_CATEGORY',
+      'To RespondedByPhoneNumber (my_lng): STARTED --> WAITING_FOR_CATEGORY',
     )
     expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
       otherResponderPhoneNumber,
       devicePhoneNumber,
-      'To OtherResponderPhoneNumbers: STARTED --> WAITING_FOR_CATEGORY',
+      'To OtherResponderPhoneNumbers (my_lng): STARTED --> WAITING_FOR_CATEGORY',
     )
 
     // Expect the state to change to WAITING_FOR_CATEGORY
@@ -120,12 +122,12 @@ describe('happy path Twilio integration test: responder responds right away and 
     expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
       responderPhoneNumber,
       devicePhoneNumber,
-      'To RespondedByPhoneNumber: WAITING_FOR_CATEGORY --> COMPLETED',
+      'To RespondedByPhoneNumber (my_lng): WAITING_FOR_CATEGORY --> COMPLETED',
     )
     expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(
       otherResponderPhoneNumber,
       devicePhoneNumber,
-      'To OtherResponderPhoneNumbers: WAITING_FOR_CATEGORY --> COMPLETED',
+      'To OtherResponderPhoneNumbers (my_lng): WAITING_FOR_CATEGORY --> COMPLETED',
     )
 
     // Expect the state to change to COMPLETED and that the incident cateogry is updated to what the responder sent
