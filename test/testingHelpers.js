@@ -35,12 +35,12 @@ function dummyGetNewNotificationsCountByAlertApiKey() {
   return 'getNewNotificationsCountByAlertApiKey'
 }
 
-function dummyGetReturnMessageToRespondedByPhoneNumber(fromAlertState, toAlertState) {
-  return `To RespondedByPhoneNumber: ${fromAlertState} --> ${toAlertState}`
+function dummyGetReturnMessageToRespondedByPhoneNumber(language, fromAlertState, toAlertState) {
+  return `To RespondedByPhoneNumber (${language}): ${fromAlertState} --> ${toAlertState}`
 }
 
-function dummyGetReturnMessageToOtherResponderPhoneNumbers(fromAlertState, toAlertState) {
-  return `To OtherResponderPhoneNumbers: ${fromAlertState} --> ${toAlertState}`
+function dummyGetReturnMessageToOtherResponderPhoneNumbers(language, fromAlertState, toAlertState) {
+  return `To OtherResponderPhoneNumbers (${language}): ${fromAlertState} --> ${toAlertState}`
 }
 
 function braveAlerterFactory(overrides = {}) {
@@ -69,6 +69,7 @@ function alertSessionFactory(overrides = {}) {
     overrides.responderPhoneNumbers !== undefined ? overrides.responderPhoneNumbers : undefined,
     overrides.validIncidentCategoryKeys !== undefined ? overrides.validIncidentCategoryKeys : undefined,
     overrides.validIncidentCategories !== undefined ? overrides.validIncidentCategories : undefined,
+    overrides.language !== undefined ? overrides.language : undefined,
   )
 }
 

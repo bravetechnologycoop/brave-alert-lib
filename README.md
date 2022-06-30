@@ -127,9 +127,9 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
-**getReturnMessageToRespondedByPhoneNumber (function(fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
+**getReturnMessageToRespondedByPhoneNumber (function(language, fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
-**getReturnMessageToOtherResponderPhoneNumbers (function(fromAlertState, toAlertState, selectedIncidentCategory)):** function that returns the message to send to all the other Responder Phone Numbers (i.e. not the RespondedByPhoneNumber) when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know which incidentCategory was chosen by the respondedByPhoneNumber for the particular session.
+**getReturnMessageToOtherResponderPhoneNumbers (function(language, fromAlertState, toAlertState, selectedIncidentCategory)):** function that returns the message to send to all the other Responder Phone Numbers (i.e. not the RespondedByPhoneNumber) when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know which incidentCategory was chosen by the respondedByPhoneNumber for the particular session.
 
 ### getRouter()
 
@@ -300,6 +300,8 @@ Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for 
 
 Note that these line up one-to-one with the `validIncidentCategoryKeys`. So for any `i`, `validIncidentCategories[i]` is the
 human-readable DB value for the `validIncidentCategoryKeys[i]` value given by the Responder in a text message.
+
+**language (string):** The language code in which client-facing messages should be sent.
 
 ## `ActiveAlert` class
 
