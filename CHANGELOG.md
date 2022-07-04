@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.0.0] - 2022-07-04
+
 ### Added
 
 - Client-specific language settings (CU-2dtutrx).
@@ -245,7 +247,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v7.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.0.0...HEAD
+[7.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v7.0.0...v8.0.0
 [7.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.9.0...v7.0.0
 [6.9.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.8.0...v6.9.0
 [6.8.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...v6.8.0
