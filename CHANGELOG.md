@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded NodeJS (CU-28na1ge).
+
 ## [8.0.0] - 2022-07-04
 
 ### Added
