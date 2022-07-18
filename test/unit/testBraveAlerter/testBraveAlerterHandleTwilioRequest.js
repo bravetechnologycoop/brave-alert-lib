@@ -44,7 +44,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
-            getAlertSessionByPhoneNumber: sinon.stub().returns(
+            getAlertSessionByPhoneNumbers: sinon.stub().returns(
               testingHelpers.alertSessionFactory({
                 sessionId: 'guid-123',
                 alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
@@ -116,7 +116,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
-            getAlertSessionByPhoneNumber: sinon.stub().returns(
+            getAlertSessionByPhoneNumbers: sinon.stub().returns(
               testingHelpers.alertSessionFactory({
                 sessionId: 'guid-123',
                 alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
@@ -160,13 +160,14 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       describe('and the request is not from a responder phone', () => {
         beforeEach(async () => {
           this.invalidFromNumber = 'not +11231231234'
+          this.toNumber = '+11231231234'
           this.guid = 'guid-123'
 
           const invalidRequest = {
             path: '/alert/sms',
             body: {
               From: this.invalidFromNumber,
-              To: '+11231231234',
+              To: this.toNumber,
               Body: 'fake body',
             },
           }
@@ -176,16 +177,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
             alertSessionChangedCallback: sandbox.stub(),
-            getAlertSessionByPhoneNumber: sinon.stub().returns(
-              testingHelpers.alertSessionFactory({
-                sessionId: this.guid,
-                alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
-                incidentCategoryKey: '3',
-                responderPhoneNumbers: ['+11231231234'],
-                validIncidentCategoryKeys: ['3'],
-                validIncidentCategories: ['three'],
-              }),
-            ),
+            getAlertSessionByPhoneNumbers: sinon.stub().returns(null),
           })
           sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
             nextAlertState: CHATBOT_STATE.COMPLETED,
@@ -201,13 +193,13 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
         })
 
         it('should log the error', () => {
-          expect(helpers.logError).to.be.calledWith(
-            `Bad request to /alert/sms: ${this.invalidFromNumber} is not the responder phone for ${this.guid}`,
+          expect(helpers.log).to.be.calledWith(
+            `Received twilio message from ${this.invalidFromNumber} to ${this.toNumber} with no corresponding open session`,
           )
         })
 
-        it('should return 400', () => {
-          expect(this.fakeExpressResponse.status).to.be.calledWith(400)
+        it('should return 200', () => {
+          expect(this.fakeExpressResponse.status).to.be.calledWith(200)
         })
       })
     })
@@ -231,7 +223,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
         // Don't actually call braveAlerter methods
         this.braveAlerter = testingHelpers.braveAlerterFactory({
-          getAlertSessionByPhoneNumber: sandbox.stub().returns(null),
+          getAlertSessionByPhoneNumbers: sandbox.stub().returns(null),
           alertSessionChangedCallback: sandbox.stub(),
         })
         sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
@@ -272,7 +264,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon.stub().returns(
+        getAlertSessionByPhoneNumbers: sinon.stub().returns(
           testingHelpers.alertSessionFactory({
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
@@ -319,7 +311,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon.stub().returns(
+        getAlertSessionByPhoneNumbers: sinon.stub().returns(
           testingHelpers.alertSessionFactory({
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
@@ -366,7 +358,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon.stub().returns(
+        getAlertSessionByPhoneNumbers: sinon.stub().returns(
           testingHelpers.alertSessionFactory({
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
@@ -416,7 +408,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
       // Don't actually call braveAlerter methods
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.stub(),
-        getAlertSessionByPhoneNumber: sinon.stub().returns(
+        getAlertSessionByPhoneNumbers: sinon.stub().returns(
           testingHelpers.alertSessionFactory({
             sessionId: 'guid-123',
             alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,

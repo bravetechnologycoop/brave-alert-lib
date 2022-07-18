@@ -9,8 +9,8 @@ function dummyGetAlertSession() {
   return 'getAlertSession'
 }
 
-function dummyGetAlertSessionByPhoneNumber() {
-  return 'getAlertSessionByPhoneNumber'
+function dummyGetAlertSessionByPhoneNumbers() {
+  return 'getAlertSessionByPhoneNumbers'
 }
 
 function dummyGetAlertSessionBySessionIdAndAlertApiKey() {
@@ -52,7 +52,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
 
     this.braveAlerter = new BraveAlerter(
       dummyGetAlertSession,
-      dummyGetAlertSessionByPhoneNumber,
+      dummyGetAlertSessionByPhoneNumbers,
       dummyGetAlertSessionBySessionIdAndAlertApiKey,
       dummyAlertSessionChangedCallback,
       dummyGetLocationByAlertApiKey,
@@ -71,7 +71,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
   it('should be able to call the functions set by in the constructor', () => {
     const result = `
       ${this.braveAlerter.getAlertSession()}
-      ${this.braveAlerter.getAlertSessionByPhoneNumber()}
+      ${this.braveAlerter.getAlertSessionByPhoneNumbers()}
       ${this.braveAlerter.getAlertSessionBySessionIdAndAlertApiKey()}
       ${this.braveAlerter.alertSessionChangedCallback()}
       ${this.braveAlerter.getLocationByAlertApiKey()}
@@ -85,7 +85,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
     expect(result).to.equal(
       `
       getAlertSession
-      getAlertSessionByPhoneNumber
+      getAlertSessionByPhoneNumbers
       getAlertSessionBySessionIdAndAlertApiKey
       alertSessionChangedCallback
       getLocationByAlertApiKey

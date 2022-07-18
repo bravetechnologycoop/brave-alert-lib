@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Name and parameter list for `getAlertSessionByPhoneNumber` to permit the changes needed to allow Twilio numbers to be shared across clients (CU-2fk3y8a).
+
 ## [8.1.0] - 2022-07-12
 
 ### Changed
