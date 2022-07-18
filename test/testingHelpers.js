@@ -7,8 +7,8 @@ function dummyGetAlertSession() {
   return 'getAlertSession'
 }
 
-function dummyGetAlertSessionByPhoneNumber() {
-  return 'getAlertSessionByPhoneNumber'
+function dummyGetAlertSessionByPhoneNumbers() {
+  return 'getAlertSessionByPhoneNumbers'
 }
 
 function dummyGetAlertSessionBySessionIdAndAlertApiKey() {
@@ -47,7 +47,7 @@ function braveAlerterFactory(overrides = {}) {
   // prettier-ignore
   return new BraveAlerter(
     overrides.getAlertSession !== undefined ? overrides.getAlertSession : dummyGetAlertSession,
-    overrides.getAlertSessionByPhoneNumber !== undefined ? overrides.getAlertSessionByPhoneNumber : dummyGetAlertSessionByPhoneNumber,
+    overrides.getAlertSessionByPhoneNumbers !== undefined ? overrides.getAlertSessionByPhoneNumbers : dummyGetAlertSessionByPhoneNumbers,
     overrides.getAlertSessionBySessionIdAndAlertApiKey !== undefined ? overrides.getAlertSessionBySessionIdAndAlertApiKey : dummyGetAlertSessionBySessionIdAndAlertApiKey,
     overrides.alertSessionChangedCallback !== undefined ? overrides.alertSessionChangedCallback : dummyAlertSessionChangedCallback,
     overrides.getLocationByAlertApiKey !== undefined ? overrides.getLocationByAlertApiKey : dummyGetLocationByAlertApiKey,

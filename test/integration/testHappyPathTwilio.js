@@ -53,7 +53,7 @@ describe('happy path Twilio integration test: responder responds right away and 
 
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
-      getAlertSessionByPhoneNumber: sandbox.stub().returns(this.currentAlertSession),
+      getAlertSessionByPhoneNumbers: sandbox.stub().returns(this.currentAlertSession),
       alertSessionChangedCallback: sandbox.stub().returns(responderPhoneNumber),
     })
 
