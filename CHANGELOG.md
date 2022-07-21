@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.0] - 2022-07-21
+
 ### Changed
 
 - Name and parameter list for `getAlertSessionByPhoneNumber` to permit the changes needed to allow Twilio numbers to be shared across clients (CU-2fk3y8a).
@@ -257,8 +259,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.0.0...HEAD
-[7.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v7.0.0...v8.0.0
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.0.0...HEAD
+[9.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.1.0...v9.0.0
+[8.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.0.0...v8.1.0
+[8.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v7.0.0...v8.0.0
 [7.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.9.0...v7.0.0
 [6.9.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.8.0...v6.9.0
 [6.8.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v6.7.0...v6.8.0
