@@ -66,7 +66,7 @@ describe('twilioHelpers.js integration tests:', () => {
       })
 
       it('should return an error object', async () => {
-        expect(this.response).to.eql({ message: 'Error in Purchasing Twilio Number' })
+        expect(this.response).to.eql({ message: 'Error: No phone numbers found' })
       })
 
       it('should log the error', async () => {
