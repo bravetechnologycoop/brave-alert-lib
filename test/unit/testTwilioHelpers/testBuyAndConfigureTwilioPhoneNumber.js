@@ -172,12 +172,12 @@ describe('twilioHelpers.js unit tests: buyAndConfigureTwilioPhoneNumber', () => 
       })
     })
 
-    it('should not log anything', () => {
-      expect(helpers.log).not.to.be.called
+    it('should log the errors anything', () => {
+      expect(helpers.log).to.be.called
     })
 
-    it('should log the errors', () => {
-      expect(helpers.logError).to.be.called
+    it('should log any errors', () => {
+      expect(helpers.logError).not.to.be.called
     })
   })
 })

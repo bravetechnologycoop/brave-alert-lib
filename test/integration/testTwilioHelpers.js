@@ -70,7 +70,7 @@ describe('twilioHelpers.js integration tests:', () => {
       })
 
       it('should log the error', async () => {
-        expect(helpers.logError).to.be.called
+        expect(helpers.log).to.be.called
       })
     })
   })
