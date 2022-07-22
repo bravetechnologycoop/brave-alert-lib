@@ -168,7 +168,7 @@ describe('twilioHelpers.js unit tests: buyAndConfigureTwilioPhoneNumber', () => 
 
     it('should return a error object', () => {
       expect(this.response).to.eql({
-        message: 'Error in Purchasing Twilio Number',
+        message: 'Error',
       })
     })
 
