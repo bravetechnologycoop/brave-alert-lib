@@ -20,7 +20,7 @@
     "dotenv": "^7.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
-    "luxon": "^2.3.0",
+    "luxon": "^2.5.2",
     "twilio": "^3.54.2"
   },
   "devDependencies": {
@@ -30,7 +30,7 @@
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-brave": "git+https://github.com/bravetechnologycoop/eslint-config-brave.git#v1.0.0",
     "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
