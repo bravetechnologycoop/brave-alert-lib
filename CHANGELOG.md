@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.2.0] - 2023-01-12
+
 ### Security
 
 - Updated dependencies.
@@ -269,7 +271,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.2.0...HEAD
+[9.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.1.0...v9.2.0
+[9.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.0.0...v9.1.0
 [9.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.1.0...v9.0.0
 [8.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v7.0.0...v8.0.0
