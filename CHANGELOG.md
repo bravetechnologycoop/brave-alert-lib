@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Updated Twilio (CU-860phzbq5).
+
 ## [9.2.0] - 2023-01-12
 
 ### Security
