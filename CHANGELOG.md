@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.3.0] - 2023-02-07
+
 ### Security
 
 - Updated Twilio (CU-860phzbq5).
@@ -275,7 +277,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.2.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.3.0...HEAD
+[9.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.1.0...v9.2.0
 [9.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.0.0...v9.1.0
 [9.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v8.1.0...v9.0.0
