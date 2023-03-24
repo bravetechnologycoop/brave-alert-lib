@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Broke up the Client's `is_active` field into the component parts: `is_displayed`, `is_sending_alerts`, and `is_sending_vitals` (CU-860ptt5rp, CU-860q154rh).
+
 ## [9.3.0] - 2023-02-07
 
 ### Security
