@@ -367,7 +367,11 @@ An object representing a client. Contains the following fields:
 
 **incidentCategories (array of strings):** Array of incident categories the Client's responder will be asked to choose from for each alert; should be the database value `client.incident_categories`
 
-**isActive (boolean):** If this Client is currently active (can be used for things like hiding on the Dashboard and not sending out vitals/heartbeat messages); should be the database value `client.is_active`
+**isDisplayed (boolean):** If this Client is displayed on the dashboard by default; should be the database value `client.is_displayed`
+
+**isSendingAlerts (boolean):** If this Client should send alert messages; should be the database value `client.is_sending_alerts`
+
+**isSendingVitals (boolean):** If this Client is should send vitals messages; should be the database value `client.is_sending_vitals`
 
 **createdAt (Date):** When the Client was created in the database; should be the database value `client.created_at`
 
