@@ -1,5 +1,5 @@
 # OS
-dist: xenial
+dist: focal
 
 # Language
 language: node_js # node version specified in .nvmrc

@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Run Travis on Ubuntu 20.04.
+
 ### Security
 
-- Upgrade Node.js (CU-860pqat6u).
+- Upgrade to Node.js 18.16.1 (CU-860pqat6u).
 
 ## [10.0.0]
 
