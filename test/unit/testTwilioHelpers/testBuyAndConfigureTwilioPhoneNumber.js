@@ -36,11 +36,13 @@ describe('twilioHelpers.js unit tests: buyAndConfigureTwilioPhoneNumber', () => 
       this.incomingFriendlyName = 'incomingFriendlyName'
       this.twilioClientStub = {
         messaging: {
-          services: sandbox.stub().returns({
-            phoneNumbers: {
-              create: sandbox.stub(),
-            },
-          }),
+          v1: {
+            services: sandbox.stub().returns({
+              phoneNumbers: {
+                create: sandbox.stub(),
+              },
+            }),
+          },
         },
         incomingPhoneNumbers: {
           create: sandbox.stub().returns({
@@ -91,7 +93,9 @@ describe('twilioHelpers.js unit tests: buyAndConfigureTwilioPhoneNumber', () => 
       this.incomingSid = 'incomingSid'
       this.twilioClientStub = {
         messaging: {
-          services: sandbox.stub().throws(new Error()),
+          v1: {
+            services: sandbox.stub().throws(new Error()),
+          },
         },
         incomingPhoneNumbers: {
           create: sandbox.stub().returns({
@@ -143,7 +147,9 @@ describe('twilioHelpers.js unit tests: buyAndConfigureTwilioPhoneNumber', () => 
       this.incomingSid = 'incomingSid'
       this.twilioClientStub = {
         messaging: {
-          services: sandbox.stub(),
+          v1: {
+            services: sandbox.stub(),
+          },
         },
         incomingPhoneNumbers: {
           create: sandbox.stub().throws(new Error()),
