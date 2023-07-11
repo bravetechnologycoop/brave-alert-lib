@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.1.0]
+
 ### Changed
 
 - Run Travis on Ubuntu 20.04.
@@ -291,7 +293,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.1.0...HEAD
+[10.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.3.0...v10.0.0
 [9.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.1.0...v9.2.0
