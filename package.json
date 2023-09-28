@@ -24,7 +24,7 @@
     "twilio": "^4.7.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.10",
     "chai-http": "^4.3.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
