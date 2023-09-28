@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.2.0] - 2023-09-28
+
 ### Security
 
 - Upgraded Chai and other dependencies (CU-8678wgn0p).
 
-## [10.1.0]
+## [10.1.0] - 2023-07-11
 
 ### Changed
 
@@ -21,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade to Node.js 18.16.1 (CU-860pqat6u).
 
-## [10.0.0]
+## [10.0.0] - 2023-04-03
 
 ### Changed
 
@@ -297,7 +299,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.1.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.2.0...HEAD
+[10.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.3.0...v10.0.0
 [9.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.2.0...v9.3.0
