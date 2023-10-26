@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### security
 
-- Address security vulnerabilities by updating project dependencies using npm audit fix
+- Address security vulnerabilities by updating project dependencies using npm audit fix.
 
 ## [10.2.0] - 2023-09-28
 
