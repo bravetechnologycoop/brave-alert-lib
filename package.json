@@ -4,7 +4,7 @@
   "description": "Library to communicate with responders and staff when action is required.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bravetechnologycoop/brave-alert-lib/tree/ad-feature/Alert-display-name-with-multiple-languages"
+    "url": "https://github.com/bravetechnologycoop/brave-alert-lib"
   },
   "main": "index.js",
   "scripts": {
