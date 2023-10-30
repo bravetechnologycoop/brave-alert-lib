@@ -30,6 +30,10 @@ const initialAlertInfo = {
   toPhoneNumbers: [responderPhoneNumber, otherResponderPhoneNumber],
   fromPhoneNumber: devicePhoneNumber,
   message: initialMessage,
+  language: 'en',
+  t: function mock_t(key, options) {
+    return `${key} - ${options.lng}`
+  },
   reminderTimeoutMillis: 1 * 60 * 1000, // 1 minute
   fallbackTimeoutMillis: 5 * 60 * 1000, // 5 minutes
   reminderMessage: 'Reminder message',

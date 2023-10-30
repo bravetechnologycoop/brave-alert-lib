@@ -29,6 +29,10 @@ const initialAlertInfo = {
   message: initialMessage,
   deviceName,
   alertType,
+  language: 'en',
+  t: function mock_t(key, options) {
+    return `${key} - ${options.lng}`
+  },
   reminderTimeoutMillis: 1, // 1 ms
   fallbackTimeoutMillis: 3000, // 3 seconds
   reminderMessage: 'Reminder message',

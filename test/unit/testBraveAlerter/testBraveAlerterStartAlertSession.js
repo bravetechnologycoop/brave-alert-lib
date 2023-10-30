@@ -53,6 +53,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         fromPhoneNumber: '+11231231234',
         sessionId: this.sessionId,
         message: this.message,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
         alertType: this.alertType,
         deviceName: this.deviceName,
         fallbackTimeoutMillis: this.fallbackTimeoutMillis,
@@ -67,7 +71,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(
         this.responderPushId,
         `${this.sessionId} START`,
-        `New Duration Alert:\n${this.deviceName}`,
+        `New SENSOR_DURATION - en Alert:\n${this.deviceName}`,
       )
     })
 
@@ -102,6 +106,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         responderPushId: this.responderPushId,
         sessionId: this.sessionId,
         message: this.message,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
         alertType: this.alertType,
         deviceName: this.deviceName,
         fallbackTimeoutMillis: this.fallbackTimeoutMillis,
@@ -116,7 +124,7 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(
         this.responderPushId,
         `${this.sessionId} START`,
-        `New Duration Alert:\n${this.deviceName}`,
+        `New SENSOR_DURATION - en Alert:\n${this.deviceName}`,
       )
     })
 
@@ -147,6 +155,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         toPhoneNumbers: this.toPhoneNumbers,
         fromPhoneNumber: this.fromPhoneNumber,
         message: this.message,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -185,6 +197,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         toPhoneNumbers: this.toPhoneNumbers,
         fromPhoneNumber: this.fromPhoneNumber,
         message: this.message,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -222,6 +238,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fromPhoneNumber: '+11231231234',
         reminderMessage: 'My message',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -254,6 +274,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         toPhoneNumbers: ['+11231231234'],
         reminderMessage: 'My message',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -286,6 +310,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         toPhoneNumbers: ['+11231231234'],
         reminderMessage: 'My message',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -317,6 +345,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
         sessionId: 'guid-123',
         toPhoneNumbers: ['+11231231234'],
         fromPhoneNumber: '+11231231234',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -349,6 +381,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         sessionId: 'guid-123',
         responderPushId: 'pushId',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -373,6 +409,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         reminderTimeoutMillis: 1,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
@@ -383,6 +423,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         reminderTimeoutMillis: -1,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
@@ -392,6 +436,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     it('not given should not send a reminder', async () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
@@ -411,6 +459,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fallbackTimeoutMillis: 1,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
@@ -421,6 +473,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
         fallbackTimeoutMillis: -1,
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
@@ -430,6 +486,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     it('not given should not send a fallback alert', async () => {
       await this.braveAlerter.startAlertSession({
         alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
       sandbox.clock.tick(2)
 
