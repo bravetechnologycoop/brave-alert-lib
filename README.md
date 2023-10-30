@@ -39,11 +39,9 @@ On your local machine, in the `brave-alert-lib` repository:
    - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
    - `DOMAIN`: The domain name pointing to this server in production
    - `DOMAIN_TEST`: The domain name pointing to this server in testing
-   - `CLICKUP_TEAM_NAME`: The full name of the Brave ClickUp Team
-   - `CLICKUP_TEAM_NAME_TEST`: The full name of the Brave ClickUp Team
-   - `CLICKUP_TEAM_ID`: The ID of the Brave ClickUp Team
-   - `CLICKUP_TEAM_ID_TEST`: The ID of the Brave ClickUp Team
    - `IS_DB_LOGGING`: Whether (true) or not (false) we are printing DB debug logs to the console
+   - `PA_CLIENT_ID`: The client ID of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_SECRET`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
 
 # How to setup a local dev environment
 
@@ -403,20 +401,6 @@ Buys and configures a Twilio Phone number for use with the current server (i.e. 
 
 ** Returns:** if successful, an object with `message: 'success'` and other key/values of interest; if not successful, an object with `message` explaining the error and other key/values of interest
 
-## `clickUpHelpers` functions
-
-A collection of functions that use the ClickUp API.
-
-### clickUpChecker(req, res, next)
-
-Express middleware that checks if the given `req.body.clickupToken` is valid for the Brave ClickUp Team
-
-** req (Request):** The Express request to check
-
-** res (Response):** The Express response to use to send back an error code if the ClickUp check fails
-
-** next (function):** The next handler function for this Express endpoint if the ClickUp check passes
-
 ## `helpers` functions
 
 A collection of functions that are useful across the Brave NodeJS applications.
@@ -558,3 +542,39 @@ Insert a row into the `clients` table in the given `db` with valid default value
 Create a new `Client` object with valid default values unless they are overridden by the values in the given `overries` array
 
 **overrides (object):** Any custom values to use for the new `Client` object other than the defaults
+
+## `googleHelpers` functions
+
+A collection of functions providing authentication for PA.
+
+### paGetPayload(idToken)
+
+Verfies an ID token as being from Google, and returns the payload.
+The payload for an ID token contains user and application information.
+
+**idToken (string):** ID token from Google. Should be retrieved using `paGetTokens`.
+
+**Returns:** Object containing [user and application information](https://cloud.google.com/docs/authentication/token-types#id).
+
+### paGetTokens(authCode)
+
+Exchanges a Google auth code for various Google tokens for authentication, including `access_token`, `id_token`, etc.
+
+**authCode (string):** auth code from Google. PA gets this from Google when a user successfully logs in.
+
+**Returns:** Object containing various tokens, including `access_token`, and `id_token`.
+
+### paAuthorize(req, res, next)
+
+Validates a posted ID token contained in `req.body.idToken`.
+Gets the payload for the provided ID token internally, and returns true if:
+- The ID token originated from PA (`payload.aud` is `PA_CLIENT_ID`)
+- The user is from the Brave organization (`payload.hd` is `'brave.coop'`)
+- The ID token was authenticated by Google (`payload.iss` is `'https://accounts.google.com'` or `'accounts.google.com'`)
+- The expiration date hasn't passed (`payload.exp` is greater than the present UNIX time)
+
+**req (Request):** The Express request to check
+
+**res (Response):** The Express response to use to send back an error code if the verification fails
+
+**next (function):** The next handler function for this Express endpoint if the verification passes

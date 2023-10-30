@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- googleHelpers.paGetTokens, googleHelpers.paGetPayload, googleHelpers.paAuthorize for PA authentication (CU-86791h7nu).
+
+### Removed
+
+- clickUpHelpers in favour of googleHelpers (CU-86791h7nu).
+
 ## [10.2.0] - 2023-09-28
 
 ### Security
