@@ -41,7 +41,9 @@ On your local machine, in the `brave-alert-lib` repository:
    - `DOMAIN_TEST`: The domain name pointing to this server in testing
    - `IS_DB_LOGGING`: Whether (true) or not (false) we are printing DB debug logs to the console
    - `PA_CLIENT_ID`: The client ID of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_ID_TEST`: The client ID of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
    - `PA_CLIENT_SECRET`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_SECRET_TEST`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
 
 # How to setup a local dev environment
 
