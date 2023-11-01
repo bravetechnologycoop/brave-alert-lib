@@ -18,7 +18,7 @@ googleHelpers.__set__('paOAuth2Client', mockOAuth2Client)
 describe('googleHelpers.js unit tests: paGetPayload', () => {
   // first case: unparesable ID token
   describe('for an unparseable ID token', () => {
-    it.only('should throw an Error', () => {
+    it('should throw an Error', () => {
       expect(googleHelpers.paGetPayload('gibberish')).to.be.rejected
       expect(googleHelpers.paGetPayload('')).to.be.rejected
       expect(googleHelpers.paGetPayload(undefined)).to.be.rejected
@@ -44,7 +44,7 @@ describe('googleHelpers.js unit tests: paGetPayload', () => {
       () => {
         // if all four qualities of the ID token are met, then paGetPayload should resolve successfully and return a populated payload
         if (!reason.expired && !reason.audience && !reason.signature && !reason.profile) {
-          it.only('should resolve successfully and return a populated payload', async () => {
+          it('should resolve successfully and return a populated payload', async () => {
             let error
             let payload
 
@@ -59,7 +59,7 @@ describe('googleHelpers.js unit tests: paGetPayload', () => {
           })
         } else {
           // for any other case, an Error should be thrown
-          it.only('should throw an Error', () => {
+          it('should throw an Error', () => {
             expect(googleHelpers.paGetPayload(mockIDTokenFactory(reason))).to.be.rejected
           })
         }
