@@ -1,7 +1,11 @@
+// Third-party dependencies
+const rewire = require('rewire')
+
 // In-house dependencies
 const AlertSession = require('../lib/alertSession')
 const BraveAlerter = require('../lib/braveAlerter')
 const CHATBOT_STATE = require('../lib/chatbotStateEnum')
+const googleHelpers = rewire('../lib/googleHelpers')
 
 function dummyGetAlertSession() {
   return 'getAlertSession'
@@ -84,8 +88,59 @@ function mockResponse(sandbox) {
   return res
 }
 
+function mockIDTokenFactory(reason) {
+  return JSON.stringify({
+    aud: reason.audience === true ? "not-pa" : googleHelpers.__get__('PA_CLIENT_ID'),
+    iss: reason.signature === true ? "hacker.com" : "https://accounts.google.com",
+    // either expired 1 hour ago, or expires in 1 hour
+    exp: reason.expired === true ? Date.now() - 3600 : Date.now() + 3600,
+    hd: reason.profile === true ? undefined : googleHelpers.__get__('PA_GSUITE_DOMAIN'),
+    email: reason.profile === true ? undefined : `john@${googleHelpers.__get__('PA_GSUITE_DOMAIN')}`,
+    name: reason.profile === true ? undefined : 'John Doe',
+  })
+}
+
+class mockTicket {
+  constructor(payload) {
+    this.payload = payload
+  }
+
+  getPayload() {
+    return this.payload
+  }
+}
+
+class mockOAuth2Client {
+  async verifyIdToken(options) {
+    const { idToken } = options
+    let payload
+
+    try {
+      // ID tokens generated from mockIDTokenFactory are JSON encoded payloads
+      payload = JSON.parse(idToken)
+
+      /* these three fields must be defined as per ID token specification
+       * see: https://cloud.google.com/docs/authentication/token-types#id */
+      if (payload.aud === undefined || payload.iss === undefined || payload.exp === undefined) {
+        throw undefined // the catch statement below doesn't parse the caught error
+      }
+    } catch (error) {
+      throw new Error("Couldn't parse token")
+    }
+
+    // replicates error thrown for expired token
+    if (Date.now() > payload.exp) {
+      throw new Error(`Token used too late, ${Date.now()} > ${payload.exp}: ${JSON.stringify(payload)}`)
+    }
+
+    return new mockTicket(payload)
+  }
+}
+
 module.exports = {
   alertSessionFactory,
   braveAlerterFactory,
   mockResponse,
+  mockIDTokenFactory,
+  mockOAuth2Client,
 }
