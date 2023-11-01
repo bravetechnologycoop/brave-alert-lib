@@ -5,6 +5,7 @@ const rewire = require('rewire')
 const AlertSession = require('../lib/alertSession')
 const BraveAlerter = require('../lib/braveAlerter')
 const CHATBOT_STATE = require('../lib/chatbotStateEnum')
+
 const googleHelpers = rewire('../lib/googleHelpers')
 
 function dummyGetAlertSession() {
@@ -90,28 +91,21 @@ function mockResponse(sandbox) {
 
 function mockIDTokenFactory(reason) {
   return JSON.stringify({
-    aud: reason.audience === true ? "not-pa" : googleHelpers.__get__('PA_CLIENT_ID'),
-    iss: reason.signature === true ? "hacker.com" : "https://accounts.google.com",
+    // eslint-disable-next-line no-underscore-dangle
+    aud: reason.audience === true ? 'not-pa' : googleHelpers.__get__('PA_CLIENT_ID'),
+    iss: reason.signature === true ? 'hacker.com' : 'https://accounts.google.com',
     // either expired 1 hour ago, or expires in 1 hour
     exp: reason.expired === true ? Date.now() - 3600 : Date.now() + 3600,
+    // eslint-disable-next-line no-underscore-dangle
     hd: reason.profile === true ? undefined : googleHelpers.__get__('PA_GSUITE_DOMAIN'),
+    // eslint-disable-next-line no-underscore-dangle
     email: reason.profile === true ? undefined : `john@${googleHelpers.__get__('PA_GSUITE_DOMAIN')}`,
     name: reason.profile === true ? undefined : 'John Doe',
   })
 }
 
-class mockTicket {
-  constructor(payload) {
-    this.payload = payload
-  }
-
-  getPayload() {
-    return this.payload
-  }
-}
-
-class mockOAuth2Client {
-  async verifyIdToken(options) {
+const mockOAuth2Client = {
+  verifyIdToken: options => {
     const { idToken } = options
     let payload
 
@@ -122,19 +116,24 @@ class mockOAuth2Client {
       /* these three fields must be defined as per ID token specification
        * see: https://cloud.google.com/docs/authentication/token-types#id */
       if (payload.aud === undefined || payload.iss === undefined || payload.exp === undefined) {
-        throw undefined // the catch statement below doesn't parse the caught error
+        throw new Error('Missing fields')
       }
     } catch (error) {
       throw new Error("Couldn't parse token")
     }
 
-    // replicates error thrown for expired token
+    // replicates error thrown by Google's OAuth2Client for an expired token
     if (Date.now() > payload.exp) {
       throw new Error(`Token used too late, ${Date.now()} > ${payload.exp}: ${JSON.stringify(payload)}`)
     }
 
-    return new mockTicket(payload)
-  }
+    // return an Object implementing the getPayload method similar to Google's Ticket class
+    return {
+      getPayload: () => {
+        return payload
+      },
+    }
+  },
 }
 
 module.exports = {
