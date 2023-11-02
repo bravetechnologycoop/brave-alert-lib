@@ -134,6 +134,13 @@ const mockOAuth2Client = {
       },
     }
   },
+  getToken: authCode => {
+    if (authCode === 'valid-authorization-code') {
+      return { tokens: { access_token: 'access_token', id_token: 'id_token' } }
+    }
+
+    throw new Error('Invalid authorization code')
+  },
 }
 
 module.exports = {

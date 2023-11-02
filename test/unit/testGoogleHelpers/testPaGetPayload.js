@@ -16,7 +16,7 @@ chai.use(chaiAsPromised)
 googleHelpers.__set__('paOAuth2Client', mockOAuth2Client)
 
 describe('googleHelpers.js unit tests: paGetPayload', () => {
-  // first case: unparesable ID token
+  // first case: unparseable ID token
   describe('for an unparseable ID token', () => {
     it('should throw an Error', () => {
       expect(googleHelpers.paGetPayload('gibberish')).to.be.rejected
