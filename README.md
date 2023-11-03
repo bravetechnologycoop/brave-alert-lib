@@ -551,32 +551,38 @@ A collection of functions providing authentication for PA.
 
 ### paGetPayload(idToken)
 
-Verfies an ID token as being from Google, and returns the payload.
-The payload for an ID token contains user and application information.
+Gets payload contained in a given ID token.
+If the ID token is invalid, this will throw an Error.
 
-**idToken (string):** ID token from Google. Should be retrieved using `paGetTokens`.
+An ID token is deemed valid if:
+- It isn't expired
+- It was created for PA
+- It was signed by Google
+- It is for a Brave Google account
+- It contains email and name fields
 
-**Returns:** Object containing [user and application information](https://cloud.google.com/docs/authentication/token-types#id).
+**idToken (string):** ID token as given from Google. Should be retrieved using `paGetTokens`.
+
+**Returns:** Payload information contained in the provided ID token.
+More information can be read in this [Google documentation](https://cloud.google.com/docs/authentication/token-types#id).
 
 ### paGetTokens(authCode)
 
-Exchanges a Google auth code for various Google tokens for authentication, including `access_token`, `id_token`, etc.
+Gets tokens (access token and ID token) from Google using an authorization code.
+If the authorization code is invalid, then this function will throw a `GaxiosError`.
 
-**authCode (string):** auth code from Google. PA gets this from Google when a user successfully logs in.
+**authCode (string):** Authorization code from Google retrieved in the frontend application (PA).
 
-**Returns:** Object containing various tokens, including `access_token`, and `id_token`.
+**Returns:** Object containing access token (accessToken) and ID token (idToken).
 
 ### paAuthorize(req, res, next)
 
-Validates a posted ID token contained in `req.body.idToken`.
-Gets the payload for the provided ID token internally, and returns true if:
-- The ID token originated from PA (`payload.aud` is `PA_CLIENT_ID`)
-- The user is from the Brave organization (`payload.hd` is `'brave.coop'`)
-- The ID token was authenticated by Google (`payload.iss` is `'https://accounts.google.com'` or `'accounts.google.com'`)
-- The expiration date hasn't passed (`payload.exp` is greater than the present UNIX time)
+Express middleware function to authorize a request to a PA API call.
+Attempts to authorize the request using a submitted ID token in the body of the request.
+The criteria for a valid ID token is defined under the `paGetPayload` function.
 
-**req (Request):** The Express request to check
+**req (Request):** The Express Request object. Should contain idToken in the body of the request.
 
-**res (Response):** The Express response to use to send back an error code if the verification fails
+**res (Response):** The Express Response object.
 
-**next (function):** The next handler function for this Express endpoint if the verification passes
+**next (function):** The next function to run if this request is authorized.
