@@ -116,12 +116,12 @@ function mockGoogleIdTokenFactory(options) {
 
 const mockOAuth2Client = {
   verifyIdToken: options => {
-    const { googleIdToken } = options
+    const { idToken } = options
     let payload
 
     try {
-      // ID tokens generated from mockGoogleIdTokenFactory are JSON encoded payloads
-      payload = JSON.parse(googleIdToken)
+      // Google ID tokens generated from mockGoogleIdTokenFactory are JSON encoded payloads
+      payload = JSON.parse(idToken)
 
       /* these three fields must be defined as per ID token specification
        * see: https://cloud.google.com/docs/authentication/token-types#id */

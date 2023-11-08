@@ -549,7 +549,7 @@ Create a new `Client` object with valid default values unless they are overridde
 
 A collection of functions providing authentication for PA.
 
-### paGetPayload(idToken)
+### paGetPayload(googleIdToken)
 
 Gets payload contained in a given Google ID token.
 If the Google ID token is invalid, this will throw an Error.
@@ -566,7 +566,7 @@ An ID token is deemed valid if:
 **Returns:** Payload information contained in the provided ID token.
 More information can be read in this [Google documentation](https://cloud.google.com/docs/authentication/token-types#id).
 
-### paGetTokens(authCode)
+### paGetTokens(googleAuthCode)
 
 Gets tokens (Google access token and Google ID token) from Google using an authorization code.
 If the authorization code is invalid, then this function will throw a `GaxiosError`.
