@@ -16,16 +16,27 @@ chai.use(chaiAsPromised)
 googleHelpers.__set__('paOAuth2Client', mockOAuth2Client)
 
 describe('googleHelpers.js unit tests: paGetTokens', () => {
-  describe('for an invalid authorization code', () => {
+  describe('for an authorization code that is unparseable', () => {
     it('should throw an Error', () => {
       expect(googleHelpers.paGetTokens('invalid-authorization-code')).to.be.rejected
+    })
+  })
+  describe('for an authorization code that is empty', () => {
+    it('should throw an Error', () => {
       expect(googleHelpers.paGetTokens('')).to.be.rejected
+    })
+  })
+  describe('for an authorization code that is undefined', () => {
+    it('should throw an Error', () => {
       expect(googleHelpers.paGetTokens(undefined)).to.be.rejected
     })
   })
-  describe('for a valid authorization code', () => {
-    it('should return an object containing idToken and accessToken', async () => {
-      expect(googleHelpers.paGetTokens('valid-authorization-code')).to.eventually.include.all.keys('accessToken', 'idToken')
+  describe('for an authorization code that is valid', () => {
+    it('should not throw an Error', () => {
+      expect(googleHelpers.paGetTokens('valid-authorization-code')).to.not.be.rejected
+    })
+    it('should return an Object containing googleAccessToken, and googleIdToken keys', async () => {
+      expect(await googleHelpers.paGetTokens('valid-authorization-code')).to.include.all.keys('googleAccessToken', 'googleIdToken')
     })
   })
 })

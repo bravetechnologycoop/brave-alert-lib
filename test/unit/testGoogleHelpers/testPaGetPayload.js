@@ -7,7 +7,7 @@ const rewire = require('rewire')
 
 // In-house dependencies
 const googleHelpers = rewire('../../../lib/googleHelpers')
-const { mockIDTokenFactory, mockOAuth2Client } = require('../../testingHelpers')
+const { mockGoogleIdTokenFactory, mockOAuth2Client } = require('../../testingHelpers')
 
 chai.use(chaiAsPromised)
 
@@ -16,54 +16,76 @@ chai.use(chaiAsPromised)
 googleHelpers.__set__('paOAuth2Client', mockOAuth2Client)
 
 describe('googleHelpers.js unit tests: paGetPayload', () => {
-  // first case: unparseable ID token
-  describe('for an unparseable ID token', () => {
+  describe('for a Google ID token that is not parseable', () => {
     it('should throw an Error', () => {
       expect(googleHelpers.paGetPayload('gibberish')).to.be.rejected
+    })
+  })
+
+  describe('for a Google ID token that is empty', () => {
+    it('should throw an Error', () => {
       expect(googleHelpers.paGetPayload('')).to.be.rejected
+    })
+  })
+
+  describe('for a Google ID token that is undefined', () => {
+    it('should throw an Error', () => {
       expect(googleHelpers.paGetPayload(undefined)).to.be.rejected
     })
   })
 
-  /* There are 16 different cases for an ID token (2**4) as there are 4 qualities to check for:
-   * whether the token is expired, whether it originated from PA, whether it is signed by Google, and whether it is for a Brave account.
-   * This four loop generates each test case, and the behaviour expected for each case. */
-  for (let n = 0; n < 16; n += 1) {
-    const reason = {
-      expired: !(Math.floor(n / 8) % 2), // 8 true, 8 false
-      audience: !(Math.floor(n / 4) % 2), // 4 true, 4 false, 4 true, 4 false
-      signature: !(Math.floor(n / 2) % 2), // 2 true, 2 false, 2 true, 2 false, ..
-      profile: !(n % 2), // 1 true, 1 false, 1 true, 1 false, ..
-    }
+  const optionsThatShouldThrowAnError = [
+    { validExpiry: true, validAudience: true, validSignature: true, validProfile: false },
+    { validExpiry: true, validAudience: true, validSignature: false, validProfile: true },
+    { validExpiry: true, validAudience: true, validSignature: false, validProfile: false },
+    { validExpiry: true, validAudience: false, validSignature: true, validProfile: true },
+    { validExpiry: true, validAudience: false, validSignature: true, validProfile: false },
+    { validExpiry: true, validAudience: false, validSignature: false, validProfile: true },
+    { validExpiry: true, validAudience: false, validSignature: false, validProfile: false },
+    { validExpiry: false, validAudience: true, validSignature: true, validProfile: true },
+    { validExpiry: false, validAudience: true, validSignature: true, validProfile: false },
+    { validExpiry: false, validAudience: true, validSignature: false, validProfile: true },
+    { validExpiry: false, validAudience: true, validSignature: false, validProfile: false },
+    { validExpiry: false, validAudience: false, validSignature: true, validProfile: true },
+    { validExpiry: false, validAudience: false, validSignature: true, validProfile: false },
+    { validExpiry: false, validAudience: false, validSignature: false, validProfile: true },
+    { validExpiry: false, validAudience: false, validSignature: false, validProfile: false },
+  ]
 
+  optionsThatShouldThrowAnError.forEach(options => {
     describe(
-      `for an ID token that ${reason.expired ? 'is' : 'is not'} expired, ` +
-        `${reason.audience ? 'is not' : 'is'} from PA, ` +
-        `${reason.signature ? 'is not' : 'is'} signed by Google, ` +
-        `and ${reason.profile ? 'is not' : 'is'} for a Brave account`,
+      `for a Google ID token that ${options.validExpiry ? 'is not' : 'is'} expired, ` +
+        `${options.validAudience ? 'is' : 'is not'} from PA, ` +
+        `${options.validSignature ? 'is' : 'is not'} signed by Google, ` +
+        `and ${options.validProfile ? 'is' : 'is not'} for a Brave account`,
       () => {
-        // if all four qualities of the ID token are met, then paGetPayload should resolve successfully and return a populated payload
-        if (!reason.expired && !reason.audience && !reason.signature && !reason.profile) {
-          it('should resolve successfully and return a populated payload', async () => {
-            let error
-            let payload
+        beforeEach(() => {
+          this.googleIdToken = mockGoogleIdTokenFactory(options)
+        })
 
-            try {
-              payload = await googleHelpers.paGetPayload(mockIDTokenFactory(reason))
-            } catch (err) {
-              error = err
-            }
-
-            expect(!error).to.be.true
-            expect(payload).to.include.all.keys('aud', 'iss', 'exp', 'hd', 'email', 'name')
-          })
-        } else {
-          // for any other case, an Error should be thrown
-          it('should throw an Error', () => {
-            expect(googleHelpers.paGetPayload(mockIDTokenFactory(reason))).to.be.rejected
-          })
-        }
+        it('should throw an Error', () => {
+          expect(googleHelpers.paGetPayload(this.googleIdToken)).to.be.rejected
+        })
       },
     )
-  }
+  })
+
+  describe('for a Google ID token that is not expired, is from PA, is signed by Google, and is for a Brave account', () => {
+    beforeEach(() => {
+      this.googleIdToken = mockGoogleIdTokenFactory({
+        validExpiry: true,
+        validAudience: true,
+        validSignature: true,
+        validProfile: true,
+      })
+    })
+
+    it('should not throw an Error', () => {
+      expect(googleHelpers.paGetPayload(this.googleIdToken)).to.not.be.rejected
+    })
+
+    it('should return an Object containing aud, iss, exp, hd, email, and name keys', async () => {
+      expect(await googleHelpers.paGetPayload(this.googleIdToken)).to.include.all.keys('aud', 'iss', 'exp', 'hd', 'email', 'name')
+    })
+  })
 })

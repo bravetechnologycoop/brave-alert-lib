@@ -89,29 +89,39 @@ function mockResponse(sandbox) {
   return res
 }
 
-function mockIDTokenFactory(reason) {
+/**
+ * mockGoogleIdTokenFactory
+ * Generates a fake Google ID token given a set of options
+ * @param options Object containing or not containing the following values as true or false:
+ *   validAudience Whether the audience (client ID) is valid (from PA)
+ *   validSignature Whether the signature is valid (from Google)
+ *   validExpiry Whether the expiration date is valid (not expired)
+ *   validProfile Whether the profile scope is fulfilled and valid
+ *     (payload contains hd, email, name; email === 'brave.coop')
+ */
+function mockGoogleIdTokenFactory(options) {
   return JSON.stringify({
     // eslint-disable-next-line no-underscore-dangle
-    aud: reason.audience === true ? 'not-pa' : googleHelpers.__get__('PA_CLIENT_ID'),
-    iss: reason.signature === true ? 'hacker.com' : 'https://accounts.google.com',
-    // either expired 1 hour ago, or expires in 1 hour
-    exp: reason.expired === true ? Date.now() - 3600 : Date.now() + 3600,
+    aud: options.validAudience ? googleHelpers.__get__('PA_CLIENT_ID') : 'not-pa',
+    iss: options.validSignature ? 'https://accounts.google.com' : 'hacker.com',
+    // either expires in 1 hour, or expired 1 hour ago
+    exp: options.validExpiry ? Date.now() + 3600 : Date.now() - 3600,
     // eslint-disable-next-line no-underscore-dangle
-    hd: reason.profile === true ? undefined : googleHelpers.__get__('PA_GSUITE_DOMAIN'),
+    hd: options.validProfile ? googleHelpers.__get__('PA_GSUITE_DOMAIN') : undefined,
     // eslint-disable-next-line no-underscore-dangle
-    email: reason.profile === true ? undefined : `john@${googleHelpers.__get__('PA_GSUITE_DOMAIN')}`,
-    name: reason.profile === true ? undefined : 'John Doe',
+    email: options.validProfile ? `john@${googleHelpers.__get__('PA_GSUITE_DOMAIN')}` : undefined,
+    name: options.validProfile ? 'John Doe' : undefined,
   })
 }
 
 const mockOAuth2Client = {
   verifyIdToken: options => {
-    const { idToken } = options
+    const { googleIdToken } = options
     let payload
 
     try {
-      // ID tokens generated from mockIDTokenFactory are JSON encoded payloads
-      payload = JSON.parse(idToken)
+      // ID tokens generated from mockGoogleIdTokenFactory are JSON encoded payloads
+      payload = JSON.parse(googleIdToken)
 
       /* these three fields must be defined as per ID token specification
        * see: https://cloud.google.com/docs/authentication/token-types#id */
@@ -147,6 +157,6 @@ module.exports = {
   alertSessionFactory,
   braveAlerterFactory,
   mockResponse,
-  mockIDTokenFactory,
+  mockGoogleIdTokenFactory,
   mockOAuth2Client,
 }

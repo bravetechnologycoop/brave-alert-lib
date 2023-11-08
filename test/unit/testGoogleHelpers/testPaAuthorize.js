@@ -8,7 +8,7 @@ const chai = require('chai')
 
 // In-house dependencies
 const helpers = require('../../../lib/helpers')
-const { mockResponse, mockIDTokenFactory, mockOAuth2Client } = require('../../testingHelpers')
+const { mockResponse, mockGoogleIdTokenFactory, mockOAuth2Client } = require('../../testingHelpers')
 
 const googleHelpers = rewire('../../../lib/googleHelpers')
 
@@ -31,14 +31,19 @@ describe('googleHelpers.js unit tests: paAuthorize', () => {
     sandbox.restore()
   })
 
-  describe('when given a valid ID token', () => {
+  describe('when given a valid Google ID token', () => {
     beforeEach(async () => {
       this.fakeExpressResponse = mockResponse(sandbox)
       this.nextStub = sandbox.stub()
       await googleHelpers.paAuthorize(
         {
           body: {
-            idToken: mockIDTokenFactory({}),
+            googleIdToken: mockGoogleIdTokenFactory({
+              validAudience: true,
+              validSignature: true,
+              validExpiry: true,
+              validProfile: true,
+            }),
           },
         },
         this.fakeExpressResponse,
@@ -59,14 +64,14 @@ describe('googleHelpers.js unit tests: paAuthorize', () => {
     })
   })
 
-  describe('when given an invalid ID token', () => {
+  describe('when given an invalid Google ID token', () => {
     beforeEach(async () => {
       this.fakeExpressResponse = mockResponse(sandbox)
       this.nextStub = sandbox.stub()
       await googleHelpers.paAuthorize(
         {
           body: {
-            idToken: mockIDTokenFactory({ audience: true }), // not from PA
+            googleIdToken: mockGoogleIdTokenFactory({}), // {}: no valid options
           },
           path: TEST_PATH,
         },
@@ -88,14 +93,14 @@ describe('googleHelpers.js unit tests: paAuthorize', () => {
     })
   })
 
-  describe('when not given an ID token', () => {
+  describe('when not given a Google ID token', () => {
     beforeEach(async () => {
       this.fakeExpressResponse = mockResponse(sandbox)
       this.nextStub = sandbox.stub()
       await googleHelpers.paAuthorize(
         {
           body: {
-            idToken: undefined,
+            googleIdToken: undefined,
           },
           path: TEST_PATH,
         },
