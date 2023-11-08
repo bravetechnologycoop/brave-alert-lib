@@ -551,8 +551,8 @@ A collection of functions providing authentication for PA.
 
 ### paGetPayload(idToken)
 
-Gets payload contained in a given ID token.
-If the ID token is invalid, this will throw an Error.
+Gets payload contained in a given Google ID token.
+If the Google ID token is invalid, this will throw an Error.
 
 An ID token is deemed valid if:
 - It isn't expired
@@ -561,27 +561,27 @@ An ID token is deemed valid if:
 - It is for a Brave Google account
 - It contains email and name fields
 
-**idToken (string):** ID token as given from Google. Should be retrieved using `paGetTokens`.
+**googleIdToken (string):** ID token as given from Google. Should be retrieved using `paGetTokens`.
 
 **Returns:** Payload information contained in the provided ID token.
 More information can be read in this [Google documentation](https://cloud.google.com/docs/authentication/token-types#id).
 
 ### paGetTokens(authCode)
 
-Gets tokens (access token and ID token) from Google using an authorization code.
+Gets tokens (Google access token and Google ID token) from Google using an authorization code.
 If the authorization code is invalid, then this function will throw a `GaxiosError`.
 
-**authCode (string):** Authorization code from Google retrieved in the frontend application (PA).
+**googleAuthCode (string):** Authorization code from Google retrieved in the frontend application (PA).
 
-**Returns:** Object containing access token (accessToken) and ID token (idToken).
+**Returns:** Object containing access token (googleAccessToken) and ID token (googleIdToken).
 
 ### paAuthorize(req, res, next)
 
 Express middleware function to authorize a request to a PA API call.
-Attempts to authorize the request using a submitted ID token in the body of the request.
-The criteria for a valid ID token is defined under the `paGetPayload` function.
+Attempts to authorize the request using a submitted Google ID token in the body of the request.
+The criteria for a valid Google ID token is defined under the `paGetPayload` function.
 
-**req (Request):** The Express Request object. Should contain idToken in the body of the request.
+**req (Request):** The Express Request object. Should contain googleIdToken in the body of the request.
 
 **res (Response):** The Express Response object.
 
