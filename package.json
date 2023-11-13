@@ -20,12 +20,14 @@
     "dotenv": "^7.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
+    "google-auth-library": "^9.2.0",
     "luxon": "^2.5.2",
     "twilio": "^4.7.1"
   },
   "devDependencies": {
     "chai": "^4.3.10",
     "chai-http": "^4.3.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-brave": "git+https://github.com/bravetechnologycoop/eslint-config-brave.git#v1.0.0",

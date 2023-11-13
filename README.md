@@ -39,11 +39,11 @@ On your local machine, in the `brave-alert-lib` repository:
    - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
    - `DOMAIN`: The domain name pointing to this server in production
    - `DOMAIN_TEST`: The domain name pointing to this server in testing
-   - `CLICKUP_TEAM_NAME`: The full name of the Brave ClickUp Team
-   - `CLICKUP_TEAM_NAME_TEST`: The full name of the Brave ClickUp Team
-   - `CLICKUP_TEAM_ID`: The ID of the Brave ClickUp Team
-   - `CLICKUP_TEAM_ID_TEST`: The ID of the Brave ClickUp Team
    - `IS_DB_LOGGING`: Whether (true) or not (false) we are printing DB debug logs to the console
+   - `PA_CLIENT_ID`: The client ID of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_ID_TEST`: The client ID of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_SECRET`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
+   - `PA_CLIENT_SECRET_TEST`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
 
 # How to setup a local dev environment
 
@@ -403,20 +403,6 @@ Buys and configures a Twilio Phone number for use with the current server (i.e. 
 
 ** Returns:** if successful, an object with `message: 'success'` and other key/values of interest; if not successful, an object with `message` explaining the error and other key/values of interest
 
-## `clickUpHelpers` functions
-
-A collection of functions that use the ClickUp API.
-
-### clickUpChecker(req, res, next)
-
-Express middleware that checks if the given `req.body.clickupToken` is valid for the Brave ClickUp Team
-
-** req (Request):** The Express request to check
-
-** res (Response):** The Express response to use to send back an error code if the ClickUp check fails
-
-** next (function):** The next handler function for this Express endpoint if the ClickUp check passes
-
 ## `helpers` functions
 
 A collection of functions that are useful across the Brave NodeJS applications.
@@ -558,3 +544,45 @@ Insert a row into the `clients` table in the given `db` with valid default value
 Create a new `Client` object with valid default values unless they are overridden by the values in the given `overries` array
 
 **overrides (object):** Any custom values to use for the new `Client` object other than the defaults
+
+## `googleHelpers` functions
+
+A collection of functions providing authentication for PA.
+
+### paGetPayload(googleIdToken)
+
+Gets payload contained in a given Google ID token.
+If the Google ID token is invalid, this will throw an Error.
+
+An ID token is deemed valid if:
+- It isn't expired
+- It was created for PA
+- It was signed by Google
+- It is for a Brave Google account
+- It contains email and name fields
+
+**googleIdToken (string):** ID token as given from Google. Should be retrieved using `paGetTokens`.
+
+**Returns:** Payload information contained in the provided ID token.
+More information can be read in this [Google documentation](https://cloud.google.com/docs/authentication/token-types#id).
+
+### paGetTokens(googleAuthCode)
+
+Gets tokens (Google access token and Google ID token) from Google using an authorization code.
+If the authorization code is invalid, then this function will throw a `GaxiosError`.
+
+**googleAuthCode (string):** Authorization code from Google retrieved in the frontend application (PA).
+
+**Returns:** Object containing access token (googleAccessToken) and ID token (googleIdToken).
+
+### paAuthorize(req, res, next)
+
+Express middleware function to authorize a request to a PA API call.
+Attempts to authorize the request using a submitted Google ID token in the body of the request.
+The criteria for a valid Google ID token is defined under the `paGetPayload` function.
+
+**req (Request):** The Express Request object. Should contain googleIdToken in the body of the request.
+
+**res (Response):** The Express Response object.
+
+**next (function):** The next function to run if this request is authorized.
