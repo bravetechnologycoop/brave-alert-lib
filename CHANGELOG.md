@@ -11,10 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Modify the function getBraveAlertDisplayName to support the Spanish language (CU-867917pm9).
 
-### security
-
-- Address security vulnerabilities by updating project dependencies using npm audit fix.
-
 ## [10.2.0] - 2023-09-28
 
 ### Security
