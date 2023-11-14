@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - clickUpHelpers in favour of googleHelpers (CU-86791h7nu).
 
+### Fixed
+
+- Usage of Date.now() with respect to the expiration date in Google ID tokens (CU-86791h7nu).
+
 ## [10.2.0] - 2023-09-28
 
 ### Security
