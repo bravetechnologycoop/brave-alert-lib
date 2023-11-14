@@ -105,7 +105,7 @@ function mockGoogleIdTokenFactory(options) {
     aud: options.validAudience ? googleHelpers.__get__('PA_CLIENT_ID') : 'not-pa',
     iss: options.validSignature ? 'https://accounts.google.com' : 'hacker.com',
     // either expires in 1 hour, or expired 1 hour ago
-    exp: options.validExpiry ? Date.now() + 3600 : Date.now() - 3600,
+    exp: options.validExpiry ? Date.now() / 1000 + 3600 : Date.now() / 1000 - 3600,
     // eslint-disable-next-line no-underscore-dangle
     hd: options.validProfile ? googleHelpers.__get__('PA_GSUITE_DOMAIN') : undefined,
     // eslint-disable-next-line no-underscore-dangle
@@ -133,7 +133,7 @@ const mockOAuth2Client = {
     }
 
     // replicates error thrown by Google's OAuth2Client for an expired token
-    if (Date.now() > payload.exp) {
+    if (Date.now() / 1000 > payload.exp) {
       throw new Error(`Token used too late, ${Date.now()} > ${payload.exp}: ${JSON.stringify(payload)}`)
     }
 
