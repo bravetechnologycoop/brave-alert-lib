@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Modify the function getBraveAlertDisplayName to support the Spanish language (CU-867917pm9).
 
+## [10.3.0] - 2023-11-14
+
+### Added
+
+- googleHelpers.paGetTokens, googleHelpers.paGetPayload, googleHelpers.paAuthorize for PA authentication (CU-86791h7nu).
+
+### Removed
+
+- clickUpHelpers in favour of googleHelpers (CU-86791h7nu).
+
+### Fixed
+
+- Usage of Date.now() with respect to the expiration date in Google ID tokens (CU-86791h7nu).
+
 ## [10.2.0] - 2023-09-28
 
 ### Security
@@ -303,7 +317,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.2.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.0...HEAD
+[10.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.2.0...v10.3.0
 [10.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v9.3.0...v10.0.0
