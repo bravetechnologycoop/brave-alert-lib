@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Response of googleHelpers.paAuthorize to properly send information if an error occurred.
+
+### Security
+
+- Upgraded axios from 0.21.4 to 1.6.0.
+
 ## [10.3.0] - 2023-11-14
 
 ### Added
