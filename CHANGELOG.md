@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+### Unreleased
+
+## [10.3.1] - 2023-11-20
+
+### Fixed
+
+- Response of googleHelpers.paAuthorize to resolve in the event of a bad or unauthorized request.
 
 ### Changed
 
@@ -317,7 +323,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.1...HEAD
+[10.3.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.0...v10.3.1
 [10.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.2.0...v10.3.0
 [10.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.0.0...v10.1.0
