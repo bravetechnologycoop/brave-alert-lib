@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Unreleased
+## [Unreleased]
+
+### Changed
+
+- Modify the function getAlertTypeDisplayName to support the Spanish language (CU-867917pm9).
 
 ## [10.3.1] - 2023-11-20
 
@@ -13,9 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Response of googleHelpers.paAuthorize to resolve in the event of a bad or unauthorized request.
 
-### Changed
-
-- Modify the function getAlertTypeDisplayName to support the Spanish language (CU-867917pm9).
 
 ## [10.3.0] - 2023-11-14
 
