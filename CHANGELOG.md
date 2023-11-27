@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Modify the function getBraveAlertDisplayName to support the Spanish language (CU-867917pm9).
+- Modify the function getAlertTypeDisplayName to support the Spanish language (CU-867917pm9).
 
 ## [10.3.0] - 2023-11-14
 
