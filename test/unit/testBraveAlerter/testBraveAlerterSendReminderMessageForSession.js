@@ -53,6 +53,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
         reminderMessage: 'My message',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 
@@ -60,7 +64,11 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
       expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
     it('should send the reminder using OneSignal', () => {
-      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly('pushId', 'guid-123 REMINDER', 'Button Press Alert Reminder:\nBathroom 2')
+      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(
+        'pushId',
+        'guid-123 REMINDER',
+        'BUTTONS_NOT_URGENT - en Alert Reminder:\nBathroom 2',
+      )
     })
 
     it('should call the callback with session ID and alert state WAITING_FOR_REPLY', () => {
@@ -287,6 +295,10 @@ describe('braveAlerter.js unit tests: sendReminderMessageForSession', () => {
         alertType: ALERT_TYPE.BUTTONS_NOT_URGENT,
         deviceName: 'Bathroom 2',
         reminderMessage: 'My message',
+        language: 'en',
+        t: function mock_t(key, options) {
+          return `${key} - ${options.lng}`
+        },
       })
     })
 

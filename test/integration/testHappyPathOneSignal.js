@@ -31,6 +31,10 @@ const initialAlertInfo = {
   sessionId,
   responderPushId,
   message: initialMessage,
+  language: 'en',
+  t: function mock_t(key, options) {
+    return `${key} - ${options.lng}`
+  },
   deviceName,
   alertType,
   reminderTimeoutMillis: 1 * 60 * 1000, // 1 minute

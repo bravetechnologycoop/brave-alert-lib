@@ -419,13 +419,17 @@ Format the given `date` into English and Pacific Time
 
 A function that can be sent as an argument to the Express Validation `formatWith` function (https://express-validator.github.io/docs/validation-result-api.html#formatwithformatter). It takes an Express error object and returns a consistent, readable string to be used for error logs and sending in error HTTP messages.
 
-## getAlertTypeDisplayName(alertType)
+## getAlertTypeDisplayName(alertType, language, t)
 
-Get a human-readable display name for the given `alertType`.
+Get a human-readable display name for the given `alertType` in the given language.
 
 **alertType (ALERT_TYPE):** the alert type whose display name to get
 
-**Returns:** the display name corresponding to the given `alertType`
+**language (String):** the language the return value would be in
+
+**t (function):** the i18Next function that handles the translation
+
+**Returns:** the display name corresponding to the given `alertType` in the given language
 
 ### getEnvVars(name)
 
