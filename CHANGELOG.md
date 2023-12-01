@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [11.0.1] - 2023-12-01
+
+### Fixed
+
+- `package-lock.json` using npm 9.9.2, node v18.16.1.
+
 ## [11.0.0] - 2023-11-27
 
 ### Changed
@@ -325,7 +331,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.1...HEAD
+[11.0.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.0...v11.0.1
 [11.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.1...v11.0.0
 [10.3.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.3.0...v10.3.1
 [10.3.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v10.2.0...v10.3.0
