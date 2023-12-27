@@ -16,28 +16,8 @@ function dummyGetAlertSessionByPhoneNumbers() {
   return 'getAlertSessionByPhoneNumbers'
 }
 
-function dummyGetAlertSessionBySessionIdAndAlertApiKey() {
-  return 'getAlertSessionBySessionIdAndAlertApiKey'
-}
-
 function dummyAlertSessionChangedCallback() {
   return 'alertSessionChangedCallback'
-}
-
-function dummyGetLocationByAlertApiKey() {
-  return 'getLocationByAlertApiKey'
-}
-
-function dummyGetActiveAlertsByAlertApiKey() {
-  return 'getActiveAlertsByAlertApiKey'
-}
-
-function dummyGetHistoricAlertsByAlertApiKey() {
-  return 'getHistoricAlertsByAlertApiKey'
-}
-
-function dummyGetNewNotificationsCountByAlertApiKey() {
-  return 'getNewNotificationsCountByAlertApiKey'
 }
 
 function dummyGetReturnMessageToRespondedByPhoneNumber(language, fromAlertState, toAlertState) {
@@ -53,12 +33,7 @@ function braveAlerterFactory(overrides = {}) {
   return new BraveAlerter(
     overrides.getAlertSession !== undefined ? overrides.getAlertSession : dummyGetAlertSession,
     overrides.getAlertSessionByPhoneNumbers !== undefined ? overrides.getAlertSessionByPhoneNumbers : dummyGetAlertSessionByPhoneNumbers,
-    overrides.getAlertSessionBySessionIdAndAlertApiKey !== undefined ? overrides.getAlertSessionBySessionIdAndAlertApiKey : dummyGetAlertSessionBySessionIdAndAlertApiKey,
     overrides.alertSessionChangedCallback !== undefined ? overrides.alertSessionChangedCallback : dummyAlertSessionChangedCallback,
-    overrides.getLocationByAlertApiKey !== undefined ? overrides.getLocationByAlertApiKey : dummyGetLocationByAlertApiKey,
-    overrides.getActiveAlertsByAlertApiKey !== undefined ? overrides.getActiveAlertsByAlertApiKey : dummyGetActiveAlertsByAlertApiKey,
-    overrides.getHistoricAlertsByAlertApiKey !== undefined ? overrides.getHistoricAlertsByAlertApiKey : dummyGetHistoricAlertsByAlertApiKey,
-    overrides.getNewNotificationsCountByAlertApiKey !== undefined ? overrides.getNewNotificationsCountByAlertApiKey : dummyGetNewNotificationsCountByAlertApiKey,
     overrides.getReturnMessageToRespondedByPhoneNumber !== undefined ? overrides.getReturnMessageToRespondedByPhoneNumber : dummyGetReturnMessageToRespondedByPhoneNumber,
     overrides.getReturnMessageToOtherResponderPhoneNumbers !== undefined ? overrides.getReturnMessageToOtherResponderPhoneNumbers : dummyGetReturnMessageToOtherResponderPhoneNumbers,
   )

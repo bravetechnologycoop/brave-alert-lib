@@ -20,7 +20,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     helpers.logError.restore()
   })
 
-  describe('if successfully sends the alert', () => {
+  describe('if it successfully sends the alert', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sinon.stub(twilioHelpers, 'sendTwilioMessage')
@@ -39,7 +39,7 @@ describe('braveAlerter.js unit tests: sendSingleAlert', () => {
     })
   })
 
-  describe('if fails to send the alert', () => {
+  describe('if it fails to send the alert', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sinon.stub(twilioHelpers, 'sendTwilioMessage').returns()

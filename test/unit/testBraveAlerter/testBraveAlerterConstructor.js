@@ -13,28 +13,8 @@ function dummyGetAlertSessionByPhoneNumbers() {
   return 'getAlertSessionByPhoneNumbers'
 }
 
-function dummyGetAlertSessionBySessionIdAndAlertApiKey() {
-  return 'getAlertSessionBySessionIdAndAlertApiKey'
-}
-
 function dummyAlertSessionChangedCallback() {
   return 'alertSessionChangedCallback'
-}
-
-function dummyGetLocationByAlertApiKey() {
-  return 'getLocationByAlertApiKey'
-}
-
-function dummyGetActiveAlertsByAlertApiKey() {
-  return 'getActiveAlertsByAlertApiKey'
-}
-
-function dummyGetHistoricAlertsByAlertApiKey() {
-  return 'getHistoricAlertsByAlertApiKey'
-}
-
-function dummyGetNewNotificationsCountByAlertApiKey() {
-  return 'getNewNotificationsCountByAlertApiKey'
 }
 
 function dummyGetReturnMessageToRespondedByPhoneNumber() {
@@ -53,12 +33,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
     this.braveAlerter = new BraveAlerter(
       dummyGetAlertSession,
       dummyGetAlertSessionByPhoneNumbers,
-      dummyGetAlertSessionBySessionIdAndAlertApiKey,
       dummyAlertSessionChangedCallback,
-      dummyGetLocationByAlertApiKey,
-      dummyGetActiveAlertsByAlertApiKey,
-      dummyGetHistoricAlertsByAlertApiKey,
-      dummyGetNewNotificationsCountByAlertApiKey,
       dummyGetReturnMessageToRespondedByPhoneNumber,
       dummyGetReturnMessageToOtherResponderPhoneNumbers,
     )
@@ -72,12 +47,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
     const result = `
       ${this.braveAlerter.getAlertSession()}
       ${this.braveAlerter.getAlertSessionByPhoneNumbers()}
-      ${this.braveAlerter.getAlertSessionBySessionIdAndAlertApiKey()}
       ${this.braveAlerter.alertSessionChangedCallback()}
-      ${this.braveAlerter.getLocationByAlertApiKey()}
-      ${this.braveAlerter.getActiveAlertsByAlertApiKey()}
-      ${this.braveAlerter.getHistoricAlertsByAlertApiKey()}
-      ${this.braveAlerter.getNewNotificationsCountByAlertApiKey()}
       ${this.braveAlerter.getReturnMessageToRespondedByPhoneNumber()}
       ${this.braveAlerter.getReturnMessageToOtherResponderPhoneNumbers()}
     `
@@ -86,12 +56,7 @@ describe('braveAlerter.js unit tests: constructor', () => {
       `
       getAlertSession
       getAlertSessionByPhoneNumbers
-      getAlertSessionBySessionIdAndAlertApiKey
       alertSessionChangedCallback
-      getLocationByAlertApiKey
-      getActiveAlertsByAlertApiKey
-      getHistoricAlertsByAlertApiKey
-      getNewNotificationsCountByAlertApiKey
       getReturnMessageToRespondedByPhoneNumber
       getReturnMessageToOtherResponderPhoneNumbers
     `,
