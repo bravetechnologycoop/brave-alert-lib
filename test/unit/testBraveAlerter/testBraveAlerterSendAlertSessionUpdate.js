@@ -33,7 +33,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
       this.sessionId = 'guid-123'
       this.toPhoneNumbers = ['+11231231234']
       this.fromPhoneNumber = '+18887776666'
-      await this.braveAlerter.sendAlertSessionUpdate(this.sessionId, this.toPhoneNumbers, this.fromPhoneNumber, 'text message', 'push message')
+      await this.braveAlerter.sendAlertSessionUpdate(this.sessionId, this.toPhoneNumbers, this.fromPhoneNumber, 'text message')
     })
 
     it('should send Twilio alert with the right parameters', () => {
@@ -51,7 +51,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
       this.sessionId = 'guid-123'
       this.toPhoneNumbers = ['+11231231234', '+15557778888']
       this.fromPhoneNumber = '+18887776666'
-      await this.braveAlerter.sendAlertSessionUpdate(this.sessionId, this.toPhoneNumbers, this.fromPhoneNumber, 'text message', 'push message')
+      await this.braveAlerter.sendAlertSessionUpdate(this.sessionId, this.toPhoneNumbers, this.fromPhoneNumber, 'text message')
     })
 
     it('should send Twilio alert with the right parameters to the first responder phone', () => {
@@ -70,7 +70,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
 
       this.braveAlerter = testingHelpers.braveAlerterFactory()
 
-      await this.braveAlerter.sendAlertSessionUpdate('guid-123', undefined, '+11231231234', 'text message', 'push message')
+      await this.braveAlerter.sendAlertSessionUpdate('guid-123', undefined, '+11231231234', 'text message')
     })
 
     it('should not send Twilio alert', () => {
@@ -78,7 +78,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: push message')
+      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: text message')
     })
   })
 
@@ -89,7 +89,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
 
       this.braveAlerter = testingHelpers.braveAlerterFactory()
 
-      await this.braveAlerter.sendAlertSessionUpdate('guid-123', ['+11231231234'], undefined, 'text message', 'push message')
+      await this.braveAlerter.sendAlertSessionUpdate('guid-123', ['+11231231234'], undefined, 'text message')
     })
 
     it('should not send Twilio alert', () => {
@@ -97,7 +97,7 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: push message')
+      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: text message')
     })
   })
 
@@ -108,11 +108,11 @@ describe('braveAlerter.js unit tests: sendAlertSessionUpdate unit tests', () => 
 
       this.braveAlerter = testingHelpers.braveAlerterFactory()
 
-      await this.braveAlerter.sendAlertSessionUpdate('guid-123', ['+11231231234'], '+11231231234', 'text message', 'push message')
+      await this.braveAlerter.sendAlertSessionUpdate('guid-123', ['+11231231234'], '+11231231234', 'text message')
     })
 
     it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: push message')
+      expect(helpers.logError).to.be.calledWith('Failed to send alert update for session guid-123: text message')
     })
   })
 })
