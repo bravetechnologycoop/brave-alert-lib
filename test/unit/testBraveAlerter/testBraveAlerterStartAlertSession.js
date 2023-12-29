@@ -6,11 +6,9 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 // In-house dependencies
-const ALERT_TYPE = require('../../../lib/alertTypeEnum')
 const CHATBOT_STATE = require('../../../lib/chatbotStateEnum')
 const helpers = require('../../../lib/helpers')
 const twilioHelpers = require('../../../lib/twilioHelpers')
-const OneSignal = require('../../../lib/oneSignal')
 const testingHelpers = require('../../testingHelpers')
 
 chai.use(sinonChai)
@@ -26,121 +24,10 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
     sandbox.restore()
   })
 
-  describe('if there is responderPushId, toPhoneNumbers, and fromPhoneNumber', () => {
+  describe('if toPhoneNumbers and fromPhoneNumber are provided', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
-
-      // Don't use real time
-      sandbox.useFakeTimers()
-
-      this.braveAlerter = testingHelpers.braveAlerterFactory({
-        alertSessionChangedCallback: sandbox.fake(),
-      })
-
-      this.sessionId = 'guid-123'
-      this.message = 'my message'
-      this.responderPushId = 'pushId'
-      this.alertType = ALERT_TYPE.SENSOR_DURATION
-      this.deviceName = 'Room 101'
-      this.fallbackTimeoutMillis = 60000
-      await this.braveAlerter.startAlertSession({
-        responderPushId: this.responderPushId,
-        toPhoneNumbers: ['+11231231234'],
-        fromPhoneNumber: '+11231231234',
-        sessionId: this.sessionId,
-        message: this.message,
-        language: 'en',
-        t: function mock_t(key, options) {
-          return `${key} - ${options.lng}`
-        },
-        alertType: this.alertType,
-        deviceName: this.deviceName,
-        fallbackTimeoutMillis: this.fallbackTimeoutMillis,
-      })
-    })
-
-    it('should not send Twilio alert', () => {
-      expect(twilioHelpers.sendTwilioMessage).not.to.be.calledOnce
-    })
-
-    it('should send OneSignal alert with the right parameters', () => {
-      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(
-        this.responderPushId,
-        `${this.sessionId} START`,
-        `New SENSOR_DURATION - en Alert:\n${this.deviceName}`,
-      )
-    })
-
-    it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
-    })
-  })
-
-  describe('if there is responderPushId', () => {
-    beforeEach(async () => {
-      // Don't actually call Twilio
-      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
-
-      // Don't use real time
-      sandbox.useFakeTimers()
-
-      this.braveAlerter = testingHelpers.braveAlerterFactory({
-        alertSessionChangedCallback: sandbox.fake(),
-      })
-
-      this.sessionId = 'guid-123'
-      this.message = 'my message'
-      this.responderPushId = 'pushId'
-      this.alertType = ALERT_TYPE.SENSOR_DURATION
-      this.deviceName = 'Room 101'
-      this.fallbackTimeoutMillis = 60000
-      await this.braveAlerter.startAlertSession({
-        responderPushId: this.responderPushId,
-        sessionId: this.sessionId,
-        message: this.message,
-        language: 'en',
-        t: function mock_t(key, options) {
-          return `${key} - ${options.lng}`
-        },
-        alertType: this.alertType,
-        deviceName: this.deviceName,
-        fallbackTimeoutMillis: this.fallbackTimeoutMillis,
-      })
-    })
-
-    it('should not send Twilio alert', () => {
-      expect(twilioHelpers.sendTwilioMessage).not.to.be.calledOnce
-    })
-
-    it('should send OneSignal alert with the right parameters', () => {
-      expect(OneSignal.sendOneSignalMessage).to.be.calledOnceWithExactly(
-        this.responderPushId,
-        `${this.sessionId} START`,
-        `New SENSOR_DURATION - en Alert:\n${this.deviceName}`,
-      )
-    })
-
-    it('should call the callback with session ID and alert state STARTED', () => {
-      const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
-      expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
-    })
-  })
-
-  describe('if there is no responderPushId but there is toPhoneNumbers and fromPhoneNumber', () => {
-    beforeEach(async () => {
-      // Don't actually call Twilio
-      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.fake(),
@@ -166,23 +53,16 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(twilioHelpers.sendTwilioMessage).to.be.calledOnceWithExactly(this.toPhoneNumbers[0], this.fromPhoneNumber, this.message)
     })
 
-    it('should not send OneSignal alert', () => {
-      expect(OneSignal.sendOneSignalMessage).not.to.be.called
-    })
-
     it('should call the callback with session ID and alert state STARTED', () => {
       const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
 
-  describe('if there is no responderPushId but there is multiple toPhoneNumbers and fromPhoneNumber', () => {
+  describe('if multiple toPhoneNumbers and fromPhoneNumber are provided', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.fake(),
@@ -212,23 +92,16 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(twilioHelpers.sendTwilioMessage).to.be.calledWithExactly(this.toPhoneNumbers[1], this.fromPhoneNumber, this.message)
     })
 
-    it('should not send OneSignal alert', () => {
-      expect(OneSignal.sendOneSignalMessage).not.to.be.called
-    })
-
     it('should call the callback with session ID and alert state STARTED', () => {
       const expectedAlertSession = testingHelpers.alertSessionFactory({ sessionId: this.sessionId, alertState: CHATBOT_STATE.STARTED })
       expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(expectedAlertSession)
     })
   })
 
-  describe('if there is no responderPushId and no toPhoneNumbers', () => {
+  describe('if fromPhoneNumber is provided, but no toPhoneNumbers', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.fake(),
@@ -249,22 +122,15 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
-    it('should not send OneSignal alert', () => {
-      expect(OneSignal.sendOneSignalMessage).not.to.be.called
-    })
-
     it('should not call the callback', () => {
       expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
-  describe('if there is no responderPushId and no fromPhoneNumber', () => {
+  describe('if toPhoneNumbers are provided, but no fromPhoneNumber', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.fake(),
@@ -285,58 +151,15 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
       expect(twilioHelpers.sendTwilioMessage).not.to.be.called
     })
 
-    it('should not send OneSignal alert', () => {
-      expect(OneSignal.sendOneSignalMessage).not.to.be.called
-    })
-
     it('should not call the callback', () => {
       expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
     })
   })
 
-  describe('if there is no responderPushId and no fromPhoneNumber', () => {
-    beforeEach(async () => {
-      // Don't actually call Twilio
-      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
-
-      this.braveAlerter = testingHelpers.braveAlerterFactory({
-        alertSessionChangedCallback: sandbox.fake(),
-      })
-
-      await this.braveAlerter.startAlertSession({
-        alertSession: testingHelpers.alertSessionFactory({ sessionId: 'guid-123' }),
-        toPhoneNumbers: ['+11231231234'],
-        reminderMessage: 'My message',
-        language: 'en',
-        t: function mock_t(key, options) {
-          return `${key} - ${options.lng}`
-        },
-      })
-    })
-
-    it('should not send Twilio alert', () => {
-      expect(twilioHelpers.sendTwilioMessage).not.to.be.called
-    })
-
-    it('should not send OneSignal alert', () => {
-      expect(OneSignal.sendOneSignalMessage).not.to.be.called
-    })
-
-    it('should not call the callback', () => {
-      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
-    })
-  })
-
-  describe('if twilio fails to send the message', () => {
+  describe('if Twilio fails to send the message', () => {
     beforeEach(async () => {
       // Don't actually call Twilio
       sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns()
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({ data: {} })
 
       this.braveAlerter = testingHelpers.braveAlerterFactory({
         alertSessionChangedCallback: sandbox.fake(),
@@ -358,42 +181,6 @@ describe('braveAlerter.js unit tests: startAlertSession unit tests', () => {
 
     it('should log the error', () => {
       expect(helpers.logError).to.be.calledWith('Failed to send alert for session guid-123')
-    })
-  })
-
-  describe('if onesignal fails to send the message', () => {
-    beforeEach(async () => {
-      // Don't actually call Twilio
-      sandbox.stub(twilioHelpers, 'sendTwilioMessage').returns({})
-
-      // Don't actually call OneSignal
-      sandbox.stub(OneSignal, 'sendOneSignalMessage').returns({
-        data: {
-          errors: {
-            invalid_external_user_ids: ['786956'],
-          },
-        },
-      })
-
-      this.braveAlerter = testingHelpers.braveAlerterFactory({
-        alertSessionChangedCallback: sandbox.fake(),
-      })
-      await this.braveAlerter.startAlertSession({
-        sessionId: 'guid-123',
-        responderPushId: 'pushId',
-        language: 'en',
-        t: function mock_t(key, options) {
-          return `${key} - ${options.lng}`
-        },
-      })
-    })
-
-    it('should not call the callback', () => {
-      expect(this.braveAlerter.alertSessionChangedCallback).not.to.be.called
-    })
-
-    it('should log the error', () => {
-      expect(helpers.logError).to.be.calledWith('Failed to send alert for session guid-123: {"invalid_external_user_ids":["786956"]}')
     })
   })
 

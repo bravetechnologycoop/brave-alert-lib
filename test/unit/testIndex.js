@@ -20,19 +20,15 @@ describe('index.js unit tests:', () => {
     expect(index.CHATBOT_STATE).not.to.be.undefined
   })
 
+  it('exports googleHelpers', () => {
+    expect(index.googleHelpers).not.to.be.undefined
+  })
+
   it('exports helpers', () => {
     expect(index.helpers).not.to.be.undefined
   })
 
-  it('exports HistoricAlert', () => {
-    expect(index.HistoricAlert).not.to.be.undefined
-  })
-
-  it('exports Location', () => {
-    expect(index.Location).not.to.be.undefined
-  })
-
-  it('exports SYSTEM', () => {
-    expect(index.SYSTEM).not.to.be.undefined
+  it('exports twilioHelpers', () => {
+    expect(index.twilioHelpers).not.to.be.undefined
   })
 })

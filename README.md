@@ -31,12 +31,6 @@ On your local machine, in the `brave-alert-lib` repository:
    - `TWILIO_MESSAGING_SERVICE_SID_TEST`: The Twilio Messaging Service SID to use in testing
    - `TWILIO_TOKEN`: The Twilio token to use in production
    - `TWILIO_TOKEN_TEST`: The Twilio token to use in testing
-   - `ONESIGNAL_APP_ID`: The OneSignal app ID for our production account
-   - `ONESIGNAL_APP_ID_TEST`: The OneSignal app ID to use in testing
-   - `ONESIGNAL_API_KEY`: The OneSignal API Key for our production account
-   - `ONE_SIGNAL_API_KEY_TEST`: The OneSignal API Key to use in testing
-   - `TEST_ONESIGNAL_PUSH_ID`: A OneSignal Player ID that will be sent messages during the integration tests
-   - `ONESIGNAL_ALERT_ANDROID_CATEGORY_ID`: The OneSignal Android Category ID for Alerts and Reminders
    - `DOMAIN`: The domain name pointing to this server in production
    - `DOMAIN_TEST`: The domain name pointing to this server in testing
    - `IS_DB_LOGGING`: Whether (true) or not (false) we are printing DB debug logs to the console
@@ -111,21 +105,13 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getLocationByAlertApiKey, getActiveAlertsByAlertApiKey, getHistoricAlertsByAlertApiKey, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers)
+### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
 **getAlertSessionByPhoneNumbers (async function(devicePhoneNumber, responderPhoneNumber)):** function that returns the AlertSession object for the most recent unfinished session for the device with the given devicePhoneNumber and client with the given responderPhoneNumber
 
-**getAlertSessionBySessionIdAndAlertApiKey (async function(sessionId, alertApiKey)):** function that returns the AlertSession object with the given `sessionId` if and only if it is a session for a client using the given `alertApiKey`
-
 **alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return the respondedAtPhoneNumber for the alertSession
-
-**getLocationByAlertApiKey (async function(alertApiKey)):** function that returns the `Location` object whose Alert API Key matches the given `alertApiKey`, or `null` if there is no match
-
-**getActiveAlertsByAlertApiKey (async function(alertApiKey)):** function that returns an array of `ActiveAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
-
-**getHistoricAlertsByAlertApiKey (async function(alertApiKey, maxHistoricAlerts)):** function that returns an array of at most `maxHistoricAlerts` `HistoricAlert` objects whose Alert API Key matches the given `alertApiKey`, or the empty array if there is no match.
 
 **getReturnMessageToRespondedByPhoneNumber (function(language, fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
@@ -133,71 +119,11 @@ The main class of this library. It is used to send single alerts or to start ale
 
 ### getRouter()
 
-The BraveAlerter's Express Router contains the routes
+The BraveAlerter's Express Router contains the route
 
 - `POST /alert/sms`
 
   Generally, a call to the `POST /alert/sms` endpoint results in a call to the BraveAlerter's `alertSessionChangedCallback` with an `AlertSession` object as a parameter. The `AlertSession.sessionId` field will always be present. Other fields will only be present if they have updated. This parameter should be used to update the session's DB.
-
-- `POST /alert/designatedevice`
-
-  Expects the header to contain `X-API-KEY`.
-
-  Expects the body to contain `verificationCode` and `responderPushId`.
-
-  Prints the Alert API key, verificiation code, and responder push ID to the logs. This will be used when designating a device to a particular location/installation by adding the Alert API key and responder push ID to the DB.
-
-  On success, returns `200` and the body `'OK'`.
-
-- `GET /alert/location`
-
-  Expects the header to contain `X-API-KEY`.
-
-  On success, return `200` and the body the `Location` object corresponding to the location/installation with the given API key. If there is no corresponding location/installation, returns the body `{}`.
-
-- `GET /alert/activeAlerts`
-
-  Expects the header to contain `X-API-KEY`.
-
-  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
-
-- `GET /alert/historicAlerts`
-
-  Expects the header to contain `X-API-KEY`.
-
-  Expects the URL parameter to contain the integer `maxHistoricAlerts`.
-
-  On success, return `200` and the body an array of `HistoricAlert` objects corresponding to the most recent `maxHistoricAlerts` non-ongoing alerts for the location/installation with the given API key. If there is no corresponding location/installation, returns the body `[]`.
-
-- `POST /alert/acknowledgeAlertSession`
-
-  Expects the header to contain `X-API-KEY`.
-
-  Expects the body to contain `sessionId`.
-
-  Acknowledges an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This is the equivalent to a person replying 'Ok' after receiving the first text message in an alert session.
-
-  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
-
-- `POST /alert/respondToAlertSession`
-
-  Expects the header to contain `X-API-KEY`.
-
-  Expects the body to contain `sessionId`.
-
-  Responds to an alert for the Alert Session with the given `sessionId` if and only if the session was started by a device whose client has the given `alertApiKey`. This occurs when the person presses the 'Completed' button on an alert in the Brave Alert App.
-
-  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
-
-- `POST /alert/setIncidentCategory`
-
-  Expects the header to contain `X-API-KEY`.
-
-  Expects the body to contain `sessionId` and `incidentCategory`.
-
-  If the Alert Session with the given `sessionId` was started by a device whose client has the given `alertApiKey` and for whom the given `incidentCategory` is valid, then update its incident category to `incidentCategory`.
-
-  On success, returns `200` and the body an array of `ActiveAlert` objects corresponding to all the active alerts for the location/installations with the given API key. If there is no corresponding location/installation, returns the body `[]`.
 
 which can be added to an existing Express app by:
 
@@ -222,13 +148,11 @@ Sends the given `message` to the `toPhoneNumber` from the `fromPhoneNumber`.
 
 **Returns:** A promise that is resolved when the message is sent.
 
-### sendAlertSessionUpdate(sessionId, responderPushId, toPhoneNumbers, fromPhoneNumber, textMessage, pushMessage)
+### sendAlertSessionUpdate(sessionId, toPhoneNumbers, fromPhoneNumber, textMessage)
 
 Updates an ongoing alert session.
 
 **sessionId (GUID):** Unique identifier for the alert session that was updated; this should match the session ID in the DB
-
-**responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the update to, or `undefined` to send a text message update instead.
 
 **toPhoneNumbers (array of strings):** The phone numbers to send text message alert to if `responderPushId` is `undefined`.
 
@@ -236,15 +160,11 @@ Updates an ongoing alert session.
 
 **textMessage (string):** Message containing the update to be sent over SMS.
 
-**pushMessage (string):** Message containing the update to be sent over Push Notification.
-
 ### startAlertSession(alertInfo)
 
 Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.sessionId (GUID):** Unique identifier for the session; this should match the session ID in the DB
-
-**alertInfo.responderPushId (string):** The Push Notifications Device ID of the Alert App Responder device to send the alert to, or `undefined` to send a text message alert instead.
 
 **alertInfo.toPhoneNumbers (string):** The phone numbers to send text message alert to if `alertInfo.responderPushId` is `undefined`.
 
@@ -303,44 +223,6 @@ human-readable DB value for the `validIncidentCategoryKeys[i]` value given by th
 
 **language (string):** The language code in which client-facing messages should be sent.
 
-## `ActiveAlert` class
-
-An object representing an active alert session. Contains the following fields:
-
-**id (GUID):** Unique identifier for the alert session; should be the session ID from the DB
-
-**chatbotState (CHATBOT_STATE):** Thc current alert state of the alert session
-
-**deviceName (string):** The name of the device that triggered this alert session
-
-**alertType (ALERT_TYPE):** The current alert type of the alert session
-
-**validIncidentCategories (array of strings):** The valid incident cateogries for this session. These are the values that will be stored in the DB. For example:
-
-```
-['Accidental', 'Safer Use', 'Overdose', 'Other']
-```
-
-**createdTimestamp (timestamp):** The UTC datetime when this alert session was created
-
-## `HistoricAlert` class
-
-An object representing a historic alert session. Contains the following fields:
-
-**id (GUID):** Unique identifier for the alert session; should be the session ID from the DB
-
-**deviceName (string):** The name of the device that triggered this alert session
-
-**category (string):** The incident category of this alert session
-
-**alertType (ALERT_TYPE):** The final alert type of the alert session
-
-**numButtonPresses (int):** The number of times the Button was pressed during this alert session, if applicable. `undefined` otherwise.
-
-**createdTimestamp (timestamp):** The UTC datetime when this alert session was created
-
-**respondedTimestamp (timestamp):** The UTC datetime when this alert was responded to
-
 ## `Client` class
 
 An object representing a client. Contains the following fields:
@@ -384,10 +266,6 @@ An enum of the possible types of alert that can be triggered.
 ## `CHATBOT_STATE` enum
 
 An enum of the possible states the Alert Session could be in at any given time.
-
-## `SYSTEM` enum
-
-An enum of the types of Brave Devices that use `brave-alert-lib`.
 
 ## `twilioHelpers` functions
 
