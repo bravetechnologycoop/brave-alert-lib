@@ -154,9 +154,9 @@ Updates an ongoing alert session.
 
 **sessionId (GUID):** Unique identifier for the alert session that was updated; this should match the session ID in the DB
 
-**toPhoneNumbers (array of strings):** The phone numbers to send text message alert to if `responderPushId` is `undefined`.
+**toPhoneNumbers (array of strings):** The phone numbers to send text message alerts to.
 
-**fromPhoneNumber (string):** The phone number to send text message alert from if `responderPushId` is `undefined`.
+**fromPhoneNumber (string):** The phone number to send text message alerts from.
 
 **textMessage (string):** Message containing the update to be sent over SMS.
 
@@ -166,9 +166,9 @@ Starts a full alert session configured with the given `alertInfo` object.
 
 **alertInfo.sessionId (GUID):** Unique identifier for the session; this should match the session ID in the DB
 
-**alertInfo.toPhoneNumbers (string):** The phone numbers to send text message alert to if `alertInfo.responderPushId` is `undefined`.
+**alertInfo.toPhoneNumbers (string):** The phone numbers to send text message alerts to.
 
-**alertInfo.fromPhoneNumber (string):** The phone number to send text message alert from if `alertInfo.responderPushId` is `undefined`.
+**alertInfo.fromPhoneNumber (string):** The phone number to send text message alerts from.
 
 **alertInfo.message (string):** First message to send as part of this session
 
@@ -232,10 +232,6 @@ An object representing a client. Contains the following fields:
 **displayName (string):** Client name is a displayable format; should be the database value `client.display_name`
 
 **responderPhoneNumbers (array of string):** Client's responder phone numbers in the form `+133344455555`; should be the database value `client.responder_phone_numbers`
-
-**responderPushId (string):** Client's Alert App Responder Push ID; should be the database value `client.responder_push_id`
-
-**alertApiKey (string):** Client's Alert App API Key; should be the database value `client.alert_api_key`
 
 **reminderTimeout (int):** Number of seconds after the initial alert before a reminder is sent; should be the database value `client.reminder_timeout`
 

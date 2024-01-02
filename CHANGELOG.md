@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - OneSignal code: ActiveAlert, HistoricAlert, Location, SYSTEM, and respective functionality in BraveAlerter (CU-86dqkmhza).
+- OneSignal remnants in the Client class and respective factory functions (CU-86dqkmhza).
 
 ## [11.0.1] - 2023-12-01
 
