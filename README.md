@@ -111,7 +111,7 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getAlertSessionByPhoneNumbers (async function(devicePhoneNumber, responderPhoneNumber)):** function that returns the AlertSession object for the most recent unfinished session for the device with the given devicePhoneNumber and client with the given responderPhoneNumber
 
-**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return the respondedAtPhoneNumber for the alertSession
+**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return an object containing the fields: respondedByPhoneNumber, replacementReturnMessageToRespondedByPhoneNumber, replacementReturnMessageToOtherResponderPhoneNumbers. The two replacement fields should be left as undefined to use messages determined through the below two functions, null to send no message at all, or other for a custom message.
 
 **getReturnMessageToRespondedByPhoneNumber (function(language, fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 

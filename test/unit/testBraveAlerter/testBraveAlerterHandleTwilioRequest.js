@@ -43,7 +43,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
-            alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
+            alertSessionChangedCallback: sandbox.stub().returns({ respondedByPhoneNumber: this.responderPhoneNumber }),
             getAlertSessionByPhoneNumbers: sinon.stub().returns(
               testingHelpers.alertSessionFactory({
                 sessionId: 'guid-123',
@@ -115,7 +115,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
-            alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
+            alertSessionChangedCallback: sandbox.stub().returns({ respondedByPhoneNumber: this.responderPhoneNumber }),
             getAlertSessionByPhoneNumbers: sinon.stub().returns(
               testingHelpers.alertSessionFactory({
                 sessionId: 'guid-123',
