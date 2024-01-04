@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [12.1.1] - 2024-01-04
+
+### Added
+
+- Ability to disable the `RESET` alert state machine transition if the `getClientMessageForRequestToReset` returns `null` (CU-860r8k57h).
 
 ## [12.1.0] - 2024-01-04
 
@@ -344,7 +348,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.1...HEAD
+[12.1.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.0...v12.1.1
 [12.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.0.0...v12.1.0
 [12.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.1...v12.0.0
 [11.0.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.0...v11.0.1

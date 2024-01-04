@@ -117,7 +117,7 @@ The main class of this library. It is used to send single alerts or to start ale
 
 **getReturnMessageToOtherResponderPhoneNumbers (function(language, fromAlertState, toAlertState, selectedIncidentCategory)):** function that returns the message to send to all the other Responder Phone Numbers (i.e. not the RespondedByPhoneNumber) when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know which incidentCategory was chosen by the respondedByPhoneNumber for the particular session.
 
-**getClientMessageForRequestToReset (function(language)):** function that returns the message that is considered a request to reset. This is checked against a message received from the client, while the chatbot is in the `STARTED` or `WAITING_FOR_REPLY` states, and if the client message equals the return value of this function, then the client has performed a request to reset.
+**getClientMessageForRequestToReset (function(language)):** function that returns the message that is considered a request to reset. This is checked against a message received from the client, while the chatbot is in the `STARTED` or `WAITING_FOR_REPLY` states. If the client message equals the return value of this function, then the client has performed a request to reset, and the alert state machine will transition to the `RESET` state. If this function returns `null`, then the alert state machine will not transition from `STARTED` or `WAITING_FOR_REPLY` to the `RESET` state, and all messages will transition into the `WAITING_FOR_CATEGORY` state.
 
 ### getRouter()
 
