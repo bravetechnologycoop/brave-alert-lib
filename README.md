@@ -105,7 +105,7 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers)
+### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers, getClientMessageForRequestToReset)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
