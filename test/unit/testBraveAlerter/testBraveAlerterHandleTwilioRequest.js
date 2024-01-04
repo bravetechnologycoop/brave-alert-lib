@@ -27,10 +27,26 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
   describe('given the required request parameters', () => {
     describe('and there is an open session for the phone', () => {
       describe('and the request is from the respondedByPhoneNumber', () => {
-        beforeEach(async () => {
+        beforeEach(() => {
           this.devicePhoneNumber = '+1-device'
           this.responderPhoneNumber = '+1-responder'
-          const validRequest = {
+          this.getAlertSessionByPhoneNumbers = sinon.stub().returns(
+            testingHelpers.alertSessionFactory({
+              sessionId: 'guid-123',
+              alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              incidentCategoryKey: '3',
+              responderPhoneNumbers: ['not-the-from-number', this.responderPhoneNumber, 'also-not-the-from-number'],
+              validIncidentCategoryKeys: ['3'],
+              validIncidentCategories: ['three'],
+            }),
+          )
+          this.stateTransition = {
+            nextAlertState: CHATBOT_STATE.COMPLETED,
+            incidentCategoryKey: '2',
+            returnMessageToRespondedByPhoneNumber: 'return message to respondedByPhoneNumber',
+            returnMessageToOtherResponderPhoneNumbers: 'return message to others',
+          }
+          this.fakeExpressRequest = {
             path: '/alert/sms',
             body: {
               From: this.responderPhoneNumber,
@@ -38,62 +54,103 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
               Body: 'fake body',
             },
           }
-
           this.fakeExpressResponse = testingHelpers.mockResponse(sandbox)
-
-          // Don't actually call braveAlerter methods
-          this.braveAlerter = testingHelpers.braveAlerterFactory({
-            alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
-            getAlertSessionByPhoneNumbers: sinon.stub().returns(
-              testingHelpers.alertSessionFactory({
-                sessionId: 'guid-123',
-                alertState: CHATBOT_STATE.WAITING_FOR_CATEGORY,
-                incidentCategoryKey: '3',
-                responderPhoneNumbers: ['not-the-from-number', this.responderPhoneNumber, 'also-not-the-from-number'],
-                validIncidentCategoryKeys: ['3'],
-                validIncidentCategories: ['three'],
-              }),
-            ),
-          })
-          sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns({
-            nextAlertState: CHATBOT_STATE.COMPLETED,
-            incidentCategoryKey: '2',
-            returnMessageToRespondedByPhoneNumber: 'return message to respondedByPhoneNumber',
-            returnMessageToOtherResponderPhoneNumbers: 'return message to others',
-          })
 
           // Don't actually call Twilio
           sandbox.stub(twilioHelpers, 'sendTwilioMessage')
           sandbox.stub(twilioHelpers, 'isValidTwilioRequest').returns(true)
-
-          await this.braveAlerter.handleTwilioRequest(validRequest, this.fakeExpressResponse)
         })
 
-        it('should call the callback', () => {
-          expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
-            testingHelpers.alertSessionFactory({
-              sessionId: 'guid-123',
-              alertState: CHATBOT_STATE.COMPLETED,
-              incidentCategoryKey: '2',
-              respondedByPhoneNumber: this.responderPhoneNumber,
-            }),
-          )
+        describe('and the callback does not provide replacement messages', () => {
+          beforeEach(async () => {
+            // Don't actually call braveAlerter methods
+            this.braveAlerter = testingHelpers.braveAlerterFactory({
+              alertSessionChangedCallback: sandbox.stub().returns({ respondedByPhoneNumber: this.responderPhoneNumber }),
+              getAlertSessionByPhoneNumbers: this.getAlertSessionByPhoneNumbers,
+            })
+            sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns(this.stateTransition)
+
+            await this.braveAlerter.handleTwilioRequest(this.fakeExpressRequest, this.fakeExpressResponse)
+          })
+
+          it('should call the callback', () => {
+            expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+              testingHelpers.alertSessionFactory({
+                sessionId: 'guid-123',
+                alertState: CHATBOT_STATE.COMPLETED,
+                incidentCategoryKey: '2',
+                respondedByPhoneNumber: this.responderPhoneNumber,
+              }),
+            )
+          })
+
+          it('should send the Twilio response to the respondedByPhoneNumber', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith(
+              this.responderPhoneNumber,
+              this.devicePhoneNumber,
+              'return message to respondedByPhoneNumber',
+            )
+          })
+
+          it('should send the Twilio response to one of the otherResponderPhoneNumbers', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith('not-the-from-number', this.devicePhoneNumber, 'return message to others')
+          })
+
+          it('should send the Twilio response to the other of the otherResponderPhoneNumbers', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith('also-not-the-from-number', this.devicePhoneNumber, 'return message to others')
+          })
         })
 
-        it('should send the Twilio response to the respondedByPhoneNumber', () => {
-          expect(twilioHelpers.sendTwilioMessage).to.be.calledWith(
-            this.responderPhoneNumber,
-            this.devicePhoneNumber,
-            'return message to respondedByPhoneNumber',
-          )
-        })
+        describe('and the callback provides replacement messages', () => {
+          beforeEach(async () => {
+            // Don't actually call braveAlerter methods
+            this.braveAlerter = testingHelpers.braveAlerterFactory({
+              alertSessionChangedCallback: sandbox.stub().returns({
+                respondedByPhoneNumber: this.responderPhoneNumber,
+                replacementReturnMessageToRespondedByPhoneNumber: 'replacement-message-to-responded-by-phone-number',
+                replacementReturnMessageToOtherResponderPhoneNumbers: 'replacement-message-to-other-responder-phone-numbers',
+              }),
+              getAlertSessionByPhoneNumbers: this.getAlertSessionByPhoneNumbers,
+            })
+            sandbox.stub(this.braveAlerter.alertStateMachine, 'processStateTransitionWithMessage').returns(this.stateTransition)
 
-        it('should send the Twilio response to one of the otherResponderPhoneNumbers', () => {
-          expect(twilioHelpers.sendTwilioMessage).to.be.calledWith('not-the-from-number', this.devicePhoneNumber, 'return message to others')
-        })
+            await this.braveAlerter.handleTwilioRequest(this.fakeExpressRequest, this.fakeExpressResponse)
+          })
 
-        it('should send the Twilio response to the other of the otherResponderPhoneNumbers', () => {
-          expect(twilioHelpers.sendTwilioMessage).to.be.calledWith('also-not-the-from-number', this.devicePhoneNumber, 'return message to others')
+          it('should call the callback', () => {
+            expect(this.braveAlerter.alertSessionChangedCallback).to.be.calledWith(
+              testingHelpers.alertSessionFactory({
+                sessionId: 'guid-123',
+                alertState: CHATBOT_STATE.COMPLETED,
+                incidentCategoryKey: '2',
+                respondedByPhoneNumber: this.responderPhoneNumber,
+              }),
+            )
+          })
+
+          it('should send the Twilio response to the respondedByPhoneNumber with the replacement message', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith(
+              this.responderPhoneNumber,
+              this.devicePhoneNumber,
+              'replacement-message-to-responded-by-phone-number',
+            )
+          })
+
+          it('should send the Twilio response to one of the otherResponderPhoneNumbers with the replacement message', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith(
+              'not-the-from-number',
+              this.devicePhoneNumber,
+              'replacement-message-to-other-responder-phone-numbers',
+            )
+          })
+
+          it('should send the Twilio response to the other of the otherResponderPhoneNumbers with the replacement message', () => {
+            expect(twilioHelpers.sendTwilioMessage).to.be.calledWith(
+              'also-not-the-from-number',
+              this.devicePhoneNumber,
+              'replacement-message-to-other-responder-phone-numbers',
+            )
+          })
         })
       })
 
@@ -115,7 +172,7 @@ describe('braveAlerter.js unit tests: handleTwilioRequest', () => {
 
           // Don't actually call braveAlerter methods
           this.braveAlerter = testingHelpers.braveAlerterFactory({
-            alertSessionChangedCallback: sandbox.stub().returns(this.responderPhoneNumber),
+            alertSessionChangedCallback: sandbox.stub().returns({ respondedByPhoneNumber: this.responderPhoneNumber }),
             getAlertSessionByPhoneNumbers: sinon.stub().returns(
               testingHelpers.alertSessionFactory({
                 sessionId: 'guid-123',

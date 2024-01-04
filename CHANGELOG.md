@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- `RESET` chatbot state; `STARTED` or `WAITING_FOR_REPLY` --> `RESET` state transition to chatbot state machine (CU-860r8k57h).
+
 ## [12.0.0] - 2024-01-02
 
 ### Removed

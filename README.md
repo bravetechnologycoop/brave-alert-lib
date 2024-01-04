@@ -105,17 +105,19 @@ Reference: https://docs.travis-ci.com/user/environment-variables/#encrypting-env
 
 The main class of this library. It is used to send single alerts or to start alert sessions with the responders.
 
-### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers)
+### constructor(getAlertSession, getAlertSessionByPhoneNumbers, alertSessionChangedCallback, getReturnMessageToRespondedByPhoneNumber, getReturnMessageToOtherResponderPhoneNumbers, getClientMessageForRequestToReset)
 
 **getAlertSession (async function(sessionId)):** function that returns the AlertSession object with the given `sessionId`
 
 **getAlertSessionByPhoneNumbers (async function(devicePhoneNumber, responderPhoneNumber)):** function that returns the AlertSession object for the most recent unfinished session for the device with the given devicePhoneNumber and client with the given responderPhoneNumber
 
-**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return the respondedAtPhoneNumber for the alertSession
+**alertSessionChangedCallback (async function(alertSession)):** function that will be called whenever an alertSession's values change; should be used to update the session in the DB. Will return an object containing the fields: respondedByPhoneNumber, replacementReturnMessageToRespondedByPhoneNumber, replacementReturnMessageToOtherResponderPhoneNumbers. The two replacement fields should be left as undefined to use messages determined through the below two functions, null to send no message at all, or other for a custom message.
 
 **getReturnMessageToRespondedByPhoneNumber (function(language, fromAlertState, toAlertState, validIncidentCategories)):** function that returns the message to send to the RespondedByPhoneNumber when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know the `validIncidentCategories` for the particular session.
 
 **getReturnMessageToOtherResponderPhoneNumbers (function(language, fromAlertState, toAlertState, selectedIncidentCategory)):** function that returns the message to send to all the other Responder Phone Numbers (i.e. not the RespondedByPhoneNumber) when there is a transition from `fromAlertState` to `toAlertState` (note that `fromAlertState` and `toAlertState` will have the same value for cases where a transition doesn't change the alert state). Sometimes this message needs to know which incidentCategory was chosen by the respondedByPhoneNumber for the particular session.
+
+**getClientMessageForRequestToReset (function(language)):** function that returns the message that is considered a request to reset. This is checked against a message received from the client, while the chatbot is in the `STARTED` or `WAITING_FOR_REPLY` states, and if the client message equals the return value of this function, then the client has performed a request to reset.
 
 ### getRouter()
 

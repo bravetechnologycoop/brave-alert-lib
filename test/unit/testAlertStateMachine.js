@@ -12,6 +12,10 @@ function dummyGetReturnMessageToOtherResponderPhoneNumbers(language, fromAlertSt
   return `To OtherResponderPhoneNumbers (${language}): ${fromAlertState} --> ${toAlertState} with "${selectedIncidentCategory}"`
 }
 
+function dummyGetClientMessageForRequestToReset(language) {
+  return `Reset (${language})`
+}
+
 const dummyIncidentCategoryKeys = ['1', '2', '3', '4']
 const dummyIncidentCategories = ['One', 'Two', 'Three', 'Four']
 const dummyLanguage = 'my_lng'
@@ -22,6 +26,7 @@ describe('alertStateMachine.js unit tests:', () => {
       this.alertStateMachine = new AlertStateMachine(
         () => 'to respondedByPhoneNumber',
         () => 'to others',
+        () => 'reset',
       )
     })
 
@@ -32,413 +37,448 @@ describe('alertStateMachine.js unit tests:', () => {
     it('should be able to call the getReturnMessageToOtherResponderPhoneNumbers function set in the constructor', () => {
       expect(this.alertStateMachine.getReturnMessageToOtherResponderPhoneNumbers()).to.equal('to others')
     })
+
+    it('should be able to call the getClientMessageForRequestToReset function set in the constructor', () => {
+      expect(this.alertStateMachine.getClientMessageForRequestToReset()).to.equal('reset')
+    })
   })
 
   describe('processStateTransitionWithMessage', () => {
     beforeEach(() => {
-      this.alertStateMachine = new AlertStateMachine(dummyGetReturnMessageToRespondedByPhoneNumber, dummyGetReturnMessageToOtherResponderPhoneNumbers)
+      this.alertStateMachine = new AlertStateMachine(
+        dummyGetReturnMessageToRespondedByPhoneNumber,
+        dummyGetReturnMessageToOtherResponderPhoneNumbers,
+        dummyGetClientMessageForRequestToReset,
+      )
     })
 
     describe('given alert state is STARTED', () => {
-      it('should transition to WAITING_FOR_CATEGORY', () => {
-        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.STARTED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+      describe('and messageText is not a request to reset', () => {
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.STARTED,
+            'ok',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+            dummyLanguage,
+          )
 
-        expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
+        it('should transition to WAITING_FOR_CATEGORY', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+        })
+
+        it('should not change the incident category', () => {
+          expect(this.incidentCategoryKey).to.be.undefined
+        })
+
+        it('should give the return message to respondedByPhoneNumber for STARTED --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.STARTED,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              dummyIncidentCategories,
+            ),
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbers for STARTED --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.STARTED, CHATBOT_STATE.WAITING_FOR_CATEGORY, undefined),
+          )
+        })
       })
 
-      it('should not change the incident category', () => {
-        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.STARTED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+      describe('and messageText is a request to reset', () => {
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.STARTED,
+            dummyGetClientMessageForRequestToReset(dummyLanguage),
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+            dummyLanguage,
+          )
 
-        expect(incidentCategoryKey).to.be.undefined
-      })
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
 
-      it('should give the return message to respondedByPhoneNumber for STARTED --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.STARTED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+        it('should transition to RESET', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.RESET)
+        })
 
-        expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
-        )
-      })
+        it('should not change the incident category', () => {
+          expect(this.incidentCategoryKey).to.be.undefined
+        })
 
-      it('should give the return message to otherResponderPhoneNumbers for STARTED --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.STARTED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+        it('should give the return message to respondedByPhoneNumber for STARTED --> RESET', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(dummyLanguage, CHATBOT_STATE.STARTED, CHATBOT_STATE.RESET, dummyIncidentCategories),
+          )
+        })
 
-        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.STARTED} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
-        )
+        it('should give the return message to otherResponderPhoneNumbers for STARTED --> RESET', () => {
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.STARTED, CHATBOT_STATE.RESET, undefined),
+          )
+        })
       })
     })
 
     describe('given alert state is WAITING_FOR_REPLY', () => {
-      it('should transition to WAITING_FOR_CATEGORY', () => {
-        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.WAITING_FOR_REPLY,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+      describe('and messageText is not a request to reset', () => {
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_REPLY,
+            'ok',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+            dummyLanguage,
+          )
 
-        expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
+        it('should transition to WAITING_FOR_CATEGORY', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+        })
+
+        it('should not change the incident category', () => {
+          expect(this.incidentCategoryKey).to.be.undefined
+        })
+
+        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_REPLY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              dummyIncidentCategories,
+            ),
+          )
+        })
+
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_REPLY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              undefined,
+            ),
+          )
+        })
       })
 
-      it('should not change the incident category', () => {
-        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.WAITING_FOR_REPLY,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+      describe('and messageText is a request to reset', () => {
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_REPLY,
+            dummyGetClientMessageForRequestToReset(dummyLanguage),
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+            dummyLanguage,
+          )
 
-        expect(incidentCategoryKey).to.be.undefined
-      })
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
 
-      it('should give the return message to respondedByPhoneNumber for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.WAITING_FOR_REPLY,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+        it('should transition to RESET', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.RESET)
+        })
 
-        expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
-        )
-      })
+        it('should not change the incident category', () => {
+          expect(this.incidentCategoryKey).to.be.undefined
+        })
 
-      it('should give the return message  to otherResponderPhoneNumbers for WAITING_FOR_REPLY --> WAITING_FOR_CATEGORY', () => {
-        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.WAITING_FOR_REPLY,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
+        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_REPLY --> RESET', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_REPLY,
+              CHATBOT_STATE.RESET,
+              dummyIncidentCategories,
+            ),
+          )
+        })
 
-        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_REPLY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
-        )
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_REPLY --> RESET', () => {
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.WAITING_FOR_REPLY, CHATBOT_STATE.RESET, undefined),
+          )
+        })
       })
     })
 
     describe('given alert state is WAITING_FOR_CATEGORY', () => {
       describe('and messageText contains a valid incident category', () => {
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+            CHATBOT_STATE.WAITING_FOR_CATEGORY,
+            '   3   ',
+            dummyIncidentCategoryKeys,
+            dummyIncidentCategories,
+            dummyLanguage,
+          )
+
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
         it('should transition to COMPLETED', () => {
-          const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '3',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
-        })
-
-        it('should change the incident category to the message text for first valid key', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '1',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.equal('1')
-        })
-
-        it('should change the incident category to the message text for last valid key', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '4',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.equal('4')
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
         })
 
         it('should change the incident category to the trimmed message text', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '   2    ',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.equal('2')
+          expect(this.incidentCategoryKey).to.equal('3')
         })
 
         it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> COMPLETED', () => {
-          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '3',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.COMPLETED,
+              dummyIncidentCategories,
+            ),
           )
         })
 
         it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> COMPLETED', () => {
-          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '3',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.COMPLETED} with "Three"`,
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.WAITING_FOR_CATEGORY, CHATBOT_STATE.COMPLETED, 'Three'),
           )
         })
       })
 
       describe('and messageText does not contain a valid incident category (too low)', () => {
-        it('should stay in WAITING_FOR_CATEGORY', () => {
-          const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '0',
+            '   0   ',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
             dummyLanguage,
           )
 
-          expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
+        it('should stay in WAITING_FOR_CATEGORY', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
         })
 
         it('should not change the incident category', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '0',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.be.undefined
+          expect(this.incidentCategoryKey).to.be.undefined
         })
 
         it('should give the return message to respondedByPhoneNumberfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '0',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              dummyIncidentCategories,
+            ),
           )
         })
 
         it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '0',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              undefined,
+            ),
           )
         })
       })
 
       describe('and messageText does not contain a valid incident category (too high)', () => {
-        it('should stay in WAITING_FOR_CATEGORY', () => {
-          const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '5',
+            '   5   ',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
             dummyLanguage,
           )
 
-          expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
+        it('should stay in WAITING_FOR_CATEGORY', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
         })
 
         it('should not change the incident category', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '5',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.be.undefined
+          expect(this.incidentCategoryKey).to.be.undefined
         })
 
-        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '5',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+        it('should give the return message to respondedByPhoneNumberfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              dummyIncidentCategories,
+            ),
           )
         })
 
-        it('should give the return message to otherResponderPhoneNumbersfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '5',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+        it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              undefined,
+            ),
           )
         })
       })
 
       describe('and messageText does not contain a valid incident category (non-numeric)', () => {
-        it('should stay in WAITING_FOR_CATEGORY', () => {
-          const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
+        beforeEach(() => {
+          const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '2A3',
+            '   A23   ',
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
             dummyLanguage,
           )
 
-          expect(nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
+          this.nextAlertState = stateTransition.nextAlertState
+          this.incidentCategoryKey = stateTransition.incidentCategoryKey
+          this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+          this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+        })
+
+        it('should stay in WAITING_FOR_CATEGORY', () => {
+          expect(this.nextAlertState).to.equal(CHATBOT_STATE.WAITING_FOR_CATEGORY)
         })
 
         it('should not change the incident category', () => {
-          const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '  2A3  ',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(incidentCategoryKey).to.be.undefined
+          expect(this.incidentCategoryKey).to.be.undefined
         })
 
-        it('should give the return message to respondedByPhoneNumber for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '2A3',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToRespondedByPhoneNumber).to.equal(
-            `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with ["One","Two","Three","Four"]`,
+        it('should give the return message to respondedByPhoneNumberfor WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
+          expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+            dummyGetReturnMessageToRespondedByPhoneNumber(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              dummyIncidentCategories,
+            ),
           )
         })
 
         it('should give the return message to otherResponderPhoneNumbers for WAITING_FOR_CATEGORY --> WAITING_FOR_CATEGORY', () => {
-          const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-            CHATBOT_STATE.WAITING_FOR_CATEGORY,
-            '2A3',
-            dummyIncidentCategoryKeys,
-            dummyIncidentCategories,
-            dummyLanguage,
-          )
-
-          expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-            `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.WAITING_FOR_CATEGORY} --> ${CHATBOT_STATE.WAITING_FOR_CATEGORY} with "undefined"`,
+          expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+            dummyGetReturnMessageToOtherResponderPhoneNumbers(
+              dummyLanguage,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              CHATBOT_STATE.WAITING_FOR_CATEGORY,
+              undefined,
+            ),
           )
         })
       })
     })
 
     describe('given alert state is COMPLETED', () => {
-      it('should stay in COMPLETED', () => {
-        const { nextAlertState } = this.alertStateMachine.processStateTransitionWithMessage(
+      beforeEach(() => {
+        const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
           CHATBOT_STATE.COMPLETED,
-          '3',
+          'arbitrary',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
           dummyLanguage,
         )
 
-        expect(nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
+        this.nextAlertState = stateTransition.nextAlertState
+        this.incidentCategoryKey = stateTransition.incidentCategoryKey
+        this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+        this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+      })
+
+      it('should stay in COMPLETED', () => {
+        expect(this.nextAlertState).to.equal(CHATBOT_STATE.COMPLETED)
       })
 
       it('should not change the incident category', () => {
-        const { incidentCategoryKey } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.COMPLETED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
-
-        expect(incidentCategoryKey).to.be.undefined
+        expect(this.incidentCategoryKey).to.be.undefined
       })
 
       it('should give the return message to respondedByPhoneNumber for COMPLETED --> COMPLETED', () => {
-        const { returnMessageToRespondedByPhoneNumber } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.COMPLETED,
-          '3',
-          dummyIncidentCategoryKeys,
-          dummyIncidentCategories,
-          dummyLanguage,
-        )
-
-        expect(returnMessageToRespondedByPhoneNumber).to.equal(
-          `To RespondedByPhoneNumber (${dummyLanguage}): ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with ["One","Two","Three","Four"]`,
+        expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+          dummyGetReturnMessageToRespondedByPhoneNumber(dummyLanguage, CHATBOT_STATE.COMPLETED, CHATBOT_STATE.COMPLETED, dummyIncidentCategories),
         )
       })
 
       it('should give the return message to otherResponderPhoneNumbers for COMPLETED --> COMPLETED', () => {
-        const { returnMessageToOtherResponderPhoneNumbers } = this.alertStateMachine.processStateTransitionWithMessage(
-          CHATBOT_STATE.COMPLETED,
-          '3',
+        expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+          dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.COMPLETED, CHATBOT_STATE.COMPLETED, undefined),
+        )
+      })
+    })
+
+    describe('given alert state is RESET', () => {
+      beforeEach(() => {
+        const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
+          CHATBOT_STATE.RESET,
+          'arbitrary',
           dummyIncidentCategoryKeys,
           dummyIncidentCategories,
           dummyLanguage,
         )
 
-        expect(returnMessageToOtherResponderPhoneNumbers).to.equal(
-          `To OtherResponderPhoneNumbers (${dummyLanguage}): ${CHATBOT_STATE.COMPLETED} --> ${CHATBOT_STATE.COMPLETED} with "undefined"`,
+        this.nextAlertState = stateTransition.nextAlertState
+        this.incidentCategoryKey = stateTransition.incidentCategoryKey
+        this.returnMessageToRespondedByPhoneNumber = stateTransition.returnMessageToRespondedByPhoneNumber
+        this.returnMessageToOtherResponderPhoneNumbers = stateTransition.returnMessageToOtherResponderPhoneNumbers
+      })
+
+      it('should stay in RESET', () => {
+        expect(this.nextAlertState).to.equal(CHATBOT_STATE.RESET)
+      })
+
+      it('should not change the incident category', () => {
+        expect(this.incidentCategoryKey).to.be.undefined
+      })
+
+      it('should give the return message to respondedByPhoneNumber for RESET --> RESET', () => {
+        expect(this.returnMessageToRespondedByPhoneNumber).to.equal(
+          dummyGetReturnMessageToRespondedByPhoneNumber(dummyLanguage, CHATBOT_STATE.RESET, CHATBOT_STATE.RESET, dummyIncidentCategories),
+        )
+      })
+
+      it('should give the return message to otherResponderPhoneNumbers for RESET --> RESET', () => {
+        expect(this.returnMessageToOtherResponderPhoneNumbers).to.equal(
+          dummyGetReturnMessageToOtherResponderPhoneNumbers(dummyLanguage, CHATBOT_STATE.RESET, CHATBOT_STATE.RESET, undefined),
         )
       })
     })

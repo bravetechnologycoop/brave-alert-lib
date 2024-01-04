@@ -28,6 +28,10 @@ function dummyGetReturnMessageToOtherResponderPhoneNumbers(language, fromAlertSt
   return `To OtherResponderPhoneNumbers (${language}): ${fromAlertState} --> ${toAlertState}`
 }
 
+function dummyGetClientMessageForRequestToReset(language) {
+  return `Reset (${language})`
+}
+
 function braveAlerterFactory(overrides = {}) {
   // prettier-ignore
   return new BraveAlerter(
@@ -36,6 +40,7 @@ function braveAlerterFactory(overrides = {}) {
     overrides.alertSessionChangedCallback !== undefined ? overrides.alertSessionChangedCallback : dummyAlertSessionChangedCallback,
     overrides.getReturnMessageToRespondedByPhoneNumber !== undefined ? overrides.getReturnMessageToRespondedByPhoneNumber : dummyGetReturnMessageToRespondedByPhoneNumber,
     overrides.getReturnMessageToOtherResponderPhoneNumbers !== undefined ? overrides.getReturnMessageToOtherResponderPhoneNumbers : dummyGetReturnMessageToOtherResponderPhoneNumbers,
+    overrides.getClientMessageForRequestToReset !== undefined ? overrides.getClientMessageForRequestToReset : dummyGetClientMessageForRequestToReset,
   )
 }
 

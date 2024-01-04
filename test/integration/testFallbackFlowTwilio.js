@@ -56,7 +56,7 @@ describe('fallback flow with Twilio: responder never responds so fallback messag
     this.braveAlerter = testingHelpers.braveAlerterFactory({
       getAlertSession: sandbox.stub().returns(this.currentAlertSession),
       getAlertSessionByPhoneNumbers: sandbox.stub().returns(this.currentAlertSession),
-      alertSessionChangedCallback: sandbox.stub().returns(responderPhoneNumber),
+      alertSessionChangedCallback: sandbox.stub().returns({ respondedByPhoneNumber: responderPhoneNumber }),
     })
 
     sandbox.spy(twilioHelpers, 'sendTwilioMessage')
