@@ -99,7 +99,7 @@ describe('alertStateMachine.js unit tests:', () => {
         beforeEach(() => {
           const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.STARTED,
-            dummyGetClientMessageForRequestToReset(),
+            dummyGetClientMessageForRequestToReset(dummyLanguage),
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
             dummyLanguage,
@@ -185,7 +185,7 @@ describe('alertStateMachine.js unit tests:', () => {
         beforeEach(() => {
           const stateTransition = this.alertStateMachine.processStateTransitionWithMessage(
             CHATBOT_STATE.WAITING_FOR_REPLY,
-            dummyGetClientMessageForRequestToReset(),
+            dummyGetClientMessageForRequestToReset(dummyLanguage),
             dummyIncidentCategoryKeys,
             dummyIncidentCategories,
             dummyLanguage,
