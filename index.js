@@ -6,6 +6,7 @@ const Client = require('./lib/models/Client')
 const factories = require('./lib/models/factories')
 const googleHelpers = require('./lib/googleHelpers')
 const helpers = require('./lib/helpers')
+const Session = require('./lib/models/Session')
 const twilioHelpers = require('./lib/twilioHelpers')
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
   factories,
   googleHelpers,
   helpers,
+  Session,
   twilioHelpers,
 }
