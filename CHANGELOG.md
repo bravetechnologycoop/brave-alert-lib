@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.2.0] - 2024-01-22
+
 ### Added
 
 - Session class to models (CU-86791yyvg).
@@ -354,7 +356,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.1...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.2.0...HEAD
+[12.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.1...v12.2.0
 [12.1.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.0...v12.1.1
 [12.1.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.0.0...v12.1.0
 [12.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v11.0.1...v12.0.0
