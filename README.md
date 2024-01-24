@@ -458,10 +458,10 @@ If the authorization code is invalid, then this function will throw a `GaxiosErr
 ### paAuthorize(req, res, next)
 
 Express middleware function to authorize a request to a PA API call.
-Attempts to authorize the request using a submitted Google ID token in the body of the request.
+Attempts to authorize the request using a submitted Google ID token in the Authorization header or body of the request.
 The criteria for a valid Google ID token is defined under the `paGetPayload` function.
 
-**req (Request):** The Express Request object. Should contain googleIdToken in the body of the request.
+**req (Request):** The Express Request object. Should contain googleIdToken in the Authorization header or body of the request.
 
 **res (Response):** The Express Response object.
 
