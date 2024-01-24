@@ -132,10 +132,7 @@ describe('googleHelpers.js unit tests: paAuthorize', () => {
     })
 
     it('should log the unauthorized request', () => {
-      const now = Date.now() / 1000
-      const errorMessage = `Token used too late, ${now} > ${now - 3600}: ${this.googleIdToken}`
-
-      expect(helpers.log).to.be.calledWith(`Google OAuth2: Unauthorized request to ${TEST_PATH}: ${errorMessage}`)
+      expect(helpers.log).to.be.calledWith(`Google OAuth2: Unauthorized request to ${TEST_PATH}: Token used too late`)
     })
   })
 
