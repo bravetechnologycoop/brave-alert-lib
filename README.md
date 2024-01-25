@@ -257,6 +257,28 @@ An object representing a client. Contains the following fields:
 
 **updatedAt (Date):** When the Client was last updated in the database; should be the database value `client.updated_at`
 
+## `Session` class
+
+An object representing a session. Contains the following fields:
+
+**id (GUID):** Unique identifier of the session; should be the database value `session.id`
+
+**chatbotState (CHATBOT_STATE enum):** The chatbot state of the session; should be the database value `session.chatbot_state`
+
+**alertType (ALERT_TYPE enum):** The alert type of the session; should be the database value `session.alert_type`
+
+**numberOfAlerts (int):** The number of alerts sent during the session; should be the database value `session.number_of_alerts`
+
+**createdAt (Date):** When the Session was created in the database; should be the database value `session.created_at`
+
+**updatedAt (Date):** When the Session was last updated in the database; should be the database value `session.updated_at`
+
+**incidentCategory (string):** The chosen incident category of the session; should be the database value `session.incident_category`
+
+**respondedAt (Date):** When the Session was responded to; should be the database value `session.responded_at`
+
+**respondedByPhoneNumber (string):** The phone number of the responder that replied to the alert this session describes; should be the database value `session.responded_by_phone_number`
+
 ## `ALERT_TYPE` enum
 
 An enum of the possible types of alert that can be triggered.

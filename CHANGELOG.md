@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `paAuthorize` function of `googleHelpers` to also authorize with Authorization header of type Bearer (CU-13kqjz8).
+- `Session` class model to deprecate the `incrementButtonPresses` function (CU-13kqjz8).
 
 ## [12.2.0] - 2024-01-22
 
