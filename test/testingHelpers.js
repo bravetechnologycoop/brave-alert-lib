@@ -112,9 +112,8 @@ const mockOAuth2Client = {
       throw new Error("Couldn't parse token")
     }
 
-    // replicates error thrown by Google's OAuth2Client for an expired token
     if (Date.now() / 1000 > payload.exp) {
-      throw new Error(`Token used too late, ${Date.now()} > ${payload.exp}: ${JSON.stringify(payload)}`)
+      throw new Error('Token used too late')
     }
 
     // return an Object implementing the getPayload method similar to Google's Ticket class
