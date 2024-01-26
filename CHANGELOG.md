@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.3.0] - 2024-01-26
+
 ### Changed
 
 - `paAuthorize` function of `googleHelpers` to also authorize with Authorization header of type Bearer (CU-13kqjz8).
