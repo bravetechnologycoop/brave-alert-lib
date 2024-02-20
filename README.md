@@ -279,6 +279,10 @@ An object representing a session. Contains the following fields:
 
 **respondedByPhoneNumber (string):** The phone number of the responder that replied to the alert this session describes; should be the database value `session.responded_by_phone_number`
 
+**device (object):** The device which generated this alert. Note: **button**, and **location** represent the same object as **device**.
+
+**isResettable (boolean):** Whether or not this device can be reset by the client. This should be set to true if the device is acting strange.
+
 ## `ALERT_TYPE` enum
 
 An enum of the possible types of alert that can be triggered.
