@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `isResettable` to Session model (CU-86drfmvrj).
+
 ## [12.3.0] - 2024-01-26
 
 ### Changed
