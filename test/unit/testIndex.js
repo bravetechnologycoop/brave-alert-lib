@@ -20,12 +20,28 @@ describe('index.js unit tests:', () => {
     expect(index.CHATBOT_STATE).not.to.be.undefined
   })
 
+  it('exports Client', () => {
+    expect(index.Client).not.to.be.undefined
+  })
+
+  it('exports DEVICE_TYPE', () => {
+    expect(index.DEVICE_TYPE).not.to.be.undefined
+  })
+
+  it('exports factories', () => {
+    expect(index.factories).not.to.be.undefined
+  })
+
   it('exports googleHelpers', () => {
     expect(index.googleHelpers).not.to.be.undefined
   })
 
   it('exports helpers', () => {
     expect(index.helpers).not.to.be.undefined
+  })
+
+  it('exports Session', () => {
+    expect(index.Session).not.to.be.undefined
   })
 
   it('exports twilioHelpers', () => {
