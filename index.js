@@ -2,12 +2,13 @@ const ALERT_TYPE = require('./lib/alertTypeEnum')
 const AlertSession = require('./lib/alertSession')
 const BraveAlerter = require('./lib/braveAlerter')
 const CHATBOT_STATE = require('./lib/chatbotStateEnum')
-const Client = require('./lib/Client')
+const Client = require('./lib/models/Client')
 const DEVICE_TYPE = require('./lib/deviceTypeEnum')
-const factories = require('./lib/factories')
+const Device = require('./lib/models/Device')
+const factories = require('./lib/models/factories')
 const googleHelpers = require('./lib/googleHelpers')
 const helpers = require('./lib/helpers')
-const Session = require('./lib/Session')
+const Session = require('./lib/models/Session')
 const twilioHelpers = require('./lib/twilioHelpers')
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
   CHATBOT_STATE,
   Client,
   DEVICE_TYPE,
+  Device,
   factories,
   googleHelpers,
   helpers,

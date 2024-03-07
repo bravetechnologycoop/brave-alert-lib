@@ -28,6 +28,10 @@ describe('index.js unit tests:', () => {
     expect(index.DEVICE_TYPE).not.to.be.undefined
   })
 
+  it('exports Device', () => {
+    expect(index.Device).not.to.be.undefined
+  })
+
   it('exports factories', () => {
     expect(index.factories).not.to.be.undefined
   })
