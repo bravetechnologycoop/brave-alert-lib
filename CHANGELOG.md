@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Device` model, `DEVICE_TYPE` enum, various factories for `button`s, `device`s, and `location`s (CU-86791yyvg).
+
+### Changed
+
+- `Session` model (CU-86791yyvg).
+
 ## [13.0.0] - 2024-02-23
 
 ### Added
