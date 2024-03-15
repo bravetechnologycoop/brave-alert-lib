@@ -3,6 +3,8 @@ const AlertSession = require('./lib/alertSession')
 const BraveAlerter = require('./lib/braveAlerter')
 const CHATBOT_STATE = require('./lib/chatbotStateEnum')
 const Client = require('./lib/models/Client')
+const DEVICE_TYPE = require('./lib/deviceTypeEnum')
+const Device = require('./lib/models/Device')
 const factories = require('./lib/models/factories')
 const googleHelpers = require('./lib/googleHelpers')
 const helpers = require('./lib/helpers')
@@ -15,6 +17,8 @@ module.exports = {
   BraveAlerter,
   CHATBOT_STATE,
   Client,
+  DEVICE_TYPE,
+  Device,
   factories,
   googleHelpers,
   helpers,
