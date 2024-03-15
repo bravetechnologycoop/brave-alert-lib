@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.0.0] - 2024-03-15
+
 ### Added
 
 - `Device` model, `DEVICE_TYPE` enum, various factories for `button`s, `device`s, and `location`s (CU-86791yyvg).
@@ -377,7 +379,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v13.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v14.0.0...HEAD
+[14.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.2.0...v13.0.0
 [12.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.1...v12.2.0
 [12.1.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.0...v12.1.1
