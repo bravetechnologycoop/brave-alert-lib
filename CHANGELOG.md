@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.0.1] - 2024-03-29
+
 ### Changed
 
-- Factories to use a specific date (CU-86791yyvg).
+- Session factories to use specific dates (CU-86791yyvg).
 
 ## [14.0.0] - 2024-03-15
 
