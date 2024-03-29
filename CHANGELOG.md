@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Factories to use a specific date (CU-86791yyvg).
+
 ## [14.0.0] - 2024-03-15
 
 ### Added
