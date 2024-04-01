@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.0.2] - 2024-04-01
+
+### Changed
+
+- `factories.sessionDBFactory` to have `createdAt` override default to `undefined`.
+
 ## [14.0.1] - 2024-03-29
 
 ### Changed
@@ -385,7 +391,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL 3.0 license.
 - README.
 
-[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v14.0.0...HEAD
+[unreleased]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v14.0.2...HEAD
+[14.0.2]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v14.0.1...v14.0.2
+[14.0.1]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v14.0.0...v14.0.1
 [14.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.2.0...v13.0.0
 [12.2.0]: https://github.com/bravetechnologycoop/brave-alert-lib/compare/v12.1.1...v12.2.0
