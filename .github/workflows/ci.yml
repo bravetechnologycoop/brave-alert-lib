@@ -35,9 +35,7 @@ jobs:
         run: npx audit-ci --config ./audit-ci.json
 
       - name: Run Linter
-        working-directory: ./server
         run: npm run lint
 
       - name: Run tests
-        working-directory: ./server
         run: npm run test
