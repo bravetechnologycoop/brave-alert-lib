@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `ci.yml` in `.github/workflows` to run Github Actions (CU-86dthadwg).
+
 ## [14.0.2] - 2024-04-01
 
 ### Changed
