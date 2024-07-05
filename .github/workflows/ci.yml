@@ -1,5 +1,6 @@
 name: CI
 
+# Run on all branches
 on:
   push:
     branches: ['*']
@@ -8,11 +9,14 @@ on:
 
 jobs:
   build:
+    # OS
     runs-on: ubuntu-latest
 
     env:
       DOMAIN_TEST: test-domain.brave.coop
+      # TWILIO_SID_TEST (from https://www.twilio.com/console/voice/project/test-credentials)
       TWILIO_SID_TEST: ${{ secrets.TWILIO_SID_TEST }}
+      # TWILIO_TOKEN_TEST (from https://www.twilio.com/console/voice/project/test-credentials)
       TWILIO_TOKEN_TEST: ${{ secrets.TWILIO_TOKEN_TEST }}
       TWILIO_MESSAGING_SERVICE_SID_TEST: abc123
       PA_CLIENT_ID_TEST: fakeclientid.apps.googleusercontent.com
@@ -22,20 +26,24 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      # Language
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: ./.nvmrc
+          node-version-file: ./.nvmrc # node version specified in .nvmrc
 
       - name: Install dependencies
         run: npm ci
 
+      # Run security audit
       - name: Run security audit
         if: github.event_name == 'pull_request'
         run: npx audit-ci --config ./audit-ci.json
 
+      # Run linting
       - name: Run Linter
         run: npm run lint
 
+      # Run unit and integration tests
       - name: Run tests
         run: npm run test
