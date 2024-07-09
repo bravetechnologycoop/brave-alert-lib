@@ -8,7 +8,8 @@ on:
     branches: ['*']
 
 jobs:
-  build:
+  security_audit_and_linting:
+    name: Security Audit and Linting
     # OS
     runs-on: ubuntu-latest
 
@@ -23,20 +24,20 @@ jobs:
       PA_CLIENT_SECRETS_TEST: fakeclientsecret
 
     steps:
-      - name: Check out the repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       # Language
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ./.nvmrc # node version specified in .nvmrc
 
-      - name: Install dependencies
+      - name: Install npm Dependencies
         run: npm ci
 
       # Run security audit
-      - name: Run security audit
+      - name: Run Security Audit
         if: github.event_name == 'pull_request'
         run: npx audit-ci --config ./audit-ci.json
 
@@ -45,5 +46,5 @@ jobs:
         run: npm run lint
 
       # Run unit and integration tests
-      - name: Run tests
+      - name: Run Tests
         run: npm run test
