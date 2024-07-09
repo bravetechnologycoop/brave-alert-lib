@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ci.yml` in `.github/workflows` to run Github Actions (CU-86dthadwg).
 
+### Changed
+
+- Removed `.travis.yml` file to stop using Travis CI (CU-86dthadwg).
+- Changed Build Status badge in the README (CU-86dthadwg).
+- Changed README instructions for adding encrypted variables for Travis to instructions for adding secrets in Github Actions (CU-86dthadwg).
+
 ## [14.0.2] - 2024-04-01
 
 ### Changed
