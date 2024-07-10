@@ -4,8 +4,6 @@ name: CI
 on:
   push:
     branches: ['*']
-  pull_request:
-    branches: ['*']
 
 jobs:
   build:
@@ -23,25 +21,24 @@ jobs:
       PA_CLIENT_SECRETS_TEST: fakeclientsecret
 
     steps:
-      - name: Check out the repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       # Language
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ./.nvmrc # node version specified in .nvmrc
 
-      - name: Install dependencies
+      - name: Install npm dependencies
         run: npm ci
 
       # Run security audit
       - name: Run security audit
-        if: github.event_name == 'pull_request'
         run: npx audit-ci --config ./audit-ci.json
 
       # Run linting
-      - name: Run Linter
+      - name: Run linter
         run: npm run lint
 
       # Run unit and integration tests
