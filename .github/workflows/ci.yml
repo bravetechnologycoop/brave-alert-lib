@@ -6,7 +6,8 @@ on:
     branches: ['*']
 
 jobs:
-  build:
+  security_audit_and_linting:
+    name: Security Audit and Linting
     # OS
     runs-on: ubuntu-latest
 
@@ -26,6 +27,7 @@ jobs:
 
       # Language
       - name: Set up Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ./.nvmrc # node version specified in .nvmrc
@@ -42,5 +44,5 @@ jobs:
         run: npm run lint
 
       # Run unit and integration tests
-      - name: Run tests
+      - name: Run Tests
         run: npm run test
