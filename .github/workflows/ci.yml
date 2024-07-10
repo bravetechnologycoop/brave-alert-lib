@@ -27,7 +27,6 @@ jobs:
 
       # Language
       - name: Set up Node.js
-      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ./.nvmrc # node version specified in .nvmrc
@@ -44,5 +43,5 @@ jobs:
         run: npm run lint
 
       # Run unit and integration tests
-      - name: Run Tests
+      - name: Run tests
         run: npm run test
