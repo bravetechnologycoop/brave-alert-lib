@@ -1,0 +1,47 @@
+name: CI
+
+# Run on all branches
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  security_audit_and_linting:
+    name: Security Audit and Linting
+    # OS
+    runs-on: ubuntu-latest
+
+    env:
+      DOMAIN_TEST: test-domain.brave.coop
+      # TWILIO_SID_TEST (from https://www.twilio.com/console/voice/project/test-credentials)
+      TWILIO_SID_TEST: ${{ secrets.TWILIO_SID_TEST }}
+      # TWILIO_TOKEN_TEST (from https://www.twilio.com/console/voice/project/test-credentials)
+      TWILIO_TOKEN_TEST: ${{ secrets.TWILIO_TOKEN_TEST }}
+      TWILIO_MESSAGING_SERVICE_SID_TEST: abc123
+      PA_CLIENT_ID_TEST: fakeclientid.apps.googleusercontent.com
+      PA_CLIENT_SECRETS_TEST: fakeclientsecret
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Language
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./.nvmrc # node version specified in .nvmrc
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Run security audit
+      - name: Run security audit
+        run: npx audit-ci --config ./audit-ci.json
+
+      # Run linting
+      - name: Run linter
+        run: npm run lint
+
+      # Run unit and integration tests
+      - name: Run tests
+        run: npm run test
