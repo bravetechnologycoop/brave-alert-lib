@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `ci.yml` in `.github/workflows` to run Github Actions (CU-86dthadwg).
+- `gatewayDBFactory` in `factories.js` to be used for testing adding and editing gateways in the buttons dashboard (CU-86duu01em).
+- `gatewayFactory` in `factories.js` just in case it needs to be used in the future (CU-86duu01em).
 
 ### Changed
 
