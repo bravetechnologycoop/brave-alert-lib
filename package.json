@@ -13,11 +13,11 @@
     "test-coverage": "nyc --reporter=html --reporter=text npm test"
   },
   "dependencies": {
-    "@sentry/node": "^6.2.5",
+    "@sentry/node": "^8.35.0",
     "@sentry/tracing": "^6.2.5",
     "chalk": "^4.1.0",
     "dotenv": "^7.0.0",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "express-validator": "^6.10.0",
     "google-auth-library": "^9.2.0",
     "luxon": "^2.5.2",
