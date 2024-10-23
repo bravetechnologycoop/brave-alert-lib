@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added new device type DEVICE_SENSOR_MULTISTALL to deviceTypeEnum.js (CU-86duvwbq2).
+
+### Changed
+
+- Updated device type DEVICE_SENSOR to DEVICE_SENSOR_SINGLESTALL (CU-86duvwbq2).
+
 ## [15.0.2] - 2024-10-04
 
 ### Changed
