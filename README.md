@@ -4,23 +4,15 @@
 
 Library to communicate with responders and staff when action is required.
 
-# How to deploy a new version
+# Table of Contents
 
-On your local machine, in the `brave-alert-lib` repository:
-
-1. Pull the latest code for release: `git checkout main && git pull origin main`
-
-1. Decide on an appropriate version number for the new version
-
-1. Update `CHANGELOG.md` by moving everything in `Unreleased` to a section for the new version
-
-1. Update the version in `package.json` and `package-lock.json`
-
-1. Make a new commit directly on `main` with those updates
-
-1. Tag the new commit - for example, if the version number is v1.0.0 use `git tag v1.0.0`
-
-1. Push the new version to GitHub: `git push origin main --tags`
+1. [Prerequisites](#prerequisites)
+2. [Deploying a New Version](#deploying-a-new-version)
+3. [Using This Library](#using-this-library-in-another-code-base)
+4. [Testing During Development](#testing-during-development)
+5. [Setting Up Local Dev Environment](#setting-up-local-dev-environment)
+6. [Managing GitHub Actions Secrets](#how-to-add-or-change-an-encrypted-github-actions-environment-variable)
+7. [API Reference](#api-reference)
 
 # Prerequisites
 
@@ -39,7 +31,68 @@ On your local machine, in the `brave-alert-lib` repository:
    - `PA_CLIENT_SECRET`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
    - `PA_CLIENT_SECRET_TEST`: The client secret of PA. Can be found under the Brave PA Sign-In resource in Google Cloud. 
 
-# How to setup a local dev environment
+
+# Deploying a New Version
+
+On your local machine, in the `brave-alert-lib` repository:
+
+1. Pull the latest code for release: `git checkout main && git pull origin main`
+
+1. Decide on an appropriate version number for the new version
+
+1. Update `CHANGELOG.md` by moving everything in `Unreleased` to a section for the new version
+
+1. Update the version in `package.json` and `package-lock.json`
+
+1. Make a new commit directly on `main` with those updates
+
+1. Tag the new commit - for example, if the version number is v1.0.0 use `git tag v1.0.0`
+
+1. Push the new version to GitHub: `git push origin main --tags`
+
+# Using This Library
+
+1.  if you are upgrading from a previous version of `brave-alert-lib`, run `npm uninstall brave-alert-lib` to remove it
+    from `package.json` and `package-lock.json`
+
+1.  in the `package.json` file of the other code base, add the following where `VERSION` is the tag that you've chosen
+    (for example `v0.1.0`):
+
+        ```
+        "dependencies": {
+            ...
+            "brave-alert-lib": "https://github.com/bravetechnologycoop/brave-alert-lib#<VERSION>",
+            ...
+        }
+        ```
+
+1.  Run `npm install` to download the library and include it in `package-lock.json`
+
+# Testing During Development
+
+If you need to test using `brave-alert-lib` while developing any external repository:
+
+1. Pull the latest code for release: `git checkout main && git pull origin main`
+
+1. Create your feature branch (eg. test-dev-feature) and commit your changes as required
+
+1. In your external repository, run `npm uninstall brave-alert-lib` to remove it from `package.json` and `package-lock.json`
+
+1. in the `package.json` file of the other code base, add the following with your feature branch name (make sure the url points to the branch):
+        
+        ```
+        "dependencies": {
+            ...
+            "brave-alert-lib": "https://github.com/bravetechnologycoop/brave-alert-lib/tree/test-dev-feature",
+            ...
+        }
+        ```
+
+1.  Run `npm install` to download the library and include it in `package-lock.json`
+
+1. Make sure to remove the test branch and include an offical tagged version after development
+
+# Setting Up Local Dev Environment
 
 1. clone this repository
 
@@ -63,25 +116,7 @@ Reference: https://docs.github.com/en/actions/security-guides/using-secrets-in-g
 
 1. Under **Repository secrets**, click **New repository secret** or edit an existing one with the pen symbol
 
-# How to use this library in another code base
-
-1.  if you are upgrading from a previous version of `brave-alert-lib`, run `npm uninstall brave-alert-lib` to remove it
-    from `package.json` and `package-lock.json`
-
-1.  in the `package.json` file of the other code base, add the following where `VERSION` is the tag that you've chosen
-    (for example `v0.1.0`):
-
-        ```
-        "dependencies": {
-            ...
-            "brave-alert-lib": "https://github.com/bravetechnologycoop/brave-alert-lib#<VERSION>",
-            ...
-        }
-        ```
-
-1.  Run `npm install` to download the library and include it in `package-lock.json`
-
-# API
+# API Reference
 
 ## `BraveAlerter` class
 
