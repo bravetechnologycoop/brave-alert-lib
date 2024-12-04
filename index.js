@@ -10,7 +10,7 @@ const googleHelpers = require('./lib/googleHelpers')
 const helpers = require('./lib/helpers')
 const Session = require('./lib/models/Session')
 const twilioHelpers = require('./lib/twilioHelpers')
-const DEVICE_TYPE = require('./lib/deviceStatusEnum')
+const STATUS = require('./lib/deviceStatusEnum')
 
 module.exports = {
   ALERT_TYPE,
