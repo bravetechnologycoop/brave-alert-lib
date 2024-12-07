@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.0.5] - 2024-12-06
+
+### Added
+
+- Added new STATUS enum in `deviceStatusEnum.js` (CU-86dv9rra0).
+
+### Changed
+
+- Changed factories to have `status` and `commissionedAt` to reflect the new client database changes (CU-86dv9rra0).
+
 ## [15.0.4] - 2024-10-29
 
 ### Changed
