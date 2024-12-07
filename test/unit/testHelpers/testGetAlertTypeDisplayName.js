@@ -1,10 +1,12 @@
+// Third-party dependencies
 const expect = require('chai').expect
 const { describe, it } = require('mocha')
 
+// In-house dependencies
 const helpers = require('../../../lib/helpers')
 
 describe('helpers.js unit tests: getAlertTypeDisplayName', () => {
-  it('given Alert type, Language, t-function, then returns the human readable displayName of that AlertType in that language according to the t function', () => {
+  it('should return the human-readable display name of the alert type in the specified language using the provided translation function', () => {
     const parameters = {
       alertType: 'SENSOR_STILLNESS',
       language: 'en',

@@ -1,6 +1,8 @@
+// Third-party dependencies
 const expect = require('chai').expect
 const { describe, it } = require('mocha')
 
+// In-house dependencies
 const helpers = require('../../../lib/helpers')
 
 describe('helpers.js unit tests: formatExpressValidationErrors', () => {

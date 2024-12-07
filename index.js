@@ -1,11 +1,11 @@
 const { Client, ClientExtension, Session, Device, Gateway, GatewaysVital, ButtonsVital, SensorsVital } = require('./lib/models/index')
-const { ALERT_TYPE, CHATBOT_STATE, DEVICE_TYPE } = require('./lib/enums/index.js')
+const { ALERT_TYPE, CHATBOT_STATE, DEVICE_TYPE } = require('./lib/enums/index')
 
 const factories = require('./lib/factories')
 
-const helpers = require('./lib/helpers/helpers')
-const twilioHelpers = require('./lib/helpers/twilioHelpers')
-const googleHelpers = require('./lib/helpers/googleHelpers')
+const helpers = require('./lib/helpers')
+const twilioHelpers = require('./lib/twilioHelpers')
+const googleHelpers = require('./lib/googleHelpers')
 
 module.exports = {
   Client,

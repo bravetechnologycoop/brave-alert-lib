@@ -2,61 +2,7 @@
 const rewire = require('rewire')
 
 // In-house dependencies
-const AlertSession = require('../lib/alertSession')
-const BraveAlerter = require('../lib/braveAlerter')
-const CHATBOT_STATE = require('../lib/chatbotStateEnum')
-
 const googleHelpers = rewire('../lib/googleHelpers')
-
-function dummyGetAlertSession() {
-  return 'getAlertSession'
-}
-
-function dummyGetAlertSessionByPhoneNumbers() {
-  return 'getAlertSessionByPhoneNumbers'
-}
-
-function dummyAlertSessionChangedCallback() {
-  return 'alertSessionChangedCallback'
-}
-
-function dummyGetReturnMessageToRespondedByPhoneNumber(language, fromAlertState, toAlertState) {
-  return `To RespondedByPhoneNumber (${language}): ${fromAlertState} --> ${toAlertState}`
-}
-
-function dummyGetReturnMessageToOtherResponderPhoneNumbers(language, fromAlertState, toAlertState) {
-  return `To OtherResponderPhoneNumbers (${language}): ${fromAlertState} --> ${toAlertState}`
-}
-
-function dummyGetClientMessageForRequestToReset(language) {
-  return `Reset (${language})`
-}
-
-function braveAlerterFactory(overrides = {}) {
-  // prettier-ignore
-  return new BraveAlerter(
-    overrides.getAlertSession !== undefined ? overrides.getAlertSession : dummyGetAlertSession,
-    overrides.getAlertSessionByPhoneNumbers !== undefined ? overrides.getAlertSessionByPhoneNumbers : dummyGetAlertSessionByPhoneNumbers,
-    overrides.alertSessionChangedCallback !== undefined ? overrides.alertSessionChangedCallback : dummyAlertSessionChangedCallback,
-    overrides.getReturnMessageToRespondedByPhoneNumber !== undefined ? overrides.getReturnMessageToRespondedByPhoneNumber : dummyGetReturnMessageToRespondedByPhoneNumber,
-    overrides.getReturnMessageToOtherResponderPhoneNumbers !== undefined ? overrides.getReturnMessageToOtherResponderPhoneNumbers : dummyGetReturnMessageToOtherResponderPhoneNumbers,
-    overrides.getClientMessageForRequestToReset !== undefined ? overrides.getClientMessageForRequestToReset : dummyGetClientMessageForRequestToReset,
-  )
-}
-
-function alertSessionFactory(overrides = {}) {
-  // prettier-ignore
-  return new AlertSession(
-    overrides.sessionId !== undefined ? overrides.sessionId : '2e4f7e78-1259-4e4c-a26f-91d79929f41a',
-    overrides.alertState !== undefined ? overrides.alertState : CHATBOT_STATE.STARTED,
-    overrides.respondedByPhoneNumber !== undefined ? overrides.respondedByPhoneNumber : undefined,
-    overrides.incidentCategoryKey !== undefined ? overrides.incidentCategoryKey : undefined,
-    overrides.responderPhoneNumbers !== undefined ? overrides.responderPhoneNumbers : undefined,
-    overrides.validIncidentCategoryKeys !== undefined ? overrides.validIncidentCategoryKeys : undefined,
-    overrides.validIncidentCategories !== undefined ? overrides.validIncidentCategories : undefined,
-    overrides.language !== undefined ? overrides.language : undefined,
-  )
-}
 
 function mockResponse(sandbox) {
   // From https://codewithhugo.com/express-request-response-mocking/
@@ -133,8 +79,6 @@ const mockOAuth2Client = {
 }
 
 module.exports = {
-  alertSessionFactory,
-  braveAlerterFactory,
   mockResponse,
   mockGoogleIdTokenFactory,
   mockOAuth2Client,
