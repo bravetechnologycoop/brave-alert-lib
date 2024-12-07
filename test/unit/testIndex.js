@@ -65,7 +65,7 @@ describe('index.js unit tests:', () => {
   it('exports googleHelpers', () => {
     expect(index.googleHelpers).not.to.be.undefined
   })
-  
+
   it('exports STATUS', () => {
     expect(index.STATUS).not.to.be.undefined
   })
