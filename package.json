@@ -17,7 +17,7 @@
     "@sentry/tracing": "^6.2.5",
     "chalk": "^4.1.0",
     "dotenv": "^7.0.0",
-    "express": "^4.21.0",
+    "express": "^4.21.2",
     "express-validator": "^6.10.0",
     "google-auth-library": "^9.2.0",
     "luxon": "^2.5.2",
