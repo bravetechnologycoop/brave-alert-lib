@@ -1,6 +1,6 @@
 {
   "name": "brave-alert-lib",
-  "version": "15.0.5",
+  "version": "15.0.6",
   "description": "Library to communicate with responders and staff when action is required.",
   "repository": {
     "type": "git",
